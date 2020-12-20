@@ -102,7 +102,10 @@ module.exports = {
   getAllItems(model) {
     return new Promise(async (resolve, reject) => {
       try {
-        resolve({ ok: true, payload: await model.findAll() });
+        resolve({
+          ok: true,
+          payload: await model.scope('populate').findAll(),
+        });
       } catch (err) {
         reject(buildErrObject(422, err.message));
       }
@@ -115,20 +118,24 @@ module.exports = {
    * @param {Object} query - query object
    */
   async getItems(req, model, query) {
-    const options = await listInitOptions(req);
-    for (const key in options) {
-      if (options.hasOwnProperty(key)) {
-        if (query.hasOwnProperty(key)) delete query[key];
+    // const options = await listInitOptions(req);
+    // for (const key in options) {
+    //   if (options.hasOwnProperty(key)) {
+    //     if (query.hasOwnProperty(key)) delete query[key];
+    //   }
+    // }
+    return new Promise(async (resolve, reject) => {
+      try {
+        resolve({
+          ok: true,
+          payload: await model.scope('populate').findAll({
+            where: query,
+            order: [['createdAt', 'ASC']],
+          }),
+        });
+      } catch (err) {
+        reject(buildErrObject(422, err.message));
       }
-    }
-    // console.log("se paginara con esto: ", query, options);
-    return new Promise((resolve, reject) => {
-      model.paginate(query, options, (err, items) => {
-        if (err) {
-          reject(buildErrObject(422, err.message));
-        }
-        resolve({ ok: true, ...cleanPaginationID(items) });
-      });
     });
   },
   /**
@@ -155,7 +162,7 @@ module.exports = {
    */
   getItem(id, model) {
     return new Promise(async (resolve, reject) => {
-      let payload = await model.findOne({ where: { id } });
+      let payload = await model.scope('populate').findOne({ where: { id } });
       itemNotFound(null, payload, reject, 'NOT_FOUND');
       resolve({ ok: true, payload });
     });

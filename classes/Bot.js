@@ -10,6 +10,14 @@ class Bot {
   intentReceived(intentName) {
     return this.req.body.queryResult.intent.displayName === intentName;
   }
+  getOriginalParameter(parameterName) {
+    return this.req.body.queryResult.outputContexts[0].parameters[
+      parameterName + '.original'
+    ];
+  }
+  getParameter(parameterName) {
+    return this.req.body.queryResult.parameters[parameterName];
+  }
   sendTextMessage(msg) {
     let textTemplate = {
       text: {

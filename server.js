@@ -16,10 +16,20 @@ const Advisor = require('./models/Advisors');
 Advisor.hasMany(Client, { foreignKey: 'advisorId', sourceKey: 'id' });
 Client.belongsTo(Advisor, { foreignKey: 'advisorId', sourceKey: 'id' });
 
+let port = 3000;
+
+//axios
+const axios = require('axios');
+if (process.env.NODE_ENV === 'development') {
+  axios.defaults.baseURL = 'http://localhost:' + port;
+} else {
+  axios.defaults.baseURL = 'https://usmp.jfbots.com';
+}
+
 // Enable only in development HTTP request logger middleware
-// if (process.env.NODE_ENV === 'development') {
-app.use(morgan('dev'));
-// }
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use(cors());
 // parse application/x-www-form-urlencoded
@@ -30,16 +40,14 @@ app.use(bodyParser.json());
 
 app.use('/api', require('./routes/api/index.js'));
 
-app.post('/webhook', express.json(), function (req, res) {
-  console.log('nueva solicitud...');
+app.post('/webhook', express.json(), async function (req, res) {
   let bot = new Bot(req, res);
-  myBot(bot);
+  await myBot(bot);
   bot.res.json(bot.fulfillmentMessages);
   // delete require.cache[require.resolve("./miBot.js")];
   // require("./miBot.js");
 });
 
-let port = 3000;
 app.listen(port, () => {
   console.log('Estamos ejecutando el servidor en el puerto ' + port);
 });

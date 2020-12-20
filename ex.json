@@ -1,0 +1,57 @@
+{
+  "responseId": "544a7ea1-efa3-41b1-8248-2a171514996f-5811cb77",
+  "queryResult": {
+    "queryText": "09934",
+    "parameters": {
+      "dni": 9934
+    },
+    "allRequiredParamsPresent": true,
+    "fulfillmentText": "Bien {client.name}, según mi información, tu asesor es {advisor.name}",
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "Bien {client.name}, según mi información, tu asesor es {advisor.name}"
+          ]
+        }
+      },
+      {
+        "payload": {
+          "card": {
+            "imageUri": "https://example.com/images/example.png",
+            "subtitle": "card text",
+            "buttons": [
+              {
+                "postback": "https://example.com/path/for/end-user/to/follow",
+                "text": "button text"
+              }
+            ],
+            "title": "card title"
+          }
+        }
+      }
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/usmpbot-uibp/agent/sessions/45db0365-bdd8-805a-7303-b8c799db1a95/contexts/__system_counters__",
+        "parameters": {
+          "no-input": 0,
+          "no-match": 0,
+          "dni": 9934,
+          "dni.original": "09934"
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/usmpbot-uibp/agent/intents/a6f5f88f-f88d-4ead-b6fb-c25921785ce9",
+      "displayName": "Asesores.obtener"
+    },
+    "intentDetectionConfidence": 1,
+    "languageCode": "es"
+  },
+  "originalDetectIntentRequest": {
+    "source": "DIALOGFLOW_CONSOLE",
+    "payload": {}
+  },
+  "session": "projects/usmpbot-uibp/agent/sessions/45db0365-bdd8-805a-7303-b8c799db1a95"
+}

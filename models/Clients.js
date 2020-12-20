@@ -36,4 +36,12 @@ const ClientModel = sequelize.define('clients', {
   updatedAt: Sequelize.DATE,
 });
 
+ClientModel.addScope('populate', {
+  include: [
+    {
+      model: Advisor,
+    },
+  ],
+});
+
 module.exports = ClientModel;
