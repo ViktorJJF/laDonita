@@ -1,0 +1,7 @@
+node_modules
+.prettierrc.json
+.eslintrc.json
+.editorconfig
+.vscode
+config/config.json
+
