@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const model = require('../models/Clients');
 const utils = require('../helpers/utils');
 const db = require('../helpers/db');
@@ -14,6 +15,9 @@ const itemExistsExcludingItself = async (id, body) =>
     for (const uniquefield of UNIQUEFIELDS) {
       query[uniquefield] = body[uniquefield];
     }
+    query.id = {
+      [Op.ne]: parseInt(id),
+    };
     model
       .findOne({ where: query })
       .then((item) => {

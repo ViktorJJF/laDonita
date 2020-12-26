@@ -1,3 +1,4 @@
+require('dotenv-safe').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -31,6 +32,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+app.use(express.static(__dirname + '/public'));
+
 app.use(cors());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,6 +49,11 @@ app.post('/webhook', express.json(), async function (req, res) {
   bot.res.json(bot.fulfillmentMessages);
   // delete require.cache[require.resolve("./miBot.js")];
   // require("./miBot.js");
+});
+
+//Handle SPA
+app.get(/.*/, (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 app.listen(port, () => {

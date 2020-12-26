@@ -6,8 +6,7 @@ const { buildErrObject, itemNotFound } = require('./utils');
  * @param {number} order - order for query (1,-1)
  */
 const buildSort = (sort, order) => {
-  const sortBy = {};
-  sortBy[sort] = order;
+  const sortBy = [[sort, order === '1' ? 'ASC' : 'DESC']];
   return sortBy;
 };
 
@@ -43,7 +42,6 @@ const listInitOptions = async (req) =>
     const options = {
       order,
       sort: sortBy,
-      lean: true,
       page,
       limit,
     };
@@ -118,19 +116,19 @@ module.exports = {
    * @param {Object} query - query object
    */
   async getItems(req, model, query) {
-    // const options = await listInitOptions(req);
-    // for (const key in options) {
-    //   if (options.hasOwnProperty(key)) {
-    //     if (query.hasOwnProperty(key)) delete query[key];
-    //   }
-    // }
+    const options = await listInitOptions(req);
+    for (const key in options) {
+      if (options.hasOwnProperty(key)) {
+        if (query.hasOwnProperty(key)) delete query[key];
+      }
+    }
     return new Promise(async (resolve, reject) => {
       try {
         resolve({
           ok: true,
           payload: await model.scope('populate').findAll({
             where: query,
-            order: [['createdAt', 'ASC']],
+            order: options.sort,
           }),
         });
       } catch (err) {
@@ -186,14 +184,15 @@ module.exports = {
    * Creates a new item in database
    * @param {Object} req - request object
    */
-  async createItem(body, model) {
-    try {
-      const item = await model.create(body);
-      return item;
-    } catch (err) {
-      console.log('el error: ', err);
-      throw new Error(buildErrObject(422, err.message));
-    }
+  createItem(body, model) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const item = await model.create(body);
+        resolve({ ok: true, payload: item });
+      } catch (error) {
+        reject(buildErrObject(422, err.message));
+      }
+    });
   },
 
   /**
@@ -211,7 +210,7 @@ module.exports = {
         let newItem = await item.update(body);
         resolve({ ok: true, payload: newItem });
       } catch (err) {
-        throw buildErrObject(422, err2.message);
+        reject(buildErrObject(422, err.message));
       }
     });
   },

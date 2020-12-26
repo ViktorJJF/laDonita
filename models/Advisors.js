@@ -28,4 +28,6 @@ const AdvisorModel = sequelize.define('advisors', {
   updatedAt: Sequelize.DATE,
 });
 
+AdvisorModel.addScope('populate', {});
+
 module.exports = AdvisorModel;
