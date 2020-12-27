@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "sequelize": "sequelize db:drop &&sequelize db:create &&sequelize db:migrate && sequelize db:seed:all"
+    "sequelize": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all"
   },
   "author": "",
   "license": "ISC",

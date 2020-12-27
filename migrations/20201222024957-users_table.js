@@ -4,7 +4,7 @@ const validRoles = ['SUPERADMIN', 'ADMIN', 'USER'];
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    queryInterface.createTable('Users', {
+    queryInterface.createTable('users', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -66,6 +66,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    queryInterface.dropTable('Users');
+    queryInterface.dropTable('users');
   },
 };
