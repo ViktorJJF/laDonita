@@ -64,6 +64,15 @@ router.put(
   controller.update,
 );
 
+// router.put(
+//   '/:id/update-password',
+//   // requireAuth,
+//   // AuthController.roleAuthorization(['ADMIN']),
+//   trimRequest.all,
+//   validate.update,
+//   controller.updatePassword,
+// );
+
 // /*
 //  * Delete item route
 //  */

@@ -1,11 +1,10 @@
-const crypto = require('crypto');
-
+// const crypto = require('crypto');
 const secret = process.env.JWT_SECRET;
 const algorithm = 'aes-192-cbc';
 // Key length is dependent on the algorithm. In this case for aes192, it is
 // 24 bytes (192 bits).
-const key = crypto.scryptSync(secret, 'salt', 24);
-const iv = Buffer.alloc(16, 0); // Initialization crypto vector
+// const key = crypto.scryptSync(secret, 'salt', 24);
+// const iv = Buffer.alloc(16, 0); // Initialization crypto vector
 
 module.exports = {
   /**
@@ -34,12 +33,13 @@ module.exports = {
    */
 
   encrypt(text) {
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
+    // const cipher = crypto.createCipheriv(algorithm, key, iv);
 
-    let encrypted = cipher.update(text, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
+    // let encrypted = cipher.update(text, 'utf8', 'hex');
+    // encrypted += cipher.final('hex');
 
-    return encrypted;
+    // return encrypted;
+    return text;
   },
 
   /**
@@ -48,12 +48,13 @@ module.exports = {
    */
 
   decrypt(text) {
-    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    // const decipher = crypto.createDecipheriv(algorithm, key, iv);
 
     try {
-      let decrypted = decipher.update(text, 'hex', 'utf8');
-      decrypted += decipher.final('utf8');
-      return decrypted;
+      // let decrypted = decipher.update(text, 'hex', 'utf8');
+      // decrypted += decipher.final('utf8');
+      // return decrypted;
+      return text;
     } catch (err) {
       return err;
     }
