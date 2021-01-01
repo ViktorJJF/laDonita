@@ -18,11 +18,11 @@ async function myBot(bot) {
       if (clients.length > 0) {
         let client = clients[0];
         bot.sendTextMessage(
-          `Bien ${client.name}, según mi información, tu asesor es ${client.advisor.name} ${client.lastname}`,
+          `Bien ${client.name}, según mi información, tu asesor es ${client.advisor.name} ${client.advisor.lastname}`,
         );
       } else {
         bot.sendTextMessage(
-          `Parce que no tengo ningún estudiante registrado con ese DNI`,
+          `Parece que no tengo ningún estudiante registrado con ese DNI`,
         );
       }
       break;
