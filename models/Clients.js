@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../database/connection');
-const Advisor = require('./Advisors');
+const Sequelize = require("sequelize");
+const sequelize = require("../database/connection");
+const Advisor = require("./Advisors");
 
-const ClientModel = sequelize.define('clients', {
+const ClientModel = sequelize.define("clients", {
   id: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -22,26 +22,26 @@ const ClientModel = sequelize.define('clients', {
   advisorId: {
     type: Sequelize.INTEGER,
     references: {
-      model: 'advisors',
-      key: 'id',
+      model: "advisors",
+      key: "id",
     },
-    onUpdate: 'cascade',
-    onDelete: 'cascade',
+    onUpdate: "cascade",
+    onDelete: "cascade",
   },
   status: {
     type: Sequelize.BOOLEAN,
     defaultValue: true,
   },
-  createdAt: Sequelize.DATE,
-  updatedAt: Sequelize.DATE,
 });
 
-ClientModel.addScope('populate', {
+ClientModel.addScope("populate", {
   include: [
     {
       model: Advisor,
     },
   ],
 });
+
+// ClientModel.belongsTo(Advisor, { foreignKey: "advisorId", sourceKey: "id" });
 
 module.exports = ClientModel;

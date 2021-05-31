@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../database/connection');
-const Client = require('./Clients');
+const Sequelize = require("sequelize");
+const sequelize = require("../database/connection");
+const Client = require("./Clients");
 
-const AdvisorModel = sequelize.define('advisors', {
+const AdvisorModel = sequelize.define("advisors", {
   id: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -28,6 +28,7 @@ const AdvisorModel = sequelize.define('advisors', {
   updatedAt: Sequelize.DATE,
 });
 
-AdvisorModel.addScope('populate', {});
+AdvisorModel.addScope("populate", {});
+AdvisorModel.hasMany(Client, { foreignKey: "advisorId", sourceKey: "id" });
 
 module.exports = AdvisorModel;

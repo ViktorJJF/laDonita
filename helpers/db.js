@@ -1,4 +1,5 @@
-const { buildErrObject, itemNotFound } = require('./utils');
+const { Op } = require("sequelize");
+const { buildErrObject, itemNotFound } = require("./utils");
 
 /**
  * Builds sorting
@@ -6,7 +7,7 @@ const { buildErrObject, itemNotFound } = require('./utils');
  * @param {number} order - order for query (1,-1)
  */
 const buildSort = (sort, order) => {
-  const sortBy = [[sort, order === '1' ? 'ASC' : 'DESC']];
+  const sortBy = [[sort, order == "1" ? "ASC" : "DESC"]];
   return sortBy;
 };
 
@@ -14,9 +15,19 @@ const buildSort = (sort, order) => {
  * Hack for mongoose-paginate, removes 'id' from results
  * @param {Object} result - result object
  */
-const cleanPaginationID = (result) => {
-  result.docs.map((element) => delete element.id);
-  result = renameKey(result, 'docs', 'payload');
+const cleanPaginationID = (result, limit, page) => {
+  // result.docs.map((element) => delete element.id);
+  let parsedPage = parseInt(page);
+  result = renameKey(result, "count", "totalDocs");
+  result["limit"] = limit;
+  result["page"] = parsedPage;
+  result["totalPages"] = Math.ceil(result.totalDocs / limit);
+  result["prevPage"] = parsedPage != 1 ? parsedPage - 1 : null;
+  result["nextPage"] = parsedPage >= result.totalPages ? null : parsedPage + 1;
+  result["hasPrevPage"] = result.prevPage ? true : false;
+  result["hasNextPage"] = result.nextPage ? true : false;
+  result = renameKey(result, "rows", "payload");
+  // result.limit=
   return result;
 };
 
@@ -35,7 +46,7 @@ function renameKey(object, key, newKey) {
 const listInitOptions = async (req) =>
   new Promise((resolve) => {
     const order = parseInt(req.query.order, 10) || 1;
-    const sort = req.query.sort || 'createdAt';
+    const sort = req.query.sort || "createdAt";
     const sortBy = buildSort(sort, order);
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 99999;
@@ -61,33 +72,32 @@ module.exports = {
     return new Promise((resolve, reject) => {
       try {
         if (
-          typeof query.filter !== 'undefined' &&
-          typeof query.fields !== 'undefined'
+          typeof query.filter !== "undefined" &&
+          typeof query.fields !== "undefined"
         ) {
           const data = {
-            $or: [],
+            [Op.or]: [],
           };
           const array = [];
           // Takes fields param and builds an array by splitting with ','
-          const arrayFields = query.fields.split(',');
+          const arrayFields = query.fields.split(",");
           // Adds SQL Like %word% with regex
+
           arrayFields.map((item) => {
             array.push({
-              [item]: {
-                $regex: new RegExp(query.filter, 'i'),
-              },
+              [item]: { [Op.like]: `%${query.filter}%` },
             });
             return true;
           });
           // Puts array result in data
-          data.$or = array;
+          data[Op.or] = array;
           resolve(data);
         } else {
           resolve({});
         }
       } catch (err) {
         console.log(err.message);
-        reject(buildErrObject(422, 'ERROR_WITH_FILTER'));
+        reject(buildErrObject(422, "ERROR_WITH_FILTER"));
       }
     });
   },
@@ -102,7 +112,7 @@ module.exports = {
       try {
         resolve({
           ok: true,
-          payload: await model.scope('populate').findAll(),
+          payload: await model.scope("populate").findAll(),
         });
       } catch (err) {
         reject(buildErrObject(422, err.message));
@@ -122,14 +132,23 @@ module.exports = {
         if (query.hasOwnProperty(key)) delete query[key];
       }
     }
+    const paginationOptions = {
+      limit: options.limit,
+      offset: (options.page - 1) * options.limit,
+      where: query,
+      order: options.sort,
+    };
+    if (!req.query.limit) delete paginationOptions["limit"];
+    if (!req.query.page) delete paginationOptions["offset"];
     return new Promise(async (resolve, reject) => {
       try {
         resolve({
           ok: true,
-          payload: await model.scope('populate').findAll({
-            where: query,
-            order: options.sort,
-          }),
+          ...cleanPaginationID(
+            await model.scope("populate").findAndCountAll(paginationOptions),
+            paginationOptions.limit,
+            req.query.page
+          ),
         });
       } catch (err) {
         reject(buildErrObject(422, err.message));
@@ -160,8 +179,8 @@ module.exports = {
    */
   getItem(id, model) {
     return new Promise(async (resolve, reject) => {
-      let payload = await model.scope('populate').findOne({ where: { id } });
-      itemNotFound(null, payload, reject, 'NOT_FOUND');
+      let payload = await model.scope("populate").findOne({ where: { id } });
+      itemNotFound(null, payload, reject, "NOT_FOUND");
       resolve({ ok: true, payload });
     });
   },
@@ -187,10 +206,13 @@ module.exports = {
   createItem(body, model) {
     return new Promise(async (resolve, reject) => {
       try {
-        const item = await model.create(body);
+        const item = await model.create(body, {
+          include: [...model.populates.map((el) => ({ model: el }))],
+        });
+        await item.reload();
         resolve({ ok: true, payload: item });
       } catch (error) {
-        reject(buildErrObject(422, err.message));
+        reject(buildErrObject(422, error.message));
       }
     });
   },
@@ -203,12 +225,12 @@ module.exports = {
   updateItem(id, model, body) {
     return new Promise(async (resolve, reject) => {
       try {
-        let item = await model.findOne({ where: { id } });
+        await model.update(body, { where: { id } });
+        let item = await model.scope("populate").findOne({ where: { id } });
         if (!item) {
-          return itemNotFound(null, item, reject, 'NOT_FOUND');
+          return itemNotFound(null, item, reject, "NOT_FOUND");
         }
-        let newItem = await item.update(body);
-        resolve({ ok: true, payload: newItem });
+        resolve({ ok: true, payload: item });
       } catch (err) {
         reject(buildErrObject(422, err.message));
       }
@@ -223,7 +245,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       try {
         let item = await model.findOne({ where: { id } });
-        if (!item) return itemNotFound(null, item, reject, 'NOT_FOUND');
+        if (!item) return itemNotFound(null, item, reject, "NOT_FOUND");
         await model.destroy({ where: { id } });
         resolve({ ok: true, payload: item });
       } catch (err) {
