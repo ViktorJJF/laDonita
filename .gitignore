@@ -5,3 +5,4 @@ node_modules
 .vscode
 config/config.json
 # client
+client/node_modules
