@@ -4,21 +4,21 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     queryInterface.createTable("products", {
       id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       name: {
-        type: DataTypes.STRING(200),
+        type: Sequelize.STRING(200),
         unique: true,
         allowNull: false,
       },
       img: {
-        type: DataTypes.STRING(200),
+        type: Sequelize.STRING(200),
       },
       userId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         references: {
           model: "Users",
           key: "id",
@@ -27,7 +27,7 @@ module.exports = {
         onDelete: "cascade",
       },
       brandId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         references: {
           model: "Brands",
           key: "id",
@@ -36,28 +36,28 @@ module.exports = {
         onDelete: "cascade",
       },
       stock: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         defaultValue: 0,
       },
       minStock: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         defaultValue: 0,
       },
       purchasePrice: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         defaultValue: 0,
       },
       minStock: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         defaultValue: 0,
       },
       price: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         defaultValue: 0,
       },
-      description: DataTypes.TEXT,
+      description: Sequelize.TEXT,
       status: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         defaultValue: true,
       },
     });
