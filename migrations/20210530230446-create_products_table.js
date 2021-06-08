@@ -12,7 +12,6 @@ module.exports = {
       name: {
         type: Sequelize.STRING(200),
         unique: true,
-        allowNull: false,
       },
       img: {
         type: Sequelize.STRING(200),
@@ -20,7 +19,7 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Users",
+          model: "users",
           key: "id",
         },
         onUpdate: "cascade",
@@ -29,7 +28,7 @@ module.exports = {
       brandId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Brands",
+          model: "brands",
           key: "id",
         },
         onUpdate: "cascade",
