@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    queryInterface.createTable('forgot_password', {
+    queryInterface.createTable("forgot_password", {
       id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
@@ -44,6 +44,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    queryInterface.dropTable('forgot_password');
+    queryInterface.dropTable("forgot_password");
   },
 };

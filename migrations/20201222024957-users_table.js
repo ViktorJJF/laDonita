@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-const validRoles = ['SUPERADMIN', 'ADMIN', 'USER'];
+const validRoles = ["SUPERADMIN", "ADMIN", "USER"];
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    queryInterface.createTable('users', {
+    queryInterface.createTable("users", {
       id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
@@ -41,7 +41,7 @@ module.exports = {
       role: {
         type: Sequelize.ENUM,
         values: validRoles,
-        defaultValue: 'USER',
+        defaultValue: "USER",
       },
       verification: Sequelize.STRING,
       verified: {
@@ -66,6 +66,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    queryInterface.dropTable('users');
+    queryInterface.dropTable("users");
   },
 };
