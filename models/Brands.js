@@ -18,7 +18,7 @@ const model = sequelize.define("brands", {
   userId: {
     type: DataTypes.INTEGER,
     references: {
-      model: "Users",
+      model: "users",
       key: "id",
     },
     onUpdate: "cascade",

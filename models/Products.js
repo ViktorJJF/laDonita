@@ -20,7 +20,7 @@ const model = sequelize.define("products", {
   userId: {
     type: DataTypes.INTEGER,
     references: {
-      model: "Users",
+      model: "users",
       key: "id",
     },
     onUpdate: "cascade",
@@ -29,7 +29,7 @@ const model = sequelize.define("products", {
   brandId: {
     type: DataTypes.INTEGER,
     references: {
-      model: "Brands",
+      model: "brands",
       key: "id",
     },
     onUpdate: "cascade",
