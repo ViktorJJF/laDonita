@@ -55,7 +55,7 @@
         </thead>
         <tbody>
           <tr v-for="(item, itemIndex) in limitedItems" :key="itemIndex">
-            <td>
+            <!-- <td>
               <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
                 <img
                   src="https://picsum.photos/200/300"
@@ -63,7 +63,7 @@
                   alt="Responsive image"
                 />
               </div>
-            </td>
+            </td> -->
             <td :width="header.width" v-for="header in headers" :key="header">
               <slot :name="'item.' + header.value" :item="item">{{
                 item[header.value]
