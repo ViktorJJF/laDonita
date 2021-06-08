@@ -4,59 +4,62 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     queryInterface.createTable("products", {
       id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
-      name: Sequelize.STRING(100),
+      name: {
+        type: DataTypes.STRING(200),
+        unique: true,
+        allowNull: false,
+      },
+      img: {
+        type: DataTypes.STRING(200),
+      },
       userId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         references: {
           model: "Users",
           key: "id",
         },
         onUpdate: "cascade",
         onDelete: "cascade",
-        allowNull: true,
       },
       brandId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         references: {
           model: "Brands",
           key: "id",
         },
         onUpdate: "cascade",
         onDelete: "cascade",
-        allowNull: true,
       },
       stock: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
       },
       minStock: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
       },
       purchasePrice: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
       },
       minStock: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
       },
       price: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
       },
-      description: Sequelize.TEXT,
+      description: DataTypes.TEXT,
       status: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         defaultValue: true,
       },
-      createdAt: Sequelize.DATE,
-      updatedAt: Sequelize.DATE,
     });
   },
 

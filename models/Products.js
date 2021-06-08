@@ -10,9 +10,12 @@ const model = sequelize.define("products", {
     autoIncrement: true,
   },
   name: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING(200),
     unique: true,
     allowNull: false,
+  },
+  img: {
+    type: DataTypes.STRING(200),
   },
   userId: {
     type: DataTypes.INTEGER,
