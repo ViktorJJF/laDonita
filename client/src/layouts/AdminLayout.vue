@@ -2,10 +2,12 @@
   <core-toolbar></core-toolbar>
   <div class="container-fluid">
     <core-drawer></core-drawer>
-    <!-- <v-fade-transition mode="out-in"> -->
     <success-message />
-    <router-view v-if="isDataReady"></router-view>
-    <!-- </v-fade-transition> -->
+    <router-view v-slot="{ Component }">
+      <!-- <transition name="fade"> -->
+      <component v-if="isDataReady" :is="Component" />
+      <!-- </transition> -->
+    </router-view>
     <core-footer></core-footer>
   </div>
 </template>
@@ -42,21 +44,19 @@ export default {
   },
   methods: {
     async initialData() {
-      // this.$store.dispatch('showOverlay');
-      // await Promise.all([this.$store.dispatch("brandsModule/list")]);
-      //   //count orders
-      //   await this.$store.dispatch("countOrders");
-      //   //count purchases
-      //   await this.$store.dispatch("countPurchases");
+      await Promise.all([this.$store.dispatch('brandsModule/list')]);
       this.isDataReady = true;
-      // this.$store.dispatch('showOverlay', false);
-      //   this.$store.dispatch("showSnackbar", {
-      //     text: "Bienvenido",
-      //     color: "success",
-      //   });
     },
   },
 };
 </script>
 
-<style></style>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>

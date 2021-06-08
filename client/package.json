@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.9.2",
+    "@vuelidate/core": "^2.0.0-alpha.19",
+    "@vuelidate/validators": "^2.0.0-alpha.16",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "date-fns": "^2.21.3",
@@ -17,9 +19,9 @@
     "masonry-layout": "^4.2.2",
     "mosha-vue-toastify": "^1.0.11",
     "perfect-scrollbar": "^1.5.1",
+    "uuid": "^8.3.2",
     "v-calendar": "^3.0.0-alpha.4",
     "v-pagination-3": "^0.1.5",
-    "vee-validate": "^3.4.5",
     "vue": "^3.0.0",
     "vue-i18n": "^8.24.4",
     "vue-router": "^4.0.0-0",
@@ -95,6 +97,18 @@
         "off"
       ],
       "dot-notation": [
+        "off"
+      ],
+      "template-curly-spacing": [
+        "off"
+      ],
+      "prefer-const": [
+        "off"
+      ],
+      "object-curly-newline": [
+        "off"
+      ],
+      "vue/no-mutating-props": [
         "off"
       ]
     }

@@ -17,6 +17,6 @@ const sequelize = new Sequelize(
     logging: false,
   }
 );
-// sequelize.sync({ force: true });
+sequelize.sync({ force: true });
 module.exports = sequelize;
 global.sequelize = sequelize;

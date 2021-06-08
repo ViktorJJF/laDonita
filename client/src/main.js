@@ -38,8 +38,14 @@ app.use(VCalendar);
 
 // plugins
 import mosha from '@/plugins/moshaToastify';
+import deepCopy from '@/plugins/deepCopy';
+import uuid from '@/plugins/uuid';
+import sweetAlert from '@/plugins/sweetAlert';
 
 mosha(app);
+app.use(deepCopy);
+app.use(uuid);
+app.use(sweetAlert);
 
 // styles
 import '@/assets/scss/styles.scss';

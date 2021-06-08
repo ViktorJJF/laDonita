@@ -7,7 +7,7 @@ export default createStore({
   state: {
     businessImage: '/img/viktorjjf.png',
     maxPaginationButtons: 15,
-    itemsPerPage: 5,
+    itemsPerPage: 10,
     snackbar: {
       text: '',
       active: false,

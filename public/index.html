@@ -1,47 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="/favicon.ico" />
-    <title>USMP</title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Material+Icons"
-    />
-    <style>
-      df-messenger {
-        --df-messenger-bot-message: #878fac;
-        --df-messenger-button-titlebar-color: #ff5733;
-        --df-messenger-chat-background-color: #fafafa;
-        --df-messenger-font-color: white;
-        --df-messenger-send-icon: #878fac;
-        --df-messenger-user-message: #a30a26;
-      }
-    </style>
-  <link href="/js/0.js" rel="prefetch"><link href="/js/1.js" rel="prefetch"><link href="/js/2.js" rel="prefetch"><link href="/js/3.js" rel="prefetch"><link href="/js/4.js" rel="prefetch"><link href="/js/5.js" rel="prefetch"><link href="/js/6.js" rel="prefetch"><link href="/js/7.js" rel="prefetch"><link href="/js/app.js" rel="preload" as="script"><link href="/js/chunk-vendors.js" rel="preload" as="script"></head>
+    <!-- Estilos propios del template -->
+    <!-- *************
+			************ Common Css Files *************
+			************ -->
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
 
+    <!-- Icomoon Font Icons css -->
+    <link rel="stylesheet" href="/fonts/style.css" />
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="/css/main.css" />
+
+    <!-- *************
+			************ Vendor Css Files *************
+		************ -->
+    <!-- /load styles -->
+    <title>atelsystem</title>
+  <link href="/js/0.js" rel="prefetch"><link href="/js/1.js" rel="prefetch"><link href="/js/2.js" rel="prefetch"><link href="/js/3.js" rel="prefetch"><link href="/js/4.js" rel="prefetch"><link href="/js/5.js" rel="prefetch"><link href="/js/6.js" rel="prefetch"><link href="/js/7.js" rel="prefetch"><link href="/js/app.js" rel="preload" as="script"><link href="/js/chunk-vendors.js" rel="preload" as="script"></head>
   <body>
     <noscript>
       <strong
-        >We're sorry but client doesn't work properly without JavaScript
-        enabled. Please enable it to continue.</strong
+        >We're sorry but atelsystem doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
       >
     </noscript>
     <div id="app"></div>
-    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-    <df-messenger
-      intent="WELCOME"
-      chat-title="USMPBot"
-      agent-id="99291769-f805-4ecf-9a4a-7612f42d1e5b"
-      language-code="es"
-      chat-icon="/images/bot.png"
-    ></df-messenger>
-    <!-- built files will be auto injected -->
+    <!-- Required jQuery first, then Bootstrap Bundle JS -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/moment.js"></script>
+
+    <!-- *************
+			************ Vendor Js Files *************
+		************* -->
+
+    <!-- Main Js Required -->
+    <script src="/js/main.js"></script>
   <script type="text/javascript" src="/js/chunk-vendors.js"></script><script type="text/javascript" src="/js/app.js"></script></body>
 </html>

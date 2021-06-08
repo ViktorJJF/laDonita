@@ -18,6 +18,7 @@ module.exports = {
         },
         onUpdate: "cascade",
         onDelete: "cascade",
+        allowNull: true,
       },
       brandId: {
         type: Sequelize.INTEGER,
@@ -27,6 +28,7 @@ module.exports = {
         },
         onUpdate: "cascade",
         onDelete: "cascade",
+        allowNull: true,
       },
       stock: {
         type: Sequelize.INTEGER,

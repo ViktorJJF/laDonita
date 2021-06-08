@@ -1,18 +1,20 @@
 <template>
   <div class="row gutters">
     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-      <div class="form-group">
-        <label for="inputName">Búsqueda</label>
-        <input
-          v-model="search"
-          type="text"
-          class="form-control"
-          id="inputName"
-          placeholder="Ingresa tu búsqueda"
-        />
-      </div>
+      <slot name="search">
+        <div class="form-group">
+          <label for="inputName">Búsqueda</label>
+          <input
+            v-model="search"
+            type="text"
+            class="form-control"
+            id="inputName"
+            placeholder="Ingresa tu búsqueda"
+          />
+        </div>
+      </slot>
     </div>
-    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div v-if="filterDate" class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
       <div class="form-group">
         <label>Desde</label>
         <v-date-picker v-model="dateFrom">
@@ -26,7 +28,7 @@
         </v-date-picker>
       </div>
     </div>
-    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div v-if="filterDate" class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
       <div class="form-group">
         <label for="inputName">Hasta</label>
         <v-date-picker @input="newDateTo(dateTo)" v-model="dateTo">
@@ -48,17 +50,26 @@
         <thead>
           <tr>
             <th v-for="header in headers" :key="header">{{ header.text }}</th>
-            <th>Acciones</th>
+            <th v-if="defaultActions">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, itemIndex) in limitedItems" :key="itemIndex">
+            <td>
+              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <img
+                  src="https://picsum.photos/200/300"
+                  class="img-thumbnail"
+                  alt="Responsive image"
+                />
+              </div>
+            </td>
             <td :width="header.width" v-for="header in headers" :key="header">
               <slot :name="'item.' + header.value" :item="item">{{
                 item[header.value]
               }}</slot>
             </td>
-            <td>
+            <td v-if="defaultActions">
               <!-- Button trigger modal -->
               <button
                 type="button"
@@ -75,20 +86,31 @@
         </tbody>
       </table>
     </div>
-    <div class="pagination justify-content-center primary text-center">
-      <pagination
-        v-model="page"
-        :records="filteredItems.length"
-        :per-page="itemsPerPage"
-        :options="{
-          chunk: numberPagesToShow,
-          texts: {
-            count:
-              'Mostrando {from} a {to} de {count} elementos|{count} elementos|Un elemento',
-          },
-        }"
-      />
+    <div class="mt-2 pagination justify-content-center primary text-center">
+      <slot name="pagination"
+        ><pagination
+          v-model="page"
+          :records="filteredItems.length"
+          :per-page="itemsPerPage"
+          :options="{
+            chunk: numberPagesToShow,
+            texts: {
+              count:
+                'Mostrando {from} a {to} de {count} elementos|{count} elementos|Un elemento',
+            },
+          }"
+      /></slot>
     </div>
+  </div>
+  <div v-if="filteredItems.length == 0" class="alert alert-danger" role="alert">
+    Sin elementos por ahora<button
+      type="button"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
   <!-- Modal -->
   <div
@@ -152,6 +174,18 @@ export default {
     dateToFilter: {
       type: String,
       default: 'createdAt',
+    },
+    filterBox: {
+      type: Boolean,
+      default: true,
+    },
+    filterDate: {
+      type: Boolean,
+      default: true,
+    },
+    defaultActions: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

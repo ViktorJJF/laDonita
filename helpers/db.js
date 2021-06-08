@@ -45,7 +45,7 @@ function renameKey(object, key, newKey) {
  */
 const listInitOptions = async (req) =>
   new Promise((resolve) => {
-    const order = parseInt(req.query.order, 10) || 1;
+    const order = parseInt(req.query.order, 10) || -1;
     const sort = req.query.sort || "createdAt";
     const sortBy = buildSort(sort, order);
     const page = parseInt(req.query.page, 10) || 1;

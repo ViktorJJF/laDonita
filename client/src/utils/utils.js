@@ -1,3 +1,4 @@
+import { createToast } from 'mosha-vue-toastify';
 import { es } from 'date-fns/locale';
 import { format, isPast } from 'date-fns';
 import store from '@/store';
@@ -111,7 +112,6 @@ const handleError = (error, commit, reject) => {
   let errMsg = '';
   // Resets errors in store
   commit('loadingModule/showLoading', false, { root: true });
-  commit('errorModule/error', null, { root: true });
   console.log('sucedio un error....');
   console.log('el error: ', error);
   // Checks if unauthorized
@@ -137,26 +137,14 @@ const handleError = (error, commit, reject) => {
     //       : commit('errorModule/showError', false, { root: true }),
     //   0,
     // );
-    this.$moshaToast(errMsg);
+    createToast(errMsg, { timeout: 3000, toastBackgroundColor: 'danger' });
   }
   reject(error);
   return 0;
 };
 
-const buildSuccess = (msg, commit) => {
-  // commit('loadingModule/showLoading', false, { root: true });
-  // commit('successModule/success', null, {
-  //   root: true,
-  // });
-  // setTimeout(
-  //   () =>
-  //     msg
-  //       ? commit('successModule/success', msg, { root: true })
-  //       : commit('successModule/showSuccess', false, { root: true }),
-  //   0,
-  // );
-  this.$moshaToast(msg);
-  commit('errorModule/error', null, { root: true });
+const buildSuccess = msg => {
+  createToast(msg, { timeout: 3000 });
 };
 
 // Checks if tokenExpiration in localstorage date is past, if so then trigger an update

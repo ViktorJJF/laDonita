@@ -5,24 +5,29 @@ const routes = [
     path: '/',
     component: () => import('@/layouts/AdminLayout.vue'),
     meta: { requiresAuth: true },
-    redirect: { name: 'SeguimientoEgresados' },
+    redirect: { name: 'BrandsList' },
     name: 'dashboard',
     children: [
       {
-        path: '/seguimiento-egresados',
-        name: 'SeguimientoEgresados',
-        component: () => import('@/views/SeguimientoEgresados.vue'),
+        path: '/marcas',
+        name: 'BrandsList',
+        component: () => import('@/views/BrandsList.vue'),
       },
-      // {
-      //   path: '/marcas',
-      //   name: 'Brands',
-      //   component: () => import('@/views/Brands.vue'),
-      // },
-      // {
-      //   path: '/perfil',
-      //   name: 'UserProfile',
-      //   component: () => import('@/views/UserProfile.vue'),
-      // },
+      {
+        path: '/marcas/:id',
+        name: 'BrandsAdd',
+        component: () => import('@/views/BrandsAdd.vue'),
+      },
+      {
+        path: '/productos',
+        name: 'ProductsList',
+        component: () => import('@/views/ProductsList.vue'),
+      },
+      {
+        path: '/productos/:id',
+        name: 'ProductsAdd',
+        component: () => import('@/views/ProductsAdd.vue'),
+      },
     ],
   },
 ];

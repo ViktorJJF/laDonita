@@ -36,6 +36,10 @@ app.use(bodyParser.json());
 
 app.use("/api", require("./routes/api/index.js"));
 
+// app.get("/github", (req, res) => {
+//   return res.sendFile(__dirname + "/pull.php");
+// });
+
 app.post("/webhook", express.json(), async function (req, res) {
   let bot = new Bot(req, res);
   await myBot(bot);
