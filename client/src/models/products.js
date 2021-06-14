@@ -1,5 +1,6 @@
 export default () => ({
   name: '',
+  img: '',
   userId: null,
   brandId: null,
   stock: 0,

@@ -76,6 +76,11 @@ const create = async (req, res) => {
     // req.body.userId = req.user._id;
     const doesItemExists = await itemExists(req.body);
     if (!doesItemExists) {
+      // manejo de imagenes
+      // if (req.file) {
+      //   req.body.img = req.file.path;
+      // }
+      console.log("el req body: ", req.body);
       res.status(200).json(await db.createItem(req.body, model));
     }
   } catch (error) {

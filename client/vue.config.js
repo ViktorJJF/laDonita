@@ -17,6 +17,10 @@ module.exports = {
         target: 'http://localhost:3000',
         // target: 'https://mastermindgeeks.herokuapp.com'
       },
+      '/uploads': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
     },
     publicPath:
       process.env.NODE_ENV === 'production'
