@@ -18,6 +18,12 @@
     </button>
     <div class="collapse navbar-collapse" id="royalHospitalsNavbar">
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <router-link class="nav-link" :to="{ name: 'Dashboard' }">
+            <i class="icon-devices_other nav-icon"></i>
+            Inicio
+          </router-link>
+        </li>
         <li class="nav-item" v-for="item in items" :key="item.to">
           <router-link class="nav-link" :to="{ name: item.to }">
             <i :class="item.icon"></i>
@@ -44,7 +50,7 @@
           <ul class="dropdown-menu" aria-labelledby="doctoRs">
             <li v-for="(subItem, idy) in multiple.subItems" :key="idy">
               <router-link
-                :to="{ name: subItem.to, params: { id: 0 } }"
+                :to="{ name: subItem.to }"
                 class="dropdown-item"
                 href="hospital-doctors-list.html"
                 >{{ subItem.text }}</router-link
@@ -76,8 +82,8 @@ export default {
             },
             {
               icon: 'icon-users nav-icon',
-              text: 'Agregar Producto',
-              to: 'ProductsAdd',
+              text: 'Nuevo Producto',
+              to: 'ProductsCreate',
             },
           ],
         },
@@ -93,8 +99,94 @@ export default {
             },
             {
               icon: 'icon-users nav-icon',
-              text: 'Agregar marca',
-              to: 'BrandsAdd',
+              text: 'Nueva marca',
+              to: 'BrandsCreate',
+            },
+          ],
+        },
+        {
+          icon: 'icon-users nav-icon',
+          text: 'Insumos',
+          to: 'Suppliers',
+          subItems: [
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Listado de Insumos',
+              to: 'SuppliersList',
+            },
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Nuevo insumo',
+              to: 'SuppliersCreate',
+            },
+          ],
+        },
+        {
+          icon: 'icon-users nav-icon',
+          text: 'Proveedores',
+          to: 'Providers',
+          subItems: [
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Listado de Proveedores',
+              to: 'ProvidersList',
+            },
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Nuevo proveedor',
+              to: 'ProvidersCreate',
+            },
+          ],
+        },
+
+        {
+          icon: 'icon-users nav-icon',
+          text: 'Ventas',
+          to: 'SalesList',
+          subItems: [
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Nueva venta',
+              to: 'SalesAdd',
+            },
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Historial de ventas',
+              to: 'SalesList',
+            },
+          ],
+        },
+        {
+          icon: 'icon-users nav-icon',
+          text: 'Compras',
+          to: 'Brands',
+          subItems: [
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Nueva compra',
+              to: 'BrandsCreate',
+            },
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Historial de Compras',
+              to: 'BrandsList',
+            },
+          ],
+        },
+        {
+          icon: 'icon-users nav-icon',
+          text: 'Reportes',
+          to: 'Brands',
+          subItems: [
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Nueva compra',
+              to: 'BrandsCreate',
+            },
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Historial de Compras',
+              to: 'BrandsList',
             },
           ],
         },

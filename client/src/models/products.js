@@ -9,4 +9,5 @@ export default () => ({
   price: 0,
   description: '',
   status: true,
+  expiration: new Date(),
 });

@@ -6,4 +6,5 @@ node_modules
 config/config.json
 # client
 client/node_modules
+public/uploads/
 # client/

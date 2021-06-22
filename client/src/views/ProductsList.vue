@@ -1,66 +1,16 @@
 <template>
   <core-view-slot view-name="Marcas">
-    <div class="row gutters">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <simple-table
-          :headers="headers"
-          :items="items"
-          date-to-filter="fechaFin"
-          :filterBox="false"
-          :filterDate="false"
-        >
-          <template v-slot:[`item.createdAt`]="{ item }">
-            {{ $filters.formatDate(item.createdAt) }}
-          </template>
-          <template v-slot:[`item.actions`]="{ item }">
-            <div class="btn-group btn-group-sm">
-              <button
-                @click="
-                  $router.push({ name: 'ProductsAdd', params: { id: item.id } })
-                "
-                type="button"
-                class="btn btn-info"
-              >
-                <i class="icon-edit1"></i>
-              </button>
-              <button
-                @click="deleteItem(item)"
-                type="button"
-                class="btn btn-danger"
-              >
-                <i class="icon-cancel"></i>
-              </button>
-            </div>
-          </template>
-          <template v-slot:[`search`]>
-            <div class="form-group">
-              <label for="inputName">Búsqueda</label>
-              <input
-                v-model="search"
-                type="text"
-                class="form-control"
-                id="inputName"
-                placeholder="Ingresa tu búsqueda"
-              />
-            </div>
-          </template>
-          <template v-slot:[`pagination`]>
-            <pagination
-              v-model="page"
-              :records="totalItems"
-              :per-page="$store.state.itemsPerPage"
-              :options="{
-                chunk: $store.state.maxPaginationButtons,
-                texts: {
-                  count:
-                    'Mostrando {from} a {to} de {count} elementos|{count} elementos|Un elemento',
-                },
-              }"
-            />
-          </template>
-        </simple-table>
-      </div>
-    </div>
+    <ProductsTable
+      :headers="[
+        { text: 'Producto', value: 'name' },
+        { text: 'Marca', value: 'brandId' },
+        { text: 'Stock', value: 'stock' },
+        { text: 'Precio de compra', value: 'purchasePrice' },
+        { text: 'Precio de venta', value: 'price' },
+        { text: 'Agregado', value: 'createdAt' },
+        { text: 'Acciones', value: 'actions', width: '15%' },
+      ]"
+    ></ProductsTable>
   </core-view-slot>
 </template>
 
@@ -68,18 +18,22 @@
 const ENTITY = 'products';
 
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
-import SimpleTable from '@/components/template/SimpleTable.vue';
+import ProductsTable from '@/components/ProductsTable.vue';
 
 export default {
   components: {
     CoreViewSlot,
-    SimpleTable,
+    ProductsTable,
   },
   data() {
     return {
       headers: [
-        { text: 'Fecha', value: 'createdAt' },
-        { text: 'Nombre', value: 'name' },
+        { text: 'Producto', value: 'name' },
+        { text: 'Marca', value: 'brandId' },
+        { text: 'Stock', value: 'stock' },
+        { text: 'Precio de compra', value: 'purchasePrice' },
+        { text: 'Precio de venta', value: 'price' },
+        { text: 'Agregado', value: 'createdAt' },
         { text: 'Acciones', value: 'actions', width: '15%' },
       ],
       fieldsToSearch: ['name'],

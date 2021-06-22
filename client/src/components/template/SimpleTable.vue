@@ -1,6 +1,6 @@
 <template>
   <div class="row gutters">
-    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
       <slot name="search">
         <div class="form-group">
           <label for="inputName">Búsqueda</label>
@@ -65,9 +65,12 @@
               </div>
             </td> -->
             <td :width="header.width" v-for="header in headers" :key="header">
-              <slot :name="'item.' + header.value" :item="item">{{
-                item[header.value]
-              }}</slot>
+              <slot
+                :name="'item.' + header.value"
+                :item="item"
+                :index="itemIndex"
+                >{{ item[header.value] }}</slot
+              >
             </td>
             <td v-if="defaultActions">
               <!-- Button trigger modal -->
@@ -187,11 +190,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    itemsPerPageCustom: {
+      type: Number,
+      default: null,
+    },
   },
   data() {
     return {
       page: 1,
-      itemsPerPage: 2,
       numberPagesToShow: 10,
       search: '',
       dateFrom: null,
@@ -199,6 +205,9 @@ export default {
     };
   },
   computed: {
+    itemsPerPage() {
+      return this.itemsPerPageCustom || this.$store.state.itemsPerPage;
+    },
     totalPages() {
       return this.items.length > 0
         ? Math.ceil(this.items.length / this.itemsPerPage)
@@ -235,9 +244,6 @@ export default {
         this.page * this.itemsPerPage,
       );
     },
-  },
-  mounted() {
-    this.itemsPerPage = this.$store.state.itemsPerPage;
   },
   watch: {
     search() {

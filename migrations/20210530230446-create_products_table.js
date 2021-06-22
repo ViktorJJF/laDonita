@@ -4,7 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     queryInterface.createTable("products", {
       id: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
@@ -58,6 +58,9 @@ module.exports = {
       status: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
+      },
+      expiration: {
+        type: Sequelize.DATE,
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,

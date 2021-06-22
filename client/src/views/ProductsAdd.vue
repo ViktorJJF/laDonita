@@ -1,5 +1,5 @@
 <template>
-  <core-view-slot view-name="Formulario Marcas">
+  <core-view-slot :view-name="formTitle">
     <div class="row gutters">
       <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12">
         <div class="card">
@@ -22,15 +22,13 @@
 
                 <div
                   class="text-center"
-                  v-show="
-                    (editedItem.img.length == 0 || editMode == true) && editedId
-                  "
+                  v-show="editedItem.img.length == 0 || editMode == true"
                 >
                   <UploadImages
                     value="/uploads/grodnobot.png"
                     ref="file"
                     @change="handleImages"
-                    max="1"
+                    :max="1"
                     uploadMsg="Click para insertar o arrastrar una imagen"
                     fileError="Solo se aceptan archivos imágenes"
                     clearAll="Borrar todo"
@@ -63,9 +61,11 @@
                   :errors="v$.editedItem.name.$errors"
                 />
               </div>
-              <div class="col-sm-12 col-12">
+              <div class="col-sm-6 col-12">
+                <label for="marca">Marca</label>
                 <div class="form-group">
                   <select
+                    id="marca"
                     required
                     placeholder="Selecciona una marca"
                     v-model="editedItem.brandId"
@@ -82,6 +82,74 @@
                       {{ brand.name }}
                     </option>
                   </select>
+                </div>
+              </div>
+              <div class="col-sm-3 col-12">
+                <VTextFieldWithValidation
+                  label="Stock mínimo"
+                  type="text"
+                  placeholder="Ingresa una cantidad"
+                  v-model="editedItem.minStock"
+                  :value="editedItem.minStock"
+                  @keyup.enter="save"
+                />
+              </div>
+              <div class="col-sm-3 col-12">
+                <VTextFieldWithValidation
+                  label="Stock"
+                  type="text"
+                  placeholder="Ingresa una cantidad"
+                  v-model="editedItem.stock"
+                  :value="editedItem.stock"
+                  @keyup.enter="save"
+                />
+              </div>
+              <div class="col-sm-4 col-12">
+                <VTextFieldWithValidation
+                  label="Precio de compra"
+                  type="text"
+                  placeholder="Ingresa un precio de compar"
+                  v-model="editedItem.purchasePrice"
+                  :value="editedItem.purchasePrice"
+                  @keyup.enter="save"
+                />
+              </div>
+              <div class="col-sm-4 col-12">
+                <VTextFieldWithValidation
+                  label="Precio de venta"
+                  type="text"
+                  placeholder="Ingresa un precio"
+                  v-model="editedItem.price"
+                  :value="editedItem.price"
+                  @keyup.enter="save"
+                />
+              </div>
+              <div class="col-sm-4 col-12">
+                <div class="form-group">
+                  <label>Fecha de expiración</label>
+                  <v-date-picker v-model="editedItem.expiration">
+                    <template v-slot="{ inputValue, inputEvents }">
+                      <input
+                        class="form-control bg-white border px-2 py-1 rounded"
+                        :value="inputValue"
+                        v-on="inputEvents"
+                      />
+                    </template>
+                  </v-date-picker>
+                </div>
+              </div>
+              <div class="col-sm-12 col-12">
+                <div class="form-group">
+                  <label for="descripcion">Marca</label>
+                  <textarea
+                    v-model="editedItem.description"
+                    class="form-control"
+                    id="descripcion"
+                    placeholder="Descripción"
+                    maxlength="140"
+                    rows="4"
+                  ></textarea>
+                  <div class="form-text text-muted"></div>
                 </div>
               </div>
             </div>
@@ -126,7 +194,7 @@ export default {
       defaultItem: MODEL_ITEM(),
       loadingButton: false,
       brands: [],
-      file: '',
+      file: null,
       imageName: '',
       imageUrl: '',
     };
@@ -143,16 +211,21 @@ export default {
       return this.$route.params.id;
     },
     submitText() {
-      return this.editedId === '0' ? 'Crear' : 'Actualizar';
+      return this.editedId ? 'Actualizar' : 'Crear';
+    },
+    formTitle() {
+      return this.editedId
+        ? 'Formulario actualizar producto'
+        : 'Formulario crear producto';
     },
   },
   watch: {
     editedId(newValue) {
-      if (newValue === '0') this.editedItem = this.$deepCopy(this.defaultItem);
+      if (!newValue) this.editedItem = this.$deepCopy(this.defaultItem);
     },
   },
   mounted() {
-    if (this.editedId > 0) this.initialize();
+    if (this.editedId) this.initialize();
     this.brands = this.$store.state.brandsModule.brands;
   },
   methods: {
@@ -170,10 +243,12 @@ export default {
       this.v$.$validate(); // checks all inputs
       if (!this.v$.$error) {
         this.loadingButton = true;
-        if (this.editedId > 0) {
+        if (this.editedId) {
           // update item
           try {
-            this.editedItem.img = await this.storeImage();
+            if (this.file) {
+              this.editedItem.img = await this.storeImage();
+            }
             await this.$store.dispatch(ENTITY + 'Module/update', {
               id: this.editedId,
               data: this.editedItem,
@@ -186,7 +261,9 @@ export default {
 
           try {
             // reasignando path
-            this.editedItem.img = await this.storeImage();
+            if (this.file) {
+              this.editedItem.img = await this.storeImage();
+            }
             await this.$store.dispatch(
               ENTITY + 'Module/create',
               this.editedItem,

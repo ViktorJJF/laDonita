@@ -1,24 +1,24 @@
-const { DataTypes } = require("sequelize");
+const Sequelize = require("sequelize");
 const sequelize = require("../database/connection");
 const Brands = require("./Brands");
 
 const model = sequelize.define("products", {
   id: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
   },
   name: {
-    type: DataTypes.STRING(200),
+    type: Sequelize.STRING(200),
     unique: true,
     allowNull: false,
   },
   img: {
-    type: DataTypes.STRING(200),
+    type: Sequelize.STRING(200),
   },
   userId: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     references: {
       model: "users",
       key: "id",
@@ -27,7 +27,7 @@ const model = sequelize.define("products", {
     onDelete: "cascade",
   },
   brandId: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     references: {
       model: "brands",
       key: "id",
@@ -36,28 +36,31 @@ const model = sequelize.define("products", {
     onDelete: "cascade",
   },
   stock: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     defaultValue: 0,
   },
   minStock: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     defaultValue: 0,
   },
   purchasePrice: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     defaultValue: 0,
   },
   minStock: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     defaultValue: 0,
   },
   price: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     defaultValue: 0,
   },
-  description: DataTypes.TEXT,
+  description: Sequelize.TEXT,
+  expiration: {
+    type: Sequelize.DATE,
+  },
   status: {
-    type: DataTypes.BOOLEAN,
+    type: Sequelize.BOOLEAN,
     defaultValue: true,
   },
 });
