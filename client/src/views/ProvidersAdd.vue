@@ -48,9 +48,9 @@
 </template>
 
 <script>
-const ENTITY = 'brands';
+const ENTITY = 'providers';
 import vuelidate from '@/plugins/vuelidate';
-import MODEL_ITEM from '@/models/brands';
+import MODEL_ITEM from '@/models/providers';
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
 import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidation.vue';
 

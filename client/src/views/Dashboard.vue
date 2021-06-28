@@ -6,8 +6,8 @@
           @click="$router.push({ name: 'PurchasesAdd' })"
           class="hospital-tiles red"
         >
-          <img width="100" src="/images/compras2.svg" alt="Appointments" />
-          <p>Compras</p>
+          <!-- <img width="100" src="/images/compras2.svg" alt="Appointments" /> -->
+          <p class="custom-title">Compras</p>
         </div>
       </div>
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -15,17 +15,17 @@
           @click="$router.push({ name: 'SalesAdd' })"
           class="hospital-tiles secondary"
         >
-          <img width="100" src="/images/ventas.png" alt="Appointments" />
-          <p>Ventas</p>
+          <!-- <img width="100" src="/images/ventas.png" alt="Appointments" /> -->
+          <p class="custom-title">Ventas</p>
         </div>
       </div>
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
         <div
           @click="$router.push({ name: 'ProductsList' })"
-          class="hospital-tiles primary"
+          class="hospital-tiles primary card"
         >
-          <img width="100" src="/images/drink.svg" alt="Appointments" />
-          <p>Productos</p>
+          <!-- <img width="100" src="/images/drink.svg" alt="Appointments" /> -->
+          <p class="custom-title">Productos</p>
         </div>
       </div>
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -33,7 +33,7 @@
           @click="$router.push({ name: 'BrandsList' })"
           class="hospital-tiles blue"
         >
-          <p>Marcas</p>
+          <p class="custom-title">Marcas</p>
         </div>
       </div>
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -41,7 +41,7 @@
           @click="$router.push({ name: 'SuppliersList' })"
           class="hospital-tiles yellow"
         >
-          <p>Insumos</p>
+          <p class="custom-title">Insumos</p>
         </div>
       </div>
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -49,7 +49,7 @@
           @click="$router.push({ name: 'ProvidersList' })"
           class="hospital-tiles blue"
         >
-          <p>Proveedores</p>
+          <p class="custom-title">Proveedores</p>
         </div>
       </div>
     </div>

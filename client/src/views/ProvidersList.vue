@@ -1,5 +1,5 @@
 <template>
-  <core-view-slot view-name="Marcas">
+  <core-view-slot view-name="Proveedores">
     <div class="row gutters">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <simple-table
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-const ENTITY = 'brands';
+const ENTITY = 'providers';
 
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
 import SimpleTable from '@/components/template/SimpleTable.vue';
