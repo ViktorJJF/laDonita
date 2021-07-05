@@ -4,7 +4,7 @@ node_modules
 .editorconfig
 .vscode
 config/config.json
-# client
+client
 client/node_modules
 public/uploads/
-# client/
+client/

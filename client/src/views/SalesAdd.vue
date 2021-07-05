@@ -98,6 +98,9 @@
                           </tr>
                         </tbody>
                       </table>
+                      <button class="btn btn-success" @click="saveSale(sales)">
+                        Completar Venta
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -174,6 +177,44 @@ export default {
     },
     deleteSale(index) {
       this.sales.splice(index, 1);
+    },
+    async saveSale(products, date) {
+      this.loadingButton = true;
+      products = this.$deepCopy(products);
+      // delete unnecesary info
+      // for (const product of products) {
+      //   delete product['productDetails'];
+      // }
+      // validate if historyMode, set history mode to products
+      // if (this.historyMode) {
+      //   for (const product of products) {
+      //     product.history = true;
+      //   }
+      // } else {
+      //   for (const product of products) {
+      //     product.history = false;
+      //   }
+      // }
+      try {
+        date = new Date(date);
+        date = new Date(date.getTime() - date.getTimezoneOffset() * -60000);
+        await this.$store.dispatch('salesModule/create', {
+          history: this.historyMode,
+          products,
+          date,
+        });
+        for (const product of products) {
+          // if (!product.history) {
+          this.$store.commit('productsModule/updateStock', {
+            productId: product.productId,
+            qty: -product.qty,
+          });
+          // }
+        }
+        this.sales = [];
+      } finally {
+        this.loadingButton = false;
+      }
     },
   },
 };

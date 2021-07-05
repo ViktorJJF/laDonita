@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/connection");
+const SalesDetails = require("./SalesDetails");
 
 const model = sequelize.define("sales", {
   id: {

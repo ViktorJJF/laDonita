@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/connection");
 const Products = require("./Products");
+const Sales = require("./Sales");
 
 const model = sequelize.define("sales_details", {
   id: {
@@ -60,6 +61,8 @@ model.addScope("populate", {
   include: [...model.populates.map((el) => ({ model: el }))],
 });
 
+model.belongsTo(Sales);
+Sales.hasMany(model);
 model.belongsTo(Products);
 Products.hasMany(model);
 

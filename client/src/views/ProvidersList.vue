@@ -16,7 +16,10 @@
             <div class="btn-group btn-group-sm">
               <button
                 @click="
-                  $router.push({ name: 'BrandsAdd', params: { id: item.id } })
+                  $router.push({
+                    name: 'ProvidersAdd',
+                    params: { id: item.id },
+                  })
                 "
                 type="button"
                 class="btn btn-info"
@@ -50,7 +53,7 @@
                 <button
                   type="button"
                   class="btn btn-primary"
-                  @click="$router.push({ name: 'BrandsCreate' })"
+                  @click="$router.push({ name: 'ProvidersCreate' })"
                 >
                   Agregar Nuevo
                 </button>

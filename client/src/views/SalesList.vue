@@ -9,8 +9,25 @@
           :filterBox="false"
           :filterDate="false"
         >
-          <template v-slot:[`item.createdAt`]="{ item }">
-            {{ $filters.formatDate(item.createdAt) }}
+          <template v-slot:[`item.userId`]=""> kxmn@gmail.com </template>
+          <template v-slot:[`item.date`]="{ item }">
+            {{ $filters.formatDate(item.date) }}
+          </template>
+          <template v-slot:[`item.products`]="{ item }">
+            <ul>
+              <li v-for="saleDetail in item.sales_details" :key="saleDetail.id">
+                ✅
+                {{
+                  saleDetail.product
+                    ? saleDetail.product.name
+                    : 'Producto eliminado'
+                }}
+                ({{ saleDetail.qty }} x S/.{{ saleDetail.salePrice }})
+              </li>
+            </ul>
+          </template>
+          <template v-slot:[`item.amount`]="{ item }">
+            <span class="ganancia">S/.{{ totalRevenue(item.products) }}</span>
           </template>
           <template v-slot:[`item.actions`]="{ item }">
             <div class="btn-group btn-group-sm">
@@ -30,18 +47,6 @@
               >
                 <i class="icon-cancel"></i>
               </button>
-            </div>
-          </template>
-          <template v-slot:[`search`]>
-            <div class="form-group">
-              <label for="inputName">Búsqueda</label>
-              <input
-                v-model="search"
-                type="text"
-                class="form-control"
-                id="inputName"
-                placeholder="Ingresa tu búsqueda"
-              />
             </div>
           </template>
           <template v-slot:[`pagination`]>
@@ -65,7 +70,7 @@
 </template>
 
 <script>
-const ENTITY = 'brands';
+const ENTITY = 'sales';
 
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
 import SimpleTable from '@/components/template/SimpleTable.vue';
@@ -78,8 +83,10 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Fecha', value: 'createdAt' },
-        { text: 'Nombre', value: 'name' },
+        { text: 'Fecha de venta', value: 'date' },
+        { text: 'Vendedor', value: 'userId' },
+        { text: 'Productos vendidos', value: 'products' },
+        { text: 'Beneficio', value: 'amount' },
         { text: 'Acciones', value: 'actions', width: '15%' },
       ],
       fieldsToSearch: ['name'],
@@ -156,6 +163,14 @@ export default {
             this[ENTITY].splice(index, 1);
           }
         });
+    },
+    totalRevenue(salesDetail) {
+      if (salesDetail) {
+        return salesDetail
+          .reduce((a, b) => a + b.salePrice * b.qty, 0)
+          .toFixed(2);
+      }
+      return 'S/.0';
     },
   },
 };

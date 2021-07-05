@@ -111,6 +111,9 @@
       ],
       "vue/no-mutating-props": [
         "off"
+      ],
+      "no-restricted-syntax": [
+        "off"
       ]
     }
   },

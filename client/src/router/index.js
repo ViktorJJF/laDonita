@@ -73,7 +73,7 @@ const routes = [
         component: () => import('@/views/ProductsAdd.vue'),
       },
       {
-        path: '/ventas',
+        path: '/historial-ventas',
         name: 'SalesList',
         component: () => import('@/views/SalesList.vue'),
       },

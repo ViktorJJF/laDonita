@@ -125,7 +125,7 @@ module.exports = {
    * @param {Object} req - request object
    * @param {Object} query - query object
    */
-  async getItems(req, model, query) {
+  async getItems(req, model, query, populates) {
     const options = await listInitOptions(req);
     for (const key in options) {
       if (options.hasOwnProperty(key)) {
@@ -137,6 +137,12 @@ module.exports = {
       offset: (options.page - 1) * options.limit,
       where: query,
       order: options.sort,
+      include: [
+        ...(populates
+          ? populates
+          : model.populates.map((el) => ({ model: el }))),
+      ],
+      distinct: true,
     };
     if (!req.query.limit) delete paginationOptions["limit"];
     if (!req.query.page) delete paginationOptions["offset"];
@@ -145,7 +151,7 @@ module.exports = {
         resolve({
           ok: true,
           ...cleanPaginationID(
-            await model.scope("populate").findAndCountAll(paginationOptions),
+            await model.findAndCountAll(paginationOptions),
             paginationOptions.limit,
             req.query.page
           ),
@@ -203,14 +209,16 @@ module.exports = {
    * Creates a new item in database
    * @param {Object} req - request object
    */
-  createItem(body, model) {
+  createItem(body, model, session) {
     return new Promise(async (resolve, reject) => {
       try {
-        const item = await model.create(body, {
+        let options = {
           include: [...model.populates.map((el) => ({ model: el }))],
-        });
-        await item.reload();
-        resolve({ ok: true, payload: item });
+        };
+        if (session) options["transaction"] = session;
+        const item = await model.create(body, options);
+        // await item.reload();
+        resolve({ ok: true, payload: JSON.parse(JSON.stringify(item)) });
       } catch (error) {
         reject(buildErrObject(422, error.message));
       }
