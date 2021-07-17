@@ -6,7 +6,7 @@
         :headers="headers"
         :items="items"
         date-to-filter="fechaFin"
-        :filterBox="false"
+        :filterBox="true"
         :filterDate="false"
       >
         <template v-slot:[`item.createdAt`]="{ item }">

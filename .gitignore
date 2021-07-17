@@ -7,4 +7,4 @@ config/config.json
 client
 client/node_modules
 public/uploads/
-client/
+# client/

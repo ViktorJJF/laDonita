@@ -14,7 +14,7 @@ const model = sequelize.define("purchases", {
   },
   date: {
     type: Sequelize.DATE,
-    defaultValue: new Date(),
+    defaultValue: Sequelize.NOW,
   },
   providerId: {
     type: Sequelize.INTEGER,

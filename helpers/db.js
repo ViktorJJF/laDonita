@@ -93,7 +93,7 @@ module.exports = {
           data[Op.or] = array;
           resolve(data);
         } else {
-          resolve({});
+          resolve(query);
         }
       } catch (err) {
         console.log(err.message);
@@ -146,6 +146,7 @@ module.exports = {
     };
     if (!req.query.limit) delete paginationOptions["limit"];
     if (!req.query.page) delete paginationOptions["offset"];
+    console.log("🚀 Aqui *** -> paginationOptions", paginationOptions);
     return new Promise(async (resolve, reject) => {
       try {
         resolve({
@@ -249,12 +250,15 @@ module.exports = {
    * Deletes an item from database by id
    * @param {string} id - id of item
    */
-  deleteItem(id, model) {
+  deleteItem(id, model, t) {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log("🚀 Aqui *** -> id", id);
         let item = await model.findOne({ where: { id } });
         if (!item) return itemNotFound(null, item, reject, "NOT_FOUND");
-        await model.destroy({ where: { id } });
+        let params = { where: { id } };
+        if (t) params["transaction"] = t;
+        await model.destroy(params);
         resolve({ ok: true, payload: item });
       } catch (err) {
         reject(buildErrObject(422, err.message));

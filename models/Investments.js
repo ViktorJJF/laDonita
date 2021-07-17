@@ -23,7 +23,7 @@ const model = sequelize.define("investments", {
   },
   date: {
     type: Sequelize.DATE,
-    defaultValue: new Date(),
+    defaultValue: Sequelize.NOW,
   },
   description: Sequelize.TEXT,
   userId: {

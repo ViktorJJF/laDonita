@@ -1,4 +1,5 @@
 const Sequelize = require("../database/connection");
+const { Op } = require("sequelize");
 const model = require("../models/Sales");
 const SalesDetail = require("../models/SalesDetails.js");
 const Product = require("../models/Products.js");
@@ -25,11 +26,12 @@ const UNIQUEFIELDS = [];
 const itemExistsExcludingItself = async (id, body) =>
   new Promise((resolve, reject) => {
     const query = UNIQUEFIELDS.length > 0 ? {} : { noFields: true };
+    if (UNIQUEFIELDS.length === 0) return resolve(false);
     for (const uniquefield of UNIQUEFIELDS) {
       query[uniquefield] = body[uniquefield];
     }
     query.id = {
-      [Sequelize.Op.ne]: parseInt(id),
+      [Op.ne]: parseInt(id),
     };
     model
       .findOne({ where: query })
@@ -161,7 +163,29 @@ const update = async (req, res) => {
 };
 const deletes = async (req, res) => {
   try {
-    res.status(200).json(await db.deleteItem(req.params.id, model));
+    const id = req.params.id;
+    //begin transaction
+    let deletedItemPayload;
+    try {
+      await Sequelize.transaction(async (t) => {
+        //delete sale
+        deletedItemPayload = await db.deleteItem(id, model, t);
+        //delete sale details
+        let salesDetails = await SalesDetail.findAll({ where: { saleId: id } });
+        for (const salesDetail of salesDetails) {
+          await db.deleteItem(salesDetail.id, SalesDetail, t);
+          //update stock
+          await updateStock(salesDetail.productId, salesDetail.qty, t);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      throw utils.buildErrObject(
+        422,
+        "Algo salió mal... intenta eliminar tu venta de nuevo"
+      );
+    }
+    res.status(200).json(deletedItemPayload);
   } catch (error) {
     utils.handleError(res, error);
   }

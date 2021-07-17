@@ -39,7 +39,7 @@
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
         <div
           @click="$router.push({ name: 'SuppliersList' })"
-          class="hospital-tiles yellow"
+          class="hospital-tiles green"
         >
           <p class="custom-title">Insumos</p>
         </div>

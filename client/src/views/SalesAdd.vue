@@ -2,6 +2,18 @@
   <core-view-slot view-name="Nueva Venta">
     <div class="row gutters">
       <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12">
+        Fecha desde:
+        <v-date-picker v-model="date">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="form-control bg-white border px-2 py-1 rounded"
+              :value="inputValue"
+              v-on="inputEvents"
+            />
+          </template>
+        </v-date-picker>
+      </div>
+      <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12">
         <div class="card">
           <div class="card-body p-0">
             <div class="invoice-container">
@@ -162,6 +174,7 @@ export default {
   data() {
     return {
       sales: [],
+      date: new Date(),
     };
   },
   methods: {
@@ -178,7 +191,7 @@ export default {
     deleteSale(index) {
       this.sales.splice(index, 1);
     },
-    async saveSale(products, date) {
+    async saveSale(products) {
       this.loadingButton = true;
       products = this.$deepCopy(products);
       // delete unnecesary info
@@ -196,21 +209,22 @@ export default {
       //   }
       // }
       try {
-        date = new Date(date);
-        date = new Date(date.getTime() - date.getTimezoneOffset() * -60000);
+        // date = new Date(date);
+        // date = new Date(date.getTime() - date.getTimezoneOffset() * -60000);
+
         await this.$store.dispatch('salesModule/create', {
           history: this.historyMode,
           products,
-          date,
+          date: this.date,
         });
-        for (const product of products) {
-          // if (!product.history) {
-          this.$store.commit('productsModule/updateStock', {
-            productId: product.productId,
-            qty: -product.qty,
-          });
-          // }
-        }
+        // for (const product of products) {
+        //   // if (!product.history) {
+        //   this.$store.commit('productsModule/updateStock', {
+        //     productId: product.productId,
+        //     qty: -product.qty,
+        //   });
+        //   // }
+        // }
         this.sales = [];
       } finally {
         this.loadingButton = false;
