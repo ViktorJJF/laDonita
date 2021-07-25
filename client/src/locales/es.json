@@ -1,0 +1,18 @@
+{
+    "users": {
+        "TITLE": "Usuarios",
+        "SUBTITLE": "Listado de usuarios",
+        "NEW_ITEM": "Nueva usuario",
+        "EDIT_ITEM": "Editar usuario",
+        "NO_DATA": "Aún no cuentas con usuarios",
+        "NO_RESULTS": "No hay resultados"
+    },
+    "brands": {
+        "TITLE": "Marcas",
+        "SUBTITLE": "Listado de marcas",
+        "NEW_ITEM": "Nueva marca",
+        "EDIT_ITEM": "Editar marca",
+        "NO_DATA": "Aún no cuentas con marcas",
+        "NO_RESULTS": "No hay resultados"
+    }
+}

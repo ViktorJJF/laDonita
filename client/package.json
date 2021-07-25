@@ -1,0 +1,131 @@
+{
+  "name": "atelsystem",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint --fix"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.9.2",
+    "@vuelidate/core": "^2.0.0-alpha.19",
+    "@vuelidate/validators": "^2.0.0-alpha.16",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "date-fns": "^2.21.3",
+    "deepcopy": "^2.1.0",
+    "flag-icon-css": "^3.5.0",
+    "masonry-layout": "^4.2.2",
+    "mosha-vue-toastify": "^1.0.11",
+    "perfect-scrollbar": "^1.5.1",
+    "uuid": "^8.3.2",
+    "v-calendar": "^3.0.0-alpha.4",
+    "v-pagination-3": "^0.1.5",
+    "vue": "^3.0.0",
+    "vue-i18n": "^8.24.4",
+    "vue-router": "^4.0.0-0",
+    "vue-sweetalert2": "^4.3.1",
+    "vue-upload-drop-images": "^1.0.6",
+    "vuex": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@mdi/font": "^5.9.55",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "@vue/airbnb"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {
+      "max-len": [
+        "off"
+      ],
+      "no-console": [
+        "off"
+      ],
+      "import/first": [
+        "off"
+      ],
+      "no-multi-assign": [
+        "off"
+      ],
+      "prefer-template": [
+        "off"
+      ],
+      "implicit-arrow-linebreak": [
+        "off"
+      ],
+      "indent": [
+        "off"
+      ],
+      "function-paren-newline": [
+        "off"
+      ],
+      "operator-linebreak": [
+        "off"
+      ],
+      "import/no-named-as-default-member": [
+        "off"
+      ],
+      "no-param-reassign": [
+        "off"
+      ],
+      "import/no-extraneous-dependencies": [
+        "off"
+      ],
+      "arrow-parens": [
+        "off"
+      ],
+      "dot-notation": [
+        "off"
+      ],
+      "template-curly-spacing": [
+        "off"
+      ],
+      "prefer-const": [
+        "off"
+      ],
+      "object-curly-newline": [
+        "off"
+      ],
+      "vue/no-mutating-props": [
+        "off"
+      ],
+      "no-restricted-syntax": [
+        "off"
+      ],
+      "linebreak-style": [
+        "off"
+      ],
+      "no-confusing-arrow": [
+        "off"
+      ]
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
