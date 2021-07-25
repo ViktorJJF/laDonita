@@ -45,7 +45,7 @@
                   </div>
                   <router-link :to="{ name: 'Profile' }">
                     <i class="icon-devices_other nav-icon"></i>
-                    <i class="icon-user1"></i>Mi perfi
+                    <i class="icon-user1"></i>Mi perfil
                   </router-link>
 
                   <a @click="logout"

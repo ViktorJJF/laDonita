@@ -102,6 +102,21 @@ const module = {
           });
       });
     },
+    updatePassword({ commit }, password) {
+      return new Promise((resolve, reject) => {
+        commit('loadingModule/showLoading', true, { root: true });
+        api
+          .updatePassword(password)
+          .then(() => {
+            buildSuccess('Contraseña actualizada', commit, resolve);
+            commit('loadingModule/showLoading', false, { root: true });
+            resolve();
+          })
+          .catch(error => {
+            handleError(error, commit, reject);
+          });
+      });
+    },
   },
   getters: {
     user: state =>

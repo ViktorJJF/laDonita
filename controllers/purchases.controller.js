@@ -1,4 +1,5 @@
 const Sequelize = require("../database/connection");
+const Product = require("../models/Products");
 const model = require("../models/Purchases");
 const PurchasesDetail = require("../models/PurchasesDetails.js");
 const utils = require("../helpers/utils");
@@ -14,11 +15,12 @@ const UNIQUEFIELDS = [];
 const itemExistsExcludingItself = async (id, body) =>
   new Promise((resolve, reject) => {
     const query = UNIQUEFIELDS.length > 0 ? {} : { noFields: true };
+    if (UNIQUEFIELDS.length === 0) return resolve(false);
     for (const uniquefield of UNIQUEFIELDS) {
       query[uniquefield] = body[uniquefield];
     }
     query.id = {
-      [Sequelize.Op.ne]: parseInt(id),
+      [Op.ne]: parseInt(id),
     };
     model
       .findOne({ where: query })
@@ -59,7 +61,15 @@ const listAll = async (req, res) => {
 const list = async (req, res) => {
   try {
     const query = await db.checkQueryString(req.query);
-    res.status(200).json(await db.getItems(req, model, query));
+    res.status(200).json(
+      await db.getItems(req, model, query, [
+        {
+          model: PurchasesDetail,
+          required: false,
+          include: [{ model: Product, required: false }],
+        },
+      ])
+    );
   } catch (error) {
     utils.handleError(res, error);
   }
@@ -99,7 +109,7 @@ const create = async (req, res) => {
           (purchasedProduct) => purchasedProduct.payload
         );
         for (const product of purchasedProducts) {
-          await updateStock(product.productId, product.qty, t);
+          await updateStock(product.productId, parseInt(product.qty), t);
         }
       });
     } catch (error) {

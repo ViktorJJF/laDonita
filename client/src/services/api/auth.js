@@ -7,8 +7,8 @@ export default {
   editUser(id, payload) {
     return axios.put(`/api/members/${id}`, payload);
   },
-  updatePassword(id, newPassword) {
-    return axios.put(`/api/members/${id}/update-password`, { newPassword });
+  updatePassword(password) {
+    return axios.put('/api/users/update-password', { password });
   },
   refreshToken() {
     return axios.get('/api/token');

@@ -1,40 +1,40 @@
-const { check } = require('express-validator');
-const { validationResult } = require('../helpers/utils');
+const { check } = require("express-validator");
+const { validationResult } = require("../helpers/utils");
 
 /**
  * Validates register request
  */
 exports.register = [
-  check('first_name')
+  check("first_name")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY'),
-  check('last_name')
+    .withMessage("IS_EMPTY"),
+  check("last_name")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY'),
-  check('email')
+    .withMessage("IS_EMPTY"),
+  check("email")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY')
+    .withMessage("IS_EMPTY")
     .isEmail()
-    .withMessage('EMAIL_IS_NOT_VALID'),
-  check('password')
+    .withMessage("EMAIL_IS_NOT_VALID"),
+  check("password")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY')
+    .withMessage("IS_EMPTY")
     .isLength({
-      min: 5,
+      min: 3,
     })
-    .withMessage('PASSWORD_TOO_SHORT_MIN_5'),
+    .withMessage("PASSWORD_TOO_SHORT_MIN_3"),
   (req, res, next) => {
     validationResult(req, res, next);
   },
@@ -44,24 +44,24 @@ exports.register = [
  * Validates login request
  */
 exports.login = [
-  check('email')
+  check("email")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY')
+    .withMessage("IS_EMPTY")
     .isEmail()
-    .withMessage('EMAIL_IS_NOT_VALID'),
-  check('password')
+    .withMessage("EMAIL_IS_NOT_VALID"),
+  check("password")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY')
+    .withMessage("IS_EMPTY")
     .isLength({
-      min: 5,
+      min: 3,
     })
-    .withMessage('PASSWORD_TOO_SHORT_MIN_5'),
+    .withMessage("PASSWORD_TOO_SHORT_MIN_3"),
   (req, res, next) => {
     validationResult(req, res, next);
   },
@@ -71,12 +71,12 @@ exports.login = [
  * Validates verify request
  */
 exports.verify = [
-  check('id')
+  check("id")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY'),
+    .withMessage("IS_EMPTY"),
   (req, res, next) => {
     validationResult(req, res, next);
   },
@@ -86,14 +86,14 @@ exports.verify = [
  * Validates forgot password request
  */
 exports.forgotPassword = [
-  check('email')
+  check("email")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY')
+    .withMessage("IS_EMPTY")
     .isEmail()
-    .withMessage('EMAIL_IS_NOT_VALID'),
+    .withMessage("EMAIL_IS_NOT_VALID"),
   (req, res, next) => {
     validationResult(req, res, next);
   },
@@ -103,22 +103,22 @@ exports.forgotPassword = [
  * Validates reset password request
  */
 exports.resetPassword = [
-  check('id')
+  check("id")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY'),
-  check('password')
+    .withMessage("IS_EMPTY"),
+  check("password")
     .exists()
-    .withMessage('MISSING')
+    .withMessage("MISSING")
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY')
+    .withMessage("IS_EMPTY")
     .isLength({
       min: 5,
     })
-    .withMessage('PASSWORD_TOO_SHORT_MIN_5'),
+    .withMessage("PASSWORD_TOO_SHORT_MIN_5"),
   (req, res, next) => {
     validationResult(req, res, next);
   },

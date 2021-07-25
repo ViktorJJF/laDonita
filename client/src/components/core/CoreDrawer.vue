@@ -164,12 +164,12 @@ export default {
             {
               icon: 'icon-users nav-icon',
               text: 'Nueva compra',
-              to: 'BrandsCreate',
+              to: 'PurchasesAdd',
             },
             {
               icon: 'icon-users nav-icon',
               text: 'Historial de Compras',
-              to: 'BrandsList',
+              to: 'PurchasesList',
             },
           ],
         },

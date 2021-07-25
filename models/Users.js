@@ -73,6 +73,12 @@ const model = sequelize.define(
         user.password = await hashPassword(user.password);
         return user;
       },
+      beforeSave: async function (user) {
+        if (user.updatePassword) {
+          user.password = await hashPassword(user.password);
+        }
+        return user;
+      },
     },
   }
 );

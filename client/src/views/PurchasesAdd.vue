@@ -1,5 +1,43 @@
 <template>
-  <core-view-slot view-name="Nueva Venta">
+  <core-view-slot view-name="Nueva Compra">
+    <div class="row gutters">
+      <div class="col-6">
+        <label>Fecha desde:</label>
+        <v-date-picker v-model="date">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="form-control bg-white border px-2 py-1 rounded"
+              :value="inputValue"
+              v-on="inputEvents"
+            />
+          </template>
+        </v-date-picker>
+      </div>
+      <div class="col-6">
+        <label for="provider">Proveedor</label>
+        <div class="form-group">
+          <select
+            id="provider"
+            required
+            placeholder="Selecciona un proveedor"
+            v-model="providerId"
+            class="form-control"
+          >
+            <option :value="null" disabled selected>
+              Selecciona una opción
+            </option>
+            <option
+              :value="provider.id"
+              v-for="provider in $store.state.providersModule.providers"
+              :key="provider.id"
+            >
+              {{ provider.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="row gutters">
       <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12">
         <div class="card">
@@ -9,7 +47,7 @@
                 <!-- Row start -->
                 <div class="row gutters">
                   <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                    <div class="invoice-logo">Nueva Venta</div>
+                    <div class="invoice-logo">Nueva Compra</div>
                   </div>
                 </div>
                 <!-- Row end -->
@@ -26,12 +64,12 @@
                             <th>X</th>
                             <th>Producto</th>
                             <th>Cantidad</th>
-                            <th>Precio de venta (x unidad)</th>
+                            <th>Precio de Compra (x unidad)</th>
                             <th>Total</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr v-for="(sale, idx) in sales" :key="idx">
+                          <tr v-for="(sale, idx) in purchases" :key="idx">
                             <td>
                               <a
                                 href="#"
@@ -85,7 +123,7 @@
                               <h5 class="text-danger">
                                 <strong
                                   >S/.{{
-                                    sales
+                                    purchases
                                       .reduce(
                                         (a, b) => a + b.salePrice * b.qty,
                                         0,
@@ -98,6 +136,12 @@
                           </tr>
                         </tbody>
                       </table>
+                      <button
+                        class="btn btn-success"
+                        @click="saveSale(purchases)"
+                      >
+                        Completar Compra
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -128,6 +172,7 @@
                     <ProductsTable
                       :productsToShow="4"
                       :isSale="true"
+                      :isPurchase="true"
                       :headers="[
                         { text: 'Producto', value: 'name' },
                         { text: 'Cantidad', value: 'qty' },
@@ -158,26 +203,75 @@ export default {
   },
   data() {
     return {
-      sales: [],
+      purchases: [],
+      date: new Date(),
+      providerId: null,
     };
   },
   methods: {
     addToSale(item) {
-      console.log(item);
-      this.sales.push({
+      this.purchases.push({
         productDetails: item,
         productId: item.id,
         qty: item.qty,
         purchasePrice: item.purchasePrice,
         salePrice: item.price,
+        providerId: null,
       });
     },
     deleteSale(index) {
-      this.sales.splice(index, 1);
+      this.purchases.splice(index, 1);
+    },
+    async saveSale(products) {
+      this.loadingButton = true;
+      products = this.$deepCopy(products);
+      // delete unnecesary info
+      // for (const product of products) {
+      //   delete product['productDetails'];
+      // }
+      // validate if historyMode, set history mode to products
+      // if (this.historyMode) {
+      //   for (const product of products) {
+      //     product.history = true;
+      //   }
+      // } else {
+      //   for (const product of products) {
+      //     product.history = false;
+      //   }
+      // }
+      try {
+        // date = new Date(date);
+        // date = new Date(date.getTime() - date.getTimezoneOffset() * -60000);
+
+        await this.$store.dispatch('purchasesModule/create', {
+          history: this.historyMode,
+          products,
+          date: this.date,
+          providerId: this.providerId,
+        });
+        // for (const product of products) {
+        //   // if (!product.history) {
+        //   this.$store.commit('productsModule/updateStock', {
+        //     productId: product.productId,
+        //     qty: -product.qty,
+        //   });
+        //   // }
+        // }
+        this.purchases = [];
+      } finally {
+        this.loadingButton = false;
+      }
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+label {
+  /* Other styling... */
+  text-align: right;
+  clear: both;
+  float: left;
+  margin-right: 15px;
+}
 </style>

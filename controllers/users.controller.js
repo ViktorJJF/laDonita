@@ -108,7 +108,12 @@ const deletes = async (req, res) => {
 };
 const updatePassword = async (req, res) => {
   try {
-    authController.updatePassword();
+    let password = req.body.password;
+    let userId = req.user.id;
+    let user = await model.findOne({ where: { id: userId } });
+    user.password = password;
+    user.updatePassword = true; // para activar hook
+    await user.save();
     res.status(200).json({ ok: true, msg: "Password actualizado" });
   } catch (error) {
     utils.handleError(res, error);

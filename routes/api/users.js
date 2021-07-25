@@ -12,6 +12,15 @@ const requireAuth = passport.authenticate("jwt", {
   session: false,
 });
 
+router.put(
+  "/update-password",
+  requireAuth,
+  AuthController.roleAuthorization(["ADMIN"]),
+  trimRequest.all,
+  validate.updatesPassword,
+  controller.updatePassword
+);
+
 /*
  * Get all items route
  */
@@ -46,7 +55,7 @@ router.post(
 router.get(
   "/:id",
   requireAuth,
-  AuthController.roleAuthorization(["USER"]),
+  AuthController.roleAuthorization(["ADMIN"]),
   trimRequest.all,
   // validate.listOne,
   controller.listOne
@@ -64,15 +73,6 @@ router.put(
   controller.update
 );
 
-// router.put(
-//   '/:id/update-password',
-//   // requireAuth,
-//   // AuthController.roleAuthorization(['ADMIN']),
-//   trimRequest.all,
-//   validate.update,
-//   controller.updatePassword,
-// );
-
 // /*
 //  * Delete item route
 //  */
@@ -83,13 +83,6 @@ router.delete(
   trimRequest.all,
   validate.deletes,
   controller.deletes
-);
-
-router.put(
-  "/update-password",
-  requireAuth,
-  trimRequest.all,
-  controller.updatePassword
 );
 
 module.exports = router;

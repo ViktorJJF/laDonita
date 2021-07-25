@@ -48,7 +48,7 @@
             type="number"
             v-model="item.qty"
             :errors="item.errors"
-            :placeholder="'Máximo ' + item.stock"
+            :placeholder="isPurchase ? '' : 'Máximo ' + item.stock"
           />
         </template>
         <template v-slot:[`item.actions`]="{ item }">
@@ -146,6 +146,10 @@ export default {
       type: Number,
       default: null,
     },
+    isPurchase: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     SimpleTable,
@@ -242,7 +246,10 @@ export default {
         });
     },
     addToSale(item) {
-      if (!item.qty || parseInt(item.qty, 10) < 1 || item.qty > item.stock) {
+      if (
+        (!item.qty || parseInt(item.qty, 10) < 1 || item.qty > item.stock) &&
+        !this.isPurchase
+      ) {
         item['errors'] = [{ $message: 'Agrega una cantidad válida' }];
         return;
       }

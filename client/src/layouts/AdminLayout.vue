@@ -44,7 +44,10 @@ export default {
   },
   methods: {
     async initialData() {
-      await Promise.all([this.$store.dispatch('brandsModule/list')]);
+      await Promise.all([
+        this.$store.dispatch('brandsModule/list'),
+        this.$store.dispatch('providersModule/list'),
+      ]);
       this.isDataReady = true;
     },
   },
