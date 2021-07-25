@@ -1,15 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import store from '@/store';
 
 const routes = [
   {
     path: '/',
+    component: () => import('@/layouts/AuthLayout.vue'),
+    meta: { requiresAuth: false },
+    children: [
+      {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/views/Login.vue'),
+      },
+    ],
+  },
+  {
+    path: '/',
     component: () => import('@/layouts/AdminLayout.vue'),
     meta: { requiresAuth: true },
-    redirect: { name: 'Dashboard' },
+    name: 'dashboard',
+    redirect: { name: 'Home' },
     children: [
       {
         path: '/inicio',
-        name: 'Dashboard',
+        name: 'Home',
         component: () => import('@/views/Dashboard.vue'),
       },
       {
@@ -99,6 +113,18 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  // checkForUpdates();
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isTokenSet = store.getters['authModule/isTokenSet'];
+  if (requiresAuth && !isTokenSet) {
+    return next({ name: 'login' });
+  } // checkIfTokenNeedsRefresh(); //
+  store.commit('successModule/success', null); //
+  store.commit('errorModule/error', null);
+  return next();
 });
 
 export default router;

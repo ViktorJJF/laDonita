@@ -19,7 +19,7 @@
     <div class="collapse navbar-collapse" id="royalHospitalsNavbar">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <router-link class="nav-link" :to="{ name: 'Dashboard' }">
+          <router-link class="nav-link" :to="{ name: 'Home' }">
             <i class="icon-devices_other nav-icon"></i>
             Inicio
           </router-link>
