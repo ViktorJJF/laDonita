@@ -1,67 +1,67 @@
-const express = require('express');
-const passport = require('passport');
-const trimRequest = require('trim-request');
-const controller = require('../../controllers/users.controller');
-const validate = require('../../controllers/users.validate');
-// const AuthController = require('../../controllers/authController');
+const express = require("express");
+const passport = require("passport");
+const trimRequest = require("trim-request");
+const controller = require("../../controllers/users.controller");
+const validate = require("../../controllers/users.validate");
+const AuthController = require("../../controllers/auth.controller");
 
 const router = express.Router();
-// require('../../config/passport');
+require("../../config/passport");
 
-// const requireAuth = passport.authenticate('jwt', {
-//   session: false,
-// });
+const requireAuth = passport.authenticate("jwt", {
+  session: false,
+});
 
 /*
  * Get all items route
  */
-router.get('/all', controller.listAll);
+router.get("/all", controller.listAll);
 
 // /*
 //  * Get items route
 //  */
 router.get(
-  '/',
+  "/",
   // requireAuth,
   // AuthController.roleAuthorization(['ADMIN']),
   trimRequest.all,
-  controller.list,
+  controller.list
 );
 
 /*
  * Create new item route
  */
 router.post(
-  '/',
+  "/",
   // requireAuth,
   // AuthController.roleAuthorization(['ADMIN']),
   trimRequest.all,
   validate.create,
-  controller.create,
+  controller.create
 );
 
 // /*
 //  * Get item route
 //  */
 router.get(
-  '/:id',
-  // requireAuth,
-  // AuthController.roleAuthorization(['ADMIN']),
+  "/:id",
+  requireAuth,
+  AuthController.roleAuthorization(["USER"]),
   trimRequest.all,
   // validate.listOne,
-  controller.listOne,
+  controller.listOne
 );
 
 // /*
 //  * Update item route
 //  */
 router.put(
-  '/:id',
+  "/:id",
   // requireAuth,
   // AuthController.roleAuthorization(['ADMIN']),
   trimRequest.all,
   validate.update,
-  controller.update,
+  controller.update
 );
 
 // router.put(
@@ -77,12 +77,19 @@ router.put(
 //  * Delete item route
 //  */
 router.delete(
-  '/:id',
+  "/:id",
   // requireAuth,
   // AuthController.roleAuthorization(['ADMIN']),
   trimRequest.all,
   validate.deletes,
-  controller.deletes,
+  controller.deletes
+);
+
+router.put(
+  "/update-password",
+  requireAuth,
+  trimRequest.all,
+  controller.updatePassword
 );
 
 module.exports = router;

@@ -1,16 +1,16 @@
-const { validationResult } = require('express-validator');
-const requestIp = require('request-ip');
+const { validationResult } = require("express-validator");
+const requestIp = require("request-ip");
 
 exports.convertToDate = (date) => {
   const preFormated = new Date(date);
   let formatedDate = new Date(
-    preFormated.getTime() - preFormated.getTimezoneOffset() * -60000,
+    preFormated.getTime() - preFormated.getTimezoneOffset() * -60000
   );
   return formatedDate;
 };
 
 exports.selectRandomId = (collection) =>
-  collection[this.Random(0, collection.length - 1)]._id;
+  collection[this.Random(0, collection.length - 1)].id;
 
 exports.Random = (min, max) => {
   let newMin = Math.ceil(min);
@@ -22,7 +22,7 @@ exports.Random = (min, max) => {
  * @param {string} file - filename
  */
 exports.removeExtensionFromFile = (file) =>
-  file.split('.').slice(0, -1).join('.').toString();
+  file.split(".").slice(0, -1).join(".").toString();
 
 /**
  * Gets IP from user
@@ -34,14 +34,14 @@ exports.getIP = (req) => requestIp.getClientIp(req);
  * Gets browser info from user
  * @param {*} req - request object
  */
-exports.getBrowserInfo = (req) => req.headers['user-agent'];
+exports.getBrowserInfo = (req) => req.headers["user-agent"];
 
 /**
  * Gets country from user using CloudFlare header 'cf-ipcountry'
  * @param {*} req - request object
  */
 exports.getCountry = (req) =>
-  req.headers['cf-ipcountry'] ? req.headers['cf-ipcountry'] : 'XX';
+  req.headers["cf-ipcountry"] ? req.headers["cf-ipcountry"] : "XX";
 
 /**
  * Handles error by printing to console in development env and builds and sends an error response
@@ -50,7 +50,7 @@ exports.getCountry = (req) =>
  */
 exports.handleError = (res, err) => {
   // Prints error in console
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     console.log(err);
   }
   // Sends error to user

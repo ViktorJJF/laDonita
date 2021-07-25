@@ -94,6 +94,7 @@ const module = {
           .update(id, data)
           .then(() => {
             buildSuccess('Registro guardado con éxito', commit, resolve);
+            commit('loadingModule/showLoading', false, { root: true });
             resolve();
           })
           .catch(error => {

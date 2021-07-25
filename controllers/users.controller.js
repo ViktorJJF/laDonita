@@ -1,13 +1,14 @@
-const { Op } = require('sequelize');
-const model = require('../models/Users');
-const utils = require('../helpers/utils');
-const db = require('../helpers/db');
+const { Op } = require("sequelize");
+const model = require("../models/Users");
+const utils = require("../helpers/utils");
+const db = require("../helpers/db");
+const authController = require("./auth.controller");
 
 /** *******************
  * Private functions *
  ******************** */
 
-const UNIQUEFIELDS = ['email'];
+const UNIQUEFIELDS = ["email"];
 
 const itemExistsExcludingItself = async (id, body) =>
   new Promise((resolve, reject) => {
@@ -21,7 +22,7 @@ const itemExistsExcludingItself = async (id, body) =>
     model
       .findOne({ where: query })
       .then((item) => {
-        utils.itemAlreadyExists(null, item, reject, 'Este registro ya existe');
+        utils.itemAlreadyExists(null, item, reject, "Este registro ya existe");
         resolve(false);
       })
       .catch((err) => console.log(err));
@@ -36,7 +37,7 @@ const itemExists = async (body) =>
     model
       .findOne({ where: query })
       .then((item) => {
-        utils.itemAlreadyExists(null, item, reject, 'Este registro ya existe');
+        utils.itemAlreadyExists(null, item, reject, "Este registro ya existe");
         resolve(false);
       })
       .catch((err) => console.log(err));
@@ -56,8 +57,7 @@ const listAll = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    const { query } = req;
-    // const query = await db.checkQueryString(req.query);
+    const query = await db.checkQueryString(req.query);
     res.status(200).json(await db.getItems(req, model, query));
   } catch (error) {
     utils.handleError(res, error);
@@ -65,6 +65,8 @@ const list = async (req, res) => {
 };
 
 const listOne = async (req, res) => {
+  console.log("🚀 Aqui *** -> req", req.user.id);
+
   try {
     res.status(200).json(await db.getItem(req.params.id, model));
   } catch (error) {
@@ -88,7 +90,7 @@ const update = async (req, res) => {
     // req.body.userId = req.user._id;
     const doesItemExists = await itemExistsExcludingItself(
       req.params.id,
-      req.body,
+      req.body
     );
     if (!doesItemExists) {
       res.status(200).json(await db.updateItem(req.params.id, model, req.body));
@@ -104,6 +106,14 @@ const deletes = async (req, res) => {
     utils.handleError(res, error);
   }
 };
+const updatePassword = async (req, res) => {
+  try {
+    authController.updatePassword();
+    res.status(200).json({ ok: true, msg: "Password actualizado" });
+  } catch (error) {
+    utils.handleError(res, error);
+  }
+};
 
 module.exports = {
   list,
@@ -112,4 +122,5 @@ module.exports = {
   create,
   update,
   deletes,
+  updatePassword,
 };

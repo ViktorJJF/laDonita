@@ -22,7 +22,11 @@
                 <span class="user-name">{{
                   $store.getters['authModule/user']
                 }}</span>
-                <span class="avatar">NR<span class="status busy"></span></span>
+                <img
+                  class="avatar"
+                  :src="$store.getters.getBusinessImage"
+                  alt="La Donita"
+                />
               </a>
               <div
                 class="dropdown-menu dropdown-menu-right"
@@ -31,22 +35,21 @@
                 <div class="header-profile-actions">
                   <div class="header-user-profile">
                     <div class="header-user">
-                      <img src="img/user5.png" alt="Royal Hospitals Admin" />
+                      <img
+                        :src="$store.getters.getBusinessImage"
+                        alt="La Donita"
+                      />
                     </div>
-                    <h5>Nélson Romyo</h5>
+                    <h5>{{ $store.getters['authModule/user'] }}</h5>
                     <p>Admin</p>
                   </div>
-                  <a href="hospital-add-doctor.html"
-                    ><i class="icon-user1"></i> My Profile</a
-                  >
-                  <a href="account-settings.html"
-                    ><i class="icon-settings1"></i> Account Settings</a
-                  >
-                  <a href="hospital-reviews.html"
-                    ><i class="icon-activity"></i> Activity Logs</a
-                  >
-                  <a href="login.html"
-                    ><i class="icon-log-out1"></i> Sign Out</a
+                  <router-link :to="{ name: 'Profile' }">
+                    <i class="icon-devices_other nav-icon"></i>
+                    <i class="icon-user1"></i>Mi perfi
+                  </router-link>
+
+                  <a @click="logout"
+                    ><i class="icon-log-out1"></i>Cerrar sesión</a
                   >
                 </div>
               </div>
@@ -61,7 +64,18 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    logout() {
+      this.$store
+        .dispatch('authModule/logout')
+        .then(() => {})
+        .catch((err) => {
+          console.log('algo salio mal en logout:', err);
+        });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped></style>

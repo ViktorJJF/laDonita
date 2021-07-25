@@ -27,6 +27,11 @@ const routes = [
         component: () => import('@/views/Dashboard.vue'),
       },
       {
+        path: '/perfil',
+        name: 'Profile',
+        component: () => import('@/views/Profile.vue'),
+      },
+      {
         path: '/marcas',
         name: 'BrandsList',
         component: () => import('@/views/BrandsList.vue'),
@@ -123,7 +128,7 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'login' });
   } // checkIfTokenNeedsRefresh(); //
   store.commit('successModule/success', null); //
-  store.commit('errorModule/error', null);
+  // store.commit('errorModule/error', null);
   return next();
 });
 

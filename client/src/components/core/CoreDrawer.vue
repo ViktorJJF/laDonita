@@ -33,6 +33,7 @@
         <li
           class="nav-item dropdown"
           v-for="(multiple, idx) in multiples"
+          @click="$router.push({ name: multiple.to })"
           :key="idx"
         >
           <a
@@ -49,11 +50,10 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="doctoRs">
             <li v-for="(subItem, idy) in multiple.subItems" :key="idy">
-              <router-link
-                :to="{ name: subItem.to }"
+              <a
+                @click.stop="$router.push({ name: subItem.to })"
                 class="dropdown-item"
-                href="hospital-doctors-list.html"
-                >{{ subItem.text }}</router-link
+                >{{ subItem.text }}</a
               >
             </li>
           </ul>
@@ -73,7 +73,7 @@ export default {
         {
           icon: 'icon-users nav-icon',
           text: 'Productos',
-          to: 'Products',
+          to: 'ProductsList',
           subItems: [
             {
               icon: 'icon-users nav-icon',
@@ -90,7 +90,7 @@ export default {
         {
           icon: 'icon-users nav-icon',
           text: 'Marcas',
-          to: 'Brands',
+          to: 'BrandsList',
           subItems: [
             {
               icon: 'icon-users nav-icon',
@@ -107,7 +107,7 @@ export default {
         {
           icon: 'icon-users nav-icon',
           text: 'Insumos',
-          to: 'Suppliers',
+          to: 'SuppliersList',
           subItems: [
             {
               icon: 'icon-users nav-icon',
@@ -124,7 +124,7 @@ export default {
         {
           icon: 'icon-users nav-icon',
           text: 'Proveedores',
-          to: 'Providers',
+          to: 'ProvidersList',
           subItems: [
             {
               icon: 'icon-users nav-icon',

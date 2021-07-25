@@ -146,7 +146,6 @@ module.exports = {
     };
     if (!req.query.limit) delete paginationOptions["limit"];
     if (!req.query.page) delete paginationOptions["offset"];
-    console.log("🚀 Aqui *** -> paginationOptions", paginationOptions);
     return new Promise(async (resolve, reject) => {
       try {
         resolve({
@@ -253,7 +252,6 @@ module.exports = {
   deleteItem(id, model, t) {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log("🚀 Aqui *** -> id", id);
         let item = await model.findOne({ where: { id } });
         if (!item) return itemNotFound(null, item, reject, "NOT_FOUND");
         let params = { where: { id } };

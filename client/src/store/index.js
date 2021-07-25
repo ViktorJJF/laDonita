@@ -5,7 +5,7 @@ import modules from './modules';
 export default createStore({
   modules,
   state: {
-    businessImage: '/img/viktorjjf.png',
+    businessImage: '/images/donitalogo.png',
     maxPaginationButtons: 15,
     itemsPerPage: 10,
     snackbar: {
@@ -22,4 +22,7 @@ export default createStore({
   },
   mutations: {},
   actions: {},
+  getters: {
+    getBusinessImage: state => state.businessImage,
+  },
 });

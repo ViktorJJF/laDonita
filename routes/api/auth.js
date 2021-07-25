@@ -1,14 +1,14 @@
-const express = require('express');
-const passport = require('passport');
-const trimRequest = require('trim-request');
-const controller = require('../../controllers/auth.controller');
-const validate = require('../../controllers/auth.validate');
-const AuthController = require('../../controllers/auth.controller');
+const express = require("express");
+const passport = require("passport");
+const trimRequest = require("trim-request");
+const controller = require("../../controllers/auth.controller");
+const validate = require("../../controllers/auth.validate");
+const AuthController = require("../../controllers/auth.controller");
 
 const router = express.Router();
-require('../../config/passport');
+require("../../config/passport");
 
-const requireAuth = passport.authenticate('jwt', {
+const requireAuth = passport.authenticate("jwt", {
   session: false,
 });
 
@@ -20,51 +20,51 @@ const requireAuth = passport.authenticate('jwt', {
  * Register route
  */
 router.post(
-  '/register',
+  "/register",
   trimRequest.all,
   validate.register,
-  controller.register,
+  controller.register
 );
 
 /*
  * Verify route
  */
-router.post('/verify', trimRequest.all, validate.verify, controller.verify);
+router.post("/verify", trimRequest.all, validate.verify, controller.verify);
 
 /*
  * Forgot password route
  */
 router.post(
-  '/forgot',
+  "/forgot",
   trimRequest.all,
   validate.forgotPassword,
-  controller.forgotPassword,
+  controller.forgotPassword
 );
 
 /*
  * Reset password route
  */
 router.post(
-  '/reset',
+  "/reset",
   trimRequest.all,
   validate.resetPassword,
-  controller.resetPassword,
+  controller.resetPassword
 );
 
 /*
  * Get new refresh token
  */
 router.get(
-  '/token',
+  "/token",
   requireAuth,
-  AuthController.roleAuthorization(['user', 'admin']),
+  AuthController.roleAuthorization(["user", "admin"]),
   trimRequest.all,
-  controller.getRefreshToken,
+  controller.getRefreshToken
 );
 
 /*
  * Login route
  */
-router.post('/login', trimRequest.all, validate.login, controller.login);
+router.post("/login", trimRequest.all, validate.login, controller.login);
 
 module.exports = router;

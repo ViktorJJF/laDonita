@@ -12,15 +12,15 @@
               placeholder="Correo"
               v-model="user.email"
               :value="user.email"
-              @keyup.enter="save"
+              @keyup.enter="login"
               :errors="v$.user.email.$errors"
             />
             <VTextFieldWithValidation
-              type="text"
+              type="password"
               placeholder="Contraseña"
               v-model="user.password"
               :value="user.password"
-              @keyup.enter="save"
+              @keyup.enter="login"
               :errors="v$.user.password.$errors"
             />
             <div class="actions">

@@ -1,7 +1,7 @@
-const nodemailer = require('nodemailer');
-const mg = require('nodemailer-mailgun-transport');
-const User = require('../models/Users');
-const { itemAlreadyExists } = require('./utils');
+const nodemailer = require("nodemailer");
+const mg = require("nodemailer-mailgun-transport");
+const User = require("../models/Users");
+const { itemAlreadyExists } = require("./utils");
 
 /**
  * Sends email
@@ -50,7 +50,7 @@ const prepareToSendEmail = (user, subject, htmlMessage) => {
     subject,
     htmlMessage,
   };
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     sendEmail(data, (messageSent) => {
       if (messageSent) {
         console.log(`Email SENT to: ${user.email}`);
@@ -59,7 +59,7 @@ const prepareToSendEmail = (user, subject, htmlMessage) => {
       }
       return true;
     });
-  } else if (process.env.NODE_ENV === 'development') {
+  } else if (process.env.NODE_ENV === "development") {
     console.log(data);
   }
 };
@@ -73,10 +73,10 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       try {
         let item = await User.findOne({ where: { email } });
-        itemAlreadyExists(null, item, reject, 'EMAIL_ALREADY_EXISTS');
+        itemAlreadyExists(null, item, reject, "EMAIL_ALREADY_EXISTS");
         resolve(false);
       } catch (err) {
-        console.log('el error: ', err);
+        console.log("el error: ", err);
       }
     });
   },
@@ -91,14 +91,14 @@ module.exports = {
       User.findOne(
         {
           email,
-          _id: {
+          id: {
             $ne: id,
           },
         },
         (err, item) => {
-          itemAlreadyExists(err, item, reject, 'EMAIL_ALREADY_EXISTS');
+          itemAlreadyExists(err, item, reject, "EMAIL_ALREADY_EXISTS");
           resolve(false);
-        },
+        }
       );
     });
   },
@@ -109,7 +109,7 @@ module.exports = {
    * @param {Object} user - user object
    */
   async sendRegistrationEmailMessage(user) {
-    const subject = 'Verificar tu Email en el Sistema';
+    const subject = "Verificar tu Email en el Sistema";
     const htmlMessage = `<p>Hola ${user.first_name} ${user.last_name}.</p> <p>¡Bienvenido! Para verificar tu Email, por favor haz click en este enlace:</p> <p>${process.env.FRONTEND_URL}/verify/${user.verification}</p> <p>Gracias.</p>`;
     prepareToSendEmail(user, subject, htmlMessage);
   },
@@ -119,16 +119,16 @@ module.exports = {
    * @param {string} locale - locale
    * @param {Object} user - user object
    */
-  async sendResetPasswordEmailMessage(locale = 'es', user) {
+  async sendResetPasswordEmailMessage(locale = "es", user) {
     console.log(locale);
-    const subject = 'Olvidaste tu contraseña...';
+    const subject = "Olvidaste tu contraseña...";
     // const htmlMessage = i18n.__(
     //   "forgotPassword.MESSAGE",
     //   user.email,
     //   process.env.FRONTEND_URL,
     //   user.verification
     // );
-    const htmlMessage = 'olvidaste la contraseña';
+    const htmlMessage = "olvidaste la contraseña";
     prepareToSendEmail(user, subject, htmlMessage);
   },
 };

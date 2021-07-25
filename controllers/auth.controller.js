@@ -1,13 +1,13 @@
-const jwt = require('jsonwebtoken');
-const uuid = require('uuid');
-const { addHours } = require('date-fns');
-const { matchedData } = require('express-validator');
-const User = require('../models/Users');
-const UserAccess = require('../models/UserAccess');
-const ForgotPassword = require('../models/ForgotPassword');
-const utils = require('../helpers/utils');
-const auth = require('../helpers/auth');
-const emailer = require('../helpers/emailer');
+const jwt = require("jsonwebtoken");
+const uuid = require("uuid");
+const { addHours } = require("date-fns");
+const { matchedData } = require("express-validator");
+const User = require("../models/Users");
+const UserAccess = require("../models/UserAccess");
+const ForgotPassword = require("../models/ForgotPassword");
+const utils = require("../helpers/utils");
+const auth = require("../helpers/auth");
+const emailer = require("../helpers/emailer");
 
 const HOURS_TO_BLOCK = 2;
 const LOGIN_ATTEMPTS = 5;
@@ -29,12 +29,12 @@ const generateToken = (user) => {
     jwt.sign(
       {
         data: {
-          _id: user,
+          id: user,
         },
         exp: expiration,
       },
-      process.env.JWT_SECRET,
-    ),
+      process.env.JWT_SECRET
+    )
   );
 };
 
@@ -53,7 +53,7 @@ const setUserInfo = (req) => {
     verified: req.verified,
   };
   // Adds verification for testing purposes
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     user = {
       ...user,
       verification: req.verification,
@@ -79,11 +79,11 @@ const saveUserAccessAndReturnToken = (req, user) =>
       const userInfo = setUserInfo(user);
       // Returns data with access token
       resolve({
-        token: generateToken(user._id),
+        token: generateToken(user.id),
         user: userInfo,
       });
     } catch (err) {
-      console.log('el error. ', err);
+      console.log("el error. ", err);
       reject(utils.buildErrObject(422, err.message));
     }
   });
@@ -100,7 +100,7 @@ const blockUser = async (user) =>
         reject(utils.buildErrObject(422, err.message));
       }
       if (result) {
-        resolve(utils.buildErrObject(409, 'BLOCKED_USER'));
+        resolve(utils.buildErrObject(409, "BLOCKED_USER"));
       }
     });
   });
@@ -115,7 +115,7 @@ const saveLoginAttemptsToDB = (user, attepmts) =>
       await user.update({ loginAttempts: attepmts });
       resolve(true);
     } catch (err) {
-      console.log('el error: ', err);
+      console.log("el error: ", err);
       reject(utils.buildErrObject(422, err.message));
     }
   });
@@ -157,7 +157,7 @@ const checkLoginAttemptsAndBlockExpires = async (user) =>
 const userIsBlocked = async (user) =>
   new Promise((resolve, reject) => {
     if (user.blockExpires > new Date()) {
-      reject(utils.buildErrObject(409, 'BLOCKED_USER'));
+      reject(utils.buildErrObject(409, "BLOCKED_USER"));
     }
     resolve(true);
   });
@@ -170,10 +170,10 @@ const findUser = (email) =>
   new Promise(async (resolve, reject) => {
     try {
       let item = await User.findOne({ where: { email } });
-      utils.itemNotFound(null, item, reject, 'La cuenta no existe');
+      utils.itemNotFound(null, item, reject, "La cuenta no existe");
       resolve(item);
     } catch (err) {
-      console.log('el error: ', err);
+      console.log("el error: ", err);
     }
   });
 
@@ -184,7 +184,7 @@ const findUser = (email) =>
 const findUserById = async (userId) =>
   new Promise((resolve, reject) => {
     User.findById(userId, (err, item) => {
-      utils.itemNotFound(err, item, reject, 'La cuenta no existe');
+      utils.itemNotFound(err, item, reject, "La cuenta no existe");
       resolve(item);
     });
   });
@@ -199,11 +199,11 @@ const passwordsDoNotMatch = async (user) => {
   await saveLoginAttemptsToDB(user, user.loginAttempts);
   return new Promise((resolve, reject) => {
     if (user.loginAttempts <= LOGIN_ATTEMPTS) {
-      resolve(utils.buildErrObject(409, 'La contraseña es incorrecta'));
+      resolve(utils.buildErrObject(409, "La contraseña es incorrecta"));
     } else {
       resolve(blockUser(user));
     }
-    reject(utils.buildErrObject(422, 'ERROR'));
+    reject(utils.buildErrObject(422, "ERROR"));
   });
 };
 
@@ -218,7 +218,7 @@ const registerUser = (body) =>
       let item = await User.create(body);
       resolve(item);
     } catch (err) {
-      console.log('el error: ', err);
+      console.log("el error: ", err);
       reject(utils.buildErrObject(422, err.message));
     }
   });
@@ -229,11 +229,11 @@ const registerUser = (body) =>
  * @param {Object} userInfo - user object
  */
 const returnRegisterToken = (item, userInfo) => {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     userInfo.verification = item.verification;
   }
   const data = {
-    token: generateToken(item._id),
+    token: generateToken(item.id),
     user: userInfo,
   };
   return data;
@@ -251,9 +251,9 @@ const verificationExists = async (id) =>
         verified: false,
       },
       (err, user) => {
-        utils.itemNotFound(err, user, reject, 'NOT_FOUND_OR_ALREADY_VERIFIED');
+        utils.itemNotFound(err, user, reject, "NOT_FOUND_OR_ALREADY_VERIFIED");
         resolve(user);
-      },
+      }
     );
   });
 
@@ -287,8 +287,8 @@ const markResetPasswordAsUsed = async (req, forgot) =>
     forgot.browserChanged = utils.getBrowserInfo(req);
     forgot.countryChanged = utils.getCountry(req);
     forgot.save((err, item) => {
-      utils.itemNotFound(err, item, reject, 'NOT_FOUND');
-      resolve(utils.buildSuccObject('PASSWORD_CHANGED'));
+      utils.itemNotFound(err, item, reject, "NOT_FOUND");
+      resolve(utils.buildSuccObject("PASSWORD_CHANGED"));
     });
   });
 
@@ -301,7 +301,7 @@ const updatePassword = async (password, user) =>
   new Promise((resolve, reject) => {
     user.password = password;
     user.save((err, item) => {
-      utils.itemNotFound(err, item, reject, 'NOT_FOUND');
+      utils.itemNotFound(err, item, reject, "NOT_FOUND");
       resolve(item);
     });
   });
@@ -317,9 +317,9 @@ const findUserToResetPassword = async (email) =>
         email,
       },
       (err, user) => {
-        utils.itemNotFound(err, user, reject, 'NOT_FOUND');
+        utils.itemNotFound(err, user, reject, "NOT_FOUND");
         resolve(user);
-      },
+      }
     );
   });
 
@@ -335,9 +335,9 @@ const findForgotPassword = async (id) =>
         used: false,
       },
       (err, item) => {
-        utils.itemNotFound(err, item, reject, 'NOT_FOUND_OR_ALREADY_USED');
+        utils.itemNotFound(err, item, reject, "NOT_FOUND_OR_ALREADY_USED");
         resolve(item);
-      },
+      }
     );
   });
 
@@ -369,10 +369,10 @@ const saveForgotPassword = async (req) =>
  */
 const forgotPasswordResponse = (item) => {
   let data = {
-    msg: 'RESET_EMAIL_SENT',
+    msg: "RESET_EMAIL_SENT",
     email: item.email,
   };
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     data = {
       ...data,
       verification: item.verification,
@@ -387,14 +387,18 @@ const forgotPasswordResponse = (item) => {
  * @param {*} next - next callback
  */
 const checkPermissions = async (data, next) =>
-  new Promise((resolve, reject) => {
-    User.findById(data.id, (err, result) => {
-      utils.itemNotFound(err, result, reject, 'NOT_FOUND');
+  new Promise(async (resolve, reject) => {
+    try {
+      const result = await User.findOne({ where: { id: data.id } });
       if (data.roles.indexOf(result.role) > -1) {
         return resolve(next());
       }
-      return reject(utils.buildErrObject(401, 'UNAUTHORIZED'));
-    });
+      return reject(utils.buildErrObject(401, "UNAUTHORIZED"));
+    } catch (err) {
+      console.log(err);
+      utils.itemNotFound(err, result, reject, "NOT_FOUND");
+      reject(err);
+    }
   });
 
 /**
@@ -406,9 +410,9 @@ const getUserIdFromToken = async (token) =>
     // Decrypts, verifies and decode token
     jwt.verify(auth.decrypt(token), process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
-        reject(utils.buildErrObject(409, 'BAD_TOKEN'));
+        reject(utils.buildErrObject(409, "BAD_TOKEN"));
       }
-      resolve(decoded.data._id);
+      resolve(decoded.data.id);
     });
   });
 
@@ -435,8 +439,8 @@ exports.login = async (req, res) => {
       user.loginAttempts = 0;
       await saveLoginAttemptsToDB(user, user.loginAttempts);
       console.log(
-        'la respuesta: ',
-        await saveUserAccessAndReturnToken(req, user),
+        "la respuesta: ",
+        await saveUserAccessAndReturnToken(req, user)
       );
       res.status(200).json(await saveUserAccessAndReturnToken(req, user));
     }
@@ -526,7 +530,7 @@ exports.resetPassword = async (req, res) => {
 exports.getRefreshToken = async (req, res) => {
   try {
     const tokenEncrypted = req.headers.authorization
-      .replace('Bearer ', '')
+      .replace("Bearer ", "")
       .trim();
     let userId = await getUserIdFromToken(tokenEncrypted);
     userId = await utils.isIDGood(userId);
@@ -547,7 +551,7 @@ exports.getRefreshToken = async (req, res) => {
 exports.roleAuthorization = (roles) => async (req, res, next) => {
   try {
     const data = {
-      id: req.user._id,
+      id: req.user.id,
       roles,
     };
     await checkPermissions(data, next);

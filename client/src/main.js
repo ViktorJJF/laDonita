@@ -41,6 +41,7 @@ import mosha from '@/plugins/moshaToastify';
 import deepCopy from '@/plugins/deepCopy';
 import uuid from '@/plugins/uuid';
 import sweetAlert from '@/plugins/sweetAlert';
+import '@/plugins/axios';
 
 mosha(app);
 app.use(deepCopy);

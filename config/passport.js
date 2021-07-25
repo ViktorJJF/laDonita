@@ -1,7 +1,7 @@
-const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
-const User = require('../models/Users');
-const auth = require('../helpers/auth');
+const passport = require("passport");
+const JwtStrategy = require("passport-jwt").Strategy;
+const User = require("../models/Users");
+const auth = require("../helpers/auth");
 
 /**
  * Extracts token from: header, body or query
@@ -11,7 +11,7 @@ const auth = require('../helpers/auth');
 const jwtExtractor = (req) => {
   let token = null;
   if (req.headers.authorization) {
-    token = req.headers.authorization.replace('Bearer ', '').trim();
+    token = req.headers.authorization.replace("Bearer ", "").trim();
   } else if (req.body.token) {
     token = req.body.token.trim();
   } else if (req.query.token) {
@@ -33,13 +33,13 @@ const jwtOptions = {
 /**
  * Login with JWT middleware
  */
-const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
-  User.findById(payload.data._id, (err, user) => {
-    if (err) {
-      return done(err, false);
-    }
+const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
+  try {
+    const user = await User.findOne({ where: { id: payload.data.id } });
     return !user ? done(null, false) : done(null, user);
-  });
+  } catch (error) {
+    return done(err, false);
+  }
 });
 
 passport.use(jwtLogin);

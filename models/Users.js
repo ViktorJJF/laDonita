@@ -1,11 +1,11 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../database/connection');
-const bcrypt = require('bcrypt');
+const Sequelize = require("sequelize");
+const sequelize = require("../database/connection");
+const bcrypt = require("bcrypt");
 
-const validRoles = ['SUPERADMIN', 'ADMIN', 'USER'];
+const validRoles = ["SUPERADMIN", "ADMIN", "USER"];
 
-const userModel = sequelize.define(
-  'users',
+const model = sequelize.define(
+  "users",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -43,7 +43,7 @@ const userModel = sequelize.define(
     role: {
       type: Sequelize.ENUM,
       values: validRoles,
-      defaultValue: 'USER',
+      defaultValue: "USER",
     },
     verification: Sequelize.STRING,
     verified: {
@@ -74,10 +74,12 @@ const userModel = sequelize.define(
         return user;
       },
     },
-  },
+  }
 );
 
-userModel.addScope('populate', {});
+model.populates = [];
+
+model.addScope("populate", {});
 
 async function hashPassword(password) {
   return new Promise((resolve, reject) => {
@@ -87,15 +89,15 @@ async function hashPassword(password) {
       function (err, hash) {
         if (err) reject(err);
         resolve(hash);
-      },
+      }
     );
   });
 }
 
-userModel.prototype.comparePassword = function (passwordAttempt, cb) {
+model.prototype.comparePassword = function (passwordAttempt, cb) {
   bcrypt.compare(passwordAttempt, this.password, (err, isMatch) =>
-    err ? cb(err) : cb(null, isMatch),
+    err ? cb(err) : cb(null, isMatch)
   );
 };
 
-module.exports = userModel;
+module.exports = model;
