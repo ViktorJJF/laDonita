@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
 const { buildErrObject, itemNotFound } = require("./utils");
+const { startOfDay, endOfDay } = require("date-fns");
 
 /**
  * Builds sorting
@@ -70,22 +71,38 @@ module.exports = {
   renameKey,
   async checkQueryString(query) {
     return new Promise((resolve, reject) => {
+      let finalQuery = JSON.parse(JSON.stringify(query));
       try {
+        // agregando filtro de rango fecha
         if (
-          typeof query.filter !== "undefined" &&
-          typeof query.fields !== "undefined"
+          finalQuery.fieldDate && // este es la fecha a filtrar
+          (finalQuery.startDate || finalQuery.endDate)
+        ) {
+          finalQuery[finalQuery["fieldDate"]] = {
+            [Op.between]: [
+              startOfDay(new Date(finalQuery.startDate || "1999")),
+              endOfDay(new Date(finalQuery.endDate || "2100")),
+            ],
+          };
+          delete finalQuery["fieldDate"];
+          delete finalQuery["startDate"];
+          delete finalQuery["endDate"];
+        }
+        if (
+          typeof finalQuery.filter !== "undefined" &&
+          typeof finalQuery.fields !== "undefined"
         ) {
           const data = {
             [Op.or]: [],
           };
           const array = [];
           // Takes fields param and builds an array by splitting with ','
-          const arrayFields = query.fields.split(",");
+          const arrayFields = finalQuery.fields.split(",");
           // Adds SQL Like %word% with regex
 
           arrayFields.map((item) => {
             array.push({
-              [item]: { [Op.like]: `%${query.filter}%` },
+              [item]: { [Op.like]: `%${finalQuery.filter}%` },
             });
             return true;
           });
@@ -93,7 +110,7 @@ module.exports = {
           data[Op.or] = array;
           resolve(data);
         } else {
-          resolve(query);
+          resolve(finalQuery);
         }
       } catch (err) {
         console.log(err.message);
@@ -144,9 +161,11 @@ module.exports = {
       ],
       distinct: true,
     };
+
     if (!req.query.limit) delete paginationOptions["limit"];
     if (!req.query.page) delete paginationOptions["offset"];
     return new Promise(async (resolve, reject) => {
+      console.log("🚀 Aqui *** -> paginationOptions", paginationOptions);
       try {
         resolve({
           ok: true,

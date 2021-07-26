@@ -1,5 +1,6 @@
 import { es } from 'date-fns/locale';
 import { format } from 'date-fns';
+import currencyFormatter from 'currency-formatter';
 
 export default function initialize(app) {
   app.config.globalProperties.$filters = {
@@ -12,6 +13,10 @@ export default function initialize(app) {
       } catch (error) {
         return 'Fecha inválida';
       }
+    },
+    formatMoney(value) {
+      if (!value && value !== 0) return 'Sin moneda';
+      return currencyFormatter.format(value, { code: 'PE' });
     },
   };
 }

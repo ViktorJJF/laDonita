@@ -14,6 +14,6 @@ export default {
     return axios.post('/api/providers', payload);
   },
   delete(id) {
-    return axios.delete(`/api/products/${id}`);
+    return axios.delete(`/api/providers/${id}`);
   },
 };

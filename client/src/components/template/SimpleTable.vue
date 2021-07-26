@@ -1,4 +1,7 @@
 <template>
+  <!-- <div class="row gutters">
+    <button @click="generateTable">Tabla</button>
+  </div> -->
   <div class="row gutters">
     <div
       v-if="filterBox"
@@ -47,9 +50,10 @@
       {{ dateFrom }} - {{ dateTo }}
     </div>
   </div>
+
   <div class="table-container">
     <div class="table-responsive">
-      <table class="table m-0">
+      <table class="table m-0" id="my-table">
         <thead>
           <tr>
             <th v-for="header in headers" :key="header">{{ header.text }}</th>
@@ -160,7 +164,11 @@
 </template>
 
 <script>
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import { format, isWithinInterval } from 'date-fns';
+
+const docTable = new jsPDF();
 
 export default {
   emits: ['clickViewCustom'], // this line
@@ -268,6 +276,11 @@ export default {
       } catch (error) {
         return false;
       }
+    },
+    generateTable() {
+      docTable.autoTable({ html: '#my-table' });
+
+      docTable.save('table.pdf');
     },
   },
 };

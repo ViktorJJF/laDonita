@@ -1,5 +1,25 @@
 <template>
-  <core-view-slot view-name="Listado de compras">
+  <core-view-slot view-name="Listado de Ventas">
+    <div class="row gutters">
+      <ul>
+        <li>
+          <h3 class="mb-3">
+            Total de Ventas:
+            <span class="ganancia"
+              >S/.{{ $filters.formatMoney(totalSales) }}</span
+            >
+          </h3>
+        </li>
+        <li>
+          <h3 class="mb-3">
+            Total de Ganancias:
+            <span class="ganancia"
+              >S/.{{ $filters.formatMoney(totalSales - totalSalesCost) }}</span
+            >
+          </h3>
+        </li>
+      </ul>
+    </div>
     <div class="row gutters mb-3">
       <div class="col-sm-6 col-12">
         <label class="mb-1 mr-2">Fecha desde:</label>
@@ -26,6 +46,7 @@
         </v-date-picker>
       </div>
     </div>
+
     <div class="row gutters">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <simple-table
@@ -36,13 +57,6 @@
           :filterDate="false"
         >
           <template v-slot:[`item.userId`]=""> kxmn@gmail.com </template>
-          <template v-slot:[`item.providerId`]="{ item }">
-            {{
-              $store.state.providersModule.providers.find(
-                (el) => el.id === item.providerId,
-              )?.name || 'Sin proveedor'
-            }}
-          </template>
           <template v-slot:[`item.date`]="{ item }">
             <div>
               <v-date-picker
@@ -64,60 +78,40 @@
           </template>
           <template v-slot:[`item.products`]="{ item }">
             <ul>
-              <li
-                v-for="purchaseDetail in item.purchases_details"
-                :key="purchaseDetail.id"
-              >
+              <li v-for="saleDetail in item.sales_details" :key="saleDetail.id">
                 ✅
                 {{
-                  purchaseDetail.product
-                    ? purchaseDetail.product.name
+                  saleDetail.product
+                    ? saleDetail.product.name
                     : 'Producto eliminado'
                 }}
-                ({{ purchaseDetail.qty }} x S/.{{
-                  purchaseDetail.purchasePrice
-                }})
+                ({{ saleDetail.qty }} x S/.{{ saleDetail.salePrice }})
               </li>
             </ul>
           </template>
-          <template v-slot:[`item.amount`]="{ item }">
-            <span class="inversion"
-              >S/.{{ totalRevenue(item.purchases_details) }}</span
+          <template v-slot:[`item.cost`]="{ item }">
+            <span class
+              >S/.{{
+                $filters.formatMoney(subTotalCost(item.sales_details))
+              }}</span
             >
           </template>
-          <template v-slot:[`item.actions`]="{ item }">
-            <div class="btn-group btn-group-sm">
-              <button
-                v-show="!editMode || item.id != editedIndex"
-                @click="
-                  editMode = true;
-                  editedIndex = item.id;
-                  editedDate = item.date;
-                "
-                type="button"
-                class="btn btn-info"
-              >
-                <i class="icon-edit1"></i>
-              </button>
-              <button
-                v-show="editMode && item.id == editedIndex"
-                class="btn btn-success"
-                small
-                @click="
-                  savePurchase(item);
-                  editMode = false;
-                "
-              >
-                Guardar
-              </button>
-              <button
-                @click="deleteItem(item)"
-                type="button"
-                class="btn btn-danger"
-              >
-                <i class="icon-cancel"></i>
-              </button>
-            </div>
+          <template v-slot:[`item.totalSale`]="{ item }">
+            <span class
+              >S/.{{
+                $filters.formatMoney(subTotalRevenue(item.sales_details))
+              }}</span
+            >
+          </template>
+          <template v-slot:[`item.amount`]="{ item }">
+            <span class="ganancia"
+              >S/.{{
+                $filters.formatMoney(
+                  subTotalRevenue(item.sales_details) -
+                    subTotalCost(item.sales_details),
+                )
+              }}</span
+            >
           </template>
           <template v-slot:[`pagination`]>
             <pagination
@@ -140,7 +134,7 @@
 </template>
 
 <script>
-const ENTITY = 'purchases';
+const ENTITY = 'sales';
 
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
 import SimpleTable from '@/components/template/SimpleTable.vue';
@@ -153,12 +147,11 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Fecha de venta', value: 'date' },
-        { text: 'Vendedor', value: 'userId' },
-        { text: 'Productos comprados', value: 'products' },
-        { text: 'Proveedor', value: 'providerId' },
-        { text: 'Inversión', value: 'amount' },
-        { text: 'Acciones', value: 'actions', width: '15%' },
+        { text: 'Fecha', value: 'date' },
+        { text: 'Productos', value: 'products' },
+        { text: 'Costo', value: 'cost' },
+        { text: 'Total de venta', value: 'totalSale' },
+        { text: 'Ganancias', value: 'amount' },
       ],
       fieldsToSearch: ['name'],
       delayTimer: null,
@@ -190,6 +183,25 @@ export default {
     },
     entity() {
       return ENTITY;
+    },
+    totalSales() {
+      return this.sales
+        .reduce(
+          (a, b) =>
+            a + b.sales_details.reduce((c, d) => c + d.salePrice * d.qty, 0),
+          0,
+        )
+        .toFixed(2);
+    },
+    totalSalesCost() {
+      return this.sales
+        .reduce(
+          (a, b) =>
+            a +
+            b.sales_details.reduce((c, d) => c + d.purchasePrice * d.qty, 0),
+          0,
+        )
+        .toFixed(2);
     },
   },
   watch: {
@@ -233,12 +245,12 @@ export default {
         this.$store.state[ENTITY + 'Module'][ENTITY],
       );
     },
-    async savePurchase(purchase) {
+    async saveSale(sale) {
       let date = new Date(this.editedDate);
       date = new Date(date.getTime() - date.getTimezoneOffset() * -60000);
-      purchase.date = date;
-      await this.$store.dispatch('purchasesModule/update', {
-        id: purchase.id,
+      sale.date = date;
+      await this.$store.dispatch('salesModule/update', {
+        id: sale.id,
         data: {
           date,
         },
@@ -275,13 +287,29 @@ export default {
           }
         });
     },
-    totalRevenue(purchasesDetail) {
-      if (purchasesDetail) {
-        return purchasesDetail
-          .reduce((a, b) => a + b.purchasePrice * b.qty, 0)
+    totalRevenue(salesDetail) {
+      if (salesDetail) {
+        return salesDetail
+          .reduce((a, b) => a + b.salePrice * b.qty, 0)
           .toFixed(2);
       }
       return '0';
+    },
+    filterItemsByDate() {
+      console.log('jaja');
+      this.initialize();
+    },
+    subTotalRevenue(salesDetail) {
+      if (salesDetail) {
+        return salesDetail.reduce((a, b) => a + b.salePrice * b.qty, 0);
+      }
+      return 'S/.0';
+    },
+    subTotalCost(salesDetail) {
+      if (salesDetail) {
+        return salesDetail.reduce((a, b) => a + b.purchasePrice * b.qty, 0);
+      }
+      return 'S/.0';
     },
   },
 };

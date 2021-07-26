@@ -13,9 +13,12 @@
     "@vuelidate/validators": "^2.0.0-alpha.16",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "currency-formatter": "^1.5.8",
     "date-fns": "^2.21.3",
     "deepcopy": "^2.1.0",
     "flag-icon-css": "^3.5.0",
+    "jspdf": "^2.3.1",
+    "jspdf-autotable": "^3.5.15",
     "masonry-layout": "^4.2.2",
     "mosha-vue-toastify": "^1.0.11",
     "perfect-scrollbar": "^1.5.1",
@@ -119,6 +122,9 @@
         "off"
       ],
       "no-confusing-arrow": [
+        "off"
+      ],
+      "new-cap": [
         "off"
       ]
     }

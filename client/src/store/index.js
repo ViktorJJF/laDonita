@@ -7,7 +7,7 @@ export default createStore({
   state: {
     businessImage: '/images/donitalogo.png',
     maxPaginationButtons: 15,
-    itemsPerPage: 10,
+    itemsPerPage: 15,
     snackbar: {
       text: '',
       active: false,

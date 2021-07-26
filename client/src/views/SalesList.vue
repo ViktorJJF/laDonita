@@ -1,5 +1,32 @@
 <template>
-  <core-view-slot view-name="Marcas">
+  <core-view-slot view-name="Listado de Ventas">
+    <div class="row gutters mb-3">
+      <div class="col-sm-6 col-12">
+        <label class="mb-1 mr-2">Fecha desde:</label>
+        <v-date-picker style="display: inline-block" v-model="startDate">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="form-control bg-white border px-2 py-1 rounded"
+              :value="inputValue"
+              v-on="inputEvents"
+            />
+          </template>
+        </v-date-picker>
+      </div>
+      <div class="col-sm-6 col-12">
+        <label class="mb-1 mr-2">Fecha Hasta:</label>
+        <v-date-picker style="display: inline-block" class="" v-model="endDate">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="form-control bg-white border px-2 py-1 rounded"
+              :value="inputValue"
+              v-on="inputEvents"
+            />
+          </template>
+        </v-date-picker>
+      </div>
+    </div>
+
     <div class="row gutters">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <simple-table
@@ -135,6 +162,8 @@ export default {
       dialog: false,
       editedDate: null,
       editMode: false,
+      startDate: null,
+      endDate: null,
     };
   },
   computed: {
@@ -161,6 +190,14 @@ export default {
     async page() {
       this.initialize(this.page);
     },
+    startDate() {
+      this.page = 1;
+      this.initialize(this.page);
+    },
+    endDate() {
+      this.page = 1;
+      this.initialize(this.page);
+    },
   },
   async mounted() {
     this.initialize();
@@ -168,13 +205,17 @@ export default {
   methods: {
     async initialize(page = 1) {
       // llamada asincrona de items
-      await Promise.all([
-        this.$store.dispatch(ENTITY + 'Module/list', {
-          page,
-          search: this.search,
-          fieldsToSearch: this.fieldsToSearch,
-        }),
-      ]);
+      let query = {
+        page,
+        search: this.search,
+        fieldsToSearch: this.fieldsToSearch,
+      };
+      if (this.startDate || this.endDate) {
+        query['fieldDate'] = 'date'; // este es el field a filtrar
+        query['startDate'] = this.startDate;
+        query['endDate'] = this.endDate;
+      }
+      await Promise.all([this.$store.dispatch(ENTITY + 'Module/list', query)]);
       // asignar al data del componente
       this[ENTITY] = this.$deepCopy(
         this.$store.state[ENTITY + 'Module'][ENTITY],
@@ -229,6 +270,10 @@ export default {
           .toFixed(2);
       }
       return '0';
+    },
+    filterItemsByDate() {
+      console.log('jaja');
+      this.initialize();
     },
   },
 };

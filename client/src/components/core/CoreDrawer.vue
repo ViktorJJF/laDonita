@@ -176,17 +176,17 @@ export default {
         {
           icon: 'icon-users nav-icon',
           text: 'Reportes',
-          to: 'Brands',
+          to: 'ReportSales',
           subItems: [
             {
               icon: 'icon-users nav-icon',
-              text: 'Nueva compra',
-              to: 'BrandsCreate',
+              text: 'Reporte de ventas',
+              to: 'ReportSales',
             },
             {
               icon: 'icon-users nav-icon',
-              text: 'Historial de Compras',
-              to: 'BrandsList',
+              text: 'Reporte de compras',
+              to: 'ReportPurchases',
             },
           ],
         },

@@ -120,11 +120,15 @@ export default {
               ENTITY + 'Module/create',
               this.editedItem,
             );
+            this.clear();
           } finally {
             this.loadingButton = false;
           }
         }
       }
+    },
+    clear() {
+      this.editedItem = { ...this.defaultItem };
     },
   },
 };

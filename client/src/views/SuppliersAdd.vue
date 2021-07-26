@@ -1,5 +1,5 @@
 <template>
-  <core-view-slot view-name="Formulario Marcas">
+  <core-view-slot :view-name="formTitle">
     <div class="row gutters">
       <div class="col-sm-12">
         <div class="card">
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-const ENTITY = 'brands';
+const ENTITY = 'supplies';
 import vuelidate from '@/plugins/vuelidate';
 import MODEL_ITEM from '@/models/brands';
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
@@ -82,6 +82,11 @@ export default {
     },
     submitText() {
       return this.editedId ? 'Actualizar' : 'Crear';
+    },
+    formTitle() {
+      return this.editedId
+        ? 'Formulario actualizar Insumo'
+        : 'Formulario crear Insumo';
     },
   },
   watch: {
@@ -120,11 +125,15 @@ export default {
               ENTITY + 'Module/create',
               this.editedItem,
             );
+            this.clear();
           } finally {
             this.loadingButton = false;
           }
         }
       }
+    },
+    clear() {
+      this.editedItem = { ...this.defaultItem };
     },
   },
 };

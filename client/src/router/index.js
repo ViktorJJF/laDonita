@@ -111,6 +111,16 @@ const routes = [
         name: 'PurchasesAdd',
         component: () => import('@/views/PurchasesAdd.vue'),
       },
+      {
+        path: '/reportes/ventas',
+        name: 'ReportSales',
+        component: () => import('@/views/ReportSales.vue'),
+      },
+      {
+        path: '/reportes/compras',
+        name: 'ReportPurchases',
+        component: () => import('@/views/ReportPurchases.vue'),
+      },
     ],
   },
 ];
