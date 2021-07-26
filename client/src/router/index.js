@@ -3,9 +3,8 @@ import store from '@/store';
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     component: () => import('@/layouts/AuthLayout.vue'),
-    meta: { requiresAuth: false },
     children: [
       {
         path: '/login',
@@ -134,9 +133,11 @@ router.beforeEach((to, from, next) => {
   // checkForUpdates();
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const isTokenSet = store.getters['authModule/isTokenSet'];
+  console.log('🚀 Aqui *** -> isTokenSet', requiresAuth, isTokenSet);
   if (requiresAuth && !isTokenSet) {
     return next({ name: 'login' });
   } // checkIfTokenNeedsRefresh(); //
+  console.log('jaja');
   store.commit('successModule/success', null); //
   // store.commit('errorModule/error', null);
   return next();

@@ -31,8 +31,8 @@ router.get("/all", controller.listAll);
 //  */
 router.get(
   "/",
-  // requireAuth,
-  // AuthController.roleAuthorization(['ADMIN']),
+  requireAuth,
+  AuthController.roleAuthorization(["ADMIN"]),
   trimRequest.all,
   controller.list
 );
@@ -42,8 +42,8 @@ router.get(
  */
 router.post(
   "/",
-  // requireAuth,
-  // AuthController.roleAuthorization(['ADMIN']),
+  requireAuth,
+  AuthController.roleAuthorization(["ADMIN"]),
   trimRequest.all,
   validate.create,
   controller.create
