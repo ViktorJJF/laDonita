@@ -120,6 +120,11 @@ const routes = [
         name: 'ReportPurchases',
         component: () => import('@/views/ReportPurchases.vue'),
       },
+      {
+        path: '/notas',
+        name: 'NotesList',
+        component: () => import('@/views/NotesList.vue'),
+      },
     ],
   },
 ];

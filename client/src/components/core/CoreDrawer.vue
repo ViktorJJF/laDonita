@@ -24,6 +24,12 @@
             Inicio
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link class="nav-link" :to="{ name: 'NotesList' }">
+            <i class="icon-devices_other nav-icon"></i>
+            Notas
+          </router-link>
+        </li>
         <li class="nav-item" v-for="item in items" :key="item.to">
           <router-link class="nav-link" :to="{ name: item.to }">
             <i :class="item.icon"></i>
