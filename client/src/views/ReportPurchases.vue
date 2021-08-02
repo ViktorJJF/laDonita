@@ -1,294 +1,283 @@
 <template>
-  <core-view-slot :view-name="formTitle">
+  <core-view-slot view-name="Listado de Ventas">
     <div class="row gutters">
-      <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="doctor-profile">
-              <div class="input-group mb-3">
-                <div
-                  class="text-center"
-                  v-show="editedItem.img.length > 0 && editMode == false"
-                >
-                  <img
-                    :src="editedItem.img"
-                    class="img-fluid mb-2"
-                    alt="Responsive image"
-                  />
-                  <button class="btn btn-info" @click="editMode = true">
-                    Editar
-                  </button>
-                </div>
-
-                <div
-                  class="text-center"
-                  v-show="editedItem.img.length == 0 || editMode == true"
-                >
-                  <UploadImages
-                    value="/uploads/grodnobot.png"
-                    ref="file"
-                    @change="handleImages"
-                    :max="1"
-                    uploadMsg="Click para insertar o arrastrar una imagen"
-                    fileError="Solo se aceptan archivos imágenes"
-                    clearAll="Borrar todo"
-                    class="mb-2"
-                  />
-                  <button class="btn btn-danger" @click="editMode = false">
-                    Cancelar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <ul>
+        <li>
+          <h3 class="mb-3">
+            Total de Compras:
+            <span class="inversion"
+              >S/.{{ $filters.formatMoney(totalPurchases) }}</span
+            >
+          </h3>
+        </li>
+        <li>
+          <h5 class="mb-3">
+            Cantidad de compras: {{ $store.state.purchasesModule.total }}
+          </h5>
+        </li>
+      </ul>
+    </div>
+    <div class="row gutters mb-3">
+      <div class="col-sm-6 col-12">
+        <label class="mb-1 mr-2">Fecha desde:</label>
+        <v-date-picker style="display: inline-block" v-model="startDate">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="form-control bg-white border px-2 py-1 rounded"
+              :value="inputValue"
+              v-on="inputEvents"
+            />
+          </template>
+        </v-date-picker>
       </div>
-      <div class="col-sm-9">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Ingresa detalles</div>
-          </div>
-          <div class="card-body">
-            <div class="row gutters">
-              <div class="col-sm-12 col-12">
-                <VTextFieldWithValidation
-                  label="Nombre"
-                  type="text"
-                  placeholder="Ingresa un Nombre"
-                  v-model="editedItem.name"
-                  :value="editedItem.name"
-                  @keyup.enter="save"
-                  :errors="v$.editedItem.name.$errors"
-                />
-              </div>
-              <div class="col-sm-6 col-12">
-                <label for="marca">Marca</label>
-                <div class="form-group">
-                  <select
-                    id="marca"
-                    required
-                    placeholder="Selecciona una marca"
-                    v-model="editedItem.brandId"
-                    class="form-control"
-                  >
-                    <option :value="0" disabled selected>
-                      Selecciona una opción
-                    </option>
-                    <option
-                      :value="brand.id"
-                      v-for="brand in brands"
-                      :key="brand.id"
-                    >
-                      {{ brand.name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-sm-3 col-12">
-                <VTextFieldWithValidation
-                  label="Stock mínimo"
-                  type="text"
-                  placeholder="Ingresa una cantidad"
-                  v-model="editedItem.minStock"
-                  :value="editedItem.minStock"
-                  @keyup.enter="save"
-                />
-              </div>
-              <div class="col-sm-3 col-12">
-                <VTextFieldWithValidation
-                  label="Stock"
-                  type="text"
-                  placeholder="Ingresa una cantidad"
-                  v-model="editedItem.stock"
-                  :value="editedItem.stock"
-                  @keyup.enter="save"
-                />
-              </div>
-              <div class="col-sm-4 col-12">
-                <VTextFieldWithValidation
-                  label="Precio de compra"
-                  type="text"
-                  placeholder="Ingresa un precio de compar"
-                  v-model="editedItem.purchasePrice"
-                  :value="editedItem.purchasePrice"
-                  @keyup.enter="save"
-                />
-              </div>
-              <div class="col-sm-4 col-12">
-                <VTextFieldWithValidation
-                  label="Precio de venta"
-                  type="text"
-                  placeholder="Ingresa un precio"
-                  v-model="editedItem.price"
-                  :value="editedItem.price"
-                  @keyup.enter="save"
-                />
-              </div>
-              <div class="col-sm-4 col-12">
-                <div class="form-group">
-                  <label>Fecha de expiración</label>
-                  <v-date-picker v-model="editedItem.expiration">
-                    <template v-slot="{ inputValue, inputEvents }">
-                      <input
-                        class="form-control bg-white border px-2 py-1 rounded"
-                        :value="inputValue"
-                        v-on="inputEvents"
-                      />
-                    </template>
-                  </v-date-picker>
-                </div>
-              </div>
-              <div class="col-sm-12 col-12">
-                <div class="form-group">
-                  <label for="descripcion">Marca</label>
-                  <textarea
-                    v-model="editedItem.description"
-                    class="form-control"
-                    id="descripcion"
-                    placeholder="Descripción"
-                    maxlength="140"
-                    rows="4"
-                  ></textarea>
-                  <div class="form-text text-muted"></div>
-                </div>
-              </div>
+      <div class="col-sm-6 col-12">
+        <label class="mb-1 mr-2">Fecha Hasta:</label>
+        <v-date-picker style="display: inline-block" class="" v-model="endDate">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="form-control bg-white border px-2 py-1 rounded"
+              :value="inputValue"
+              v-on="inputEvents"
+            />
+          </template>
+        </v-date-picker>
+      </div>
+    </div>
+
+    <div class="row gutters">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <simple-table
+          :headers="headers"
+          :items="items"
+          date-to-filter="fechaFin"
+          :filterBox="false"
+          :filterDate="false"
+        >
+          <template v-slot:[`item.userId`]=""> kxmn@gmail.com </template>
+          <template v-slot:[`item.date`]="{ item }">
+            <div>
+              <v-date-picker
+                v-show="editMode && item.id == editedIndex"
+                v-model="editedDate"
+              >
+                <template v-slot="{ inputValue, inputEvents }">
+                  <input
+                    class="form-control bg-white border px-2 py-1 rounded"
+                    :value="inputValue"
+                    v-on="inputEvents"
+                  />
+                </template>
+              </v-date-picker>
+              <span v-show="!editMode || item.id != editedIndex">{{
+                $filters.formatDate(item.date)
+              }}</span>
             </div>
-          </div>
-          <div class="d-flex justify-content-between mx-3 mb-3">
-            <button class="btn btn-info" @click="$router.go(-1)">
-              Regresar
-            </button>
-            <button class="btn btn-primary" @click="save">
-              {{ submitText }}
-            </button>
-          </div>
-        </div>
+          </template>
+          <template v-slot:[`item.provider`]="{ item }">
+            <div>
+              {{
+                $store.state.providersModule.providers.find(
+                  (el) => el.id === item.providerId,
+                )?.name || 'Sin proveedor'
+              }}
+            </div>
+          </template>
+          <template v-slot:[`item.products`]="{ item }">
+            <ul>
+              <li
+                v-for="purchaseDetail in item.purchases_details"
+                :key="purchaseDetail.id"
+              >
+                ✅
+                {{
+                  purchaseDetail.product
+                    ? purchaseDetail.product.name
+                    : 'Producto eliminado'
+                }}
+                ({{ purchaseDetail.qty }} x S/.{{
+                  purchaseDetail.purchasePrice
+                }})
+              </li>
+            </ul>
+          </template>
+          <template v-slot:[`item.totalPurchase`]="{ item }">
+            <span class="inversion"
+              >S/.{{
+                $filters.formatMoney(subTotalRevenue(item.purchases_details))
+              }}</span
+            >
+          </template>
+          <template v-slot:[`pagination`]>
+            <pagination
+              v-model="page"
+              :records="totalItems"
+              :per-page="$store.state.itemsPerPage"
+              :options="{
+                chunk: $store.state.maxPaginationButtons,
+                texts: {
+                  count:
+                    'Mostrando {from} a {to} de {count} elementos|{count} elementos|Un elemento',
+                },
+              }"
+            />
+          </template>
+        </simple-table>
       </div>
     </div>
   </core-view-slot>
 </template>
 
 <script>
-import UploadImages from 'vue-upload-drop-images';
-import axios from 'axios';
+const ENTITY = 'purchases';
 
-const ENTITY = 'products';
-import vuelidate from '@/plugins/vuelidate';
-import MODEL_ITEM from '@/models/products';
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
-import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidation.vue';
+import SimpleTable from '@/components/template/SimpleTable.vue';
 
 export default {
   components: {
     CoreViewSlot,
-    VTextFieldWithValidation,
-    UploadImages,
-  },
-  setup() {
-    return { v$: vuelidate.useVuelidate() };
+    SimpleTable,
   },
   data() {
     return {
-      editMode: false,
-      editedItem: MODEL_ITEM(),
-      defaultItem: MODEL_ITEM(),
+      headers: [
+        { text: 'Fecha', value: 'date' },
+        { text: 'Proveedor', value: 'provider' },
+        { text: 'Productos', value: 'products' },
+        { text: 'Total de compra', value: 'totalPurchase' },
+      ],
+      fieldsToSearch: ['name'],
+      delayTimer: null,
+      [ENTITY]: [],
+      editedIndex: -1,
+      // configuracion de la tabla
+      pagination: {},
+      dataTableLoading: true,
+      page: 1,
+      pageCount: 0,
       loadingButton: false,
-      brands: [],
-      file: null,
-      imageName: '',
-      imageUrl: '',
-    };
-  },
-  validations() {
-    return {
-      editedItem: {
-        name: { required: vuelidate.required },
-      },
+      search: '',
+      dialog: false,
+      editedDate: null,
+      editMode: false,
+      startDate: null,
+      endDate: null,
     };
   },
   computed: {
-    editedId() {
-      return this.$route.params.id;
+    totalItems() {
+      return this.$store.state[ENTITY + 'Module'].total;
     },
-    submitText() {
-      return this.editedId ? 'Actualizar' : 'Crear';
+    totalPages() {
+      return this.$store.state[ENTITY + 'Module'].totalPages;
     },
-    formTitle() {
-      return this.editedId
-        ? 'Formulario actualizar producto'
-        : 'Formulario crear producto';
+    items() {
+      return this[ENTITY];
+    },
+    entity() {
+      return ENTITY;
+    },
+    totalPurchases() {
+      return this.purchases.reduce(
+        (acc, el) =>
+          acc +
+          el.purchases_details.reduce(
+            (acc2, el2) => acc2 + el2.product.purchasePrice * el2.qty,
+            0,
+          ),
+        0,
+      );
     },
   },
   watch: {
-    editedId(newValue) {
-      if (!newValue) this.editedItem = this.$deepCopy(this.defaultItem);
+    async search() {
+      clearTimeout(this.delayTimer);
+      this.delayTimer = setTimeout(() => {
+        this.initialize(this.page);
+      }, 600);
+    },
+    async page() {
+      this.initialize(this.page);
+    },
+    startDate() {
+      this.page = 1;
+      this.initialize(this.page);
+    },
+    endDate() {
+      this.page = 1;
+      this.initialize(this.page);
     },
   },
-  mounted() {
-    if (this.editedId) this.initialize();
-    this.brands = this.$store.state.brandsModule.brands;
+  async mounted() {
+    this.initialize();
   },
   methods: {
-    async initialize() {
-      this.editedItem = await this.$store.dispatch(
-        ENTITY + 'Module/listOne',
-        this.editedId,
+    async initialize(page = 1) {
+      // llamada asincrona de items
+      let query = {
+        page,
+        search: this.search,
+        fieldsToSearch: this.fieldsToSearch,
+      };
+      if (this.startDate || this.endDate) {
+        query['fieldDate'] = 'date'; // este es el field a filtrar
+        query['startDate'] = this.startDate;
+        query['endDate'] = this.endDate;
+      }
+      await Promise.all([this.$store.dispatch(ENTITY + 'Module/list', query)]);
+      // asignar al data del componente
+      this[ENTITY] = this.$deepCopy(
+        this.$store.state[ENTITY + 'Module'][ENTITY],
       );
     },
-    handleImages() {
-      // this.editedItem.img = files;
-      [this.file] = this.$refs.file.files;
-    },
-    async save() {
-      this.v$.$validate(); // checks all inputs
-      if (!this.v$.$error) {
-        this.loadingButton = true;
-        if (this.editedId) {
-          // update item
-          try {
-            if (this.file) {
-              this.editedItem.img = await this.storeImage();
-            }
-            await this.$store.dispatch(ENTITY + 'Module/update', {
-              id: this.editedId,
-              data: this.editedItem,
-            });
-          } finally {
-            this.loadingButton = false;
-          }
-        } else {
-          // create item
-
-          try {
-            // reasignando path
-            if (this.file) {
-              this.editedItem.img = await this.storeImage();
-            }
-            await this.$store.dispatch(
-              ENTITY + 'Module/create',
-              this.editedItem,
-            );
-            this.clear();
-          } finally {
-            this.loadingButton = false;
-          }
-        }
-      }
-    },
-    async storeImage() {
-      let formData = new FormData();
-      formData.append('img', this.file);
-      let path = (
-        await axios.post('/api/images', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+    async deleteItem(item) {
+      const index = this[ENTITY].indexOf(item);
+      let itemId = this[ENTITY][index].id;
+      this.$swal
+        .fire({
+          title: '¿Estás seguro?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, elimínalo!',
+          cancelButtonText: 'No, mantenerlo',
         })
-      ).data.payload;
-      return path;
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              await this.$store.dispatch(ENTITY + 'Module/delete', itemId);
+              // for (const detailsProduct of detailsProducts) {
+              // console.log('este es el history: ', detailsProduct.history);
+              // if (!detailsProduct.history) {
+              // this.$store.commit('productsModule/updateStock', {
+              //   productId: detailsProduct.productId.id,
+              //   qty: detailsProduct.qty,
+              // });
+              // }
+              // }
+              this[ENTITY].splice(index, 1);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
     },
-    clear() {
-      this.editedItem = { ...this.defaultItem };
+    totalRevenue(purchasesDetail) {
+      if (purchasesDetail) {
+        return purchasesDetail
+          .reduce((a, b) => a + b.purchasePrice * b.qty, 0)
+          .toFixed(2);
+      }
+      return '0';
+    },
+    filterItemsByDate() {
+      console.log('jaja');
+      this.initialize();
+    },
+    subTotalRevenue(purchasesDetail) {
+      if (purchasesDetail) {
+        return purchasesDetail.reduce((a, b) => a + b.purchasePrice * b.qty, 0);
+      }
+      return 'S/.0';
     },
   },
 };

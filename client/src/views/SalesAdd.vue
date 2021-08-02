@@ -1,16 +1,18 @@
 <template>
   <core-view-slot view-name="Nueva Venta">
-    <div class="align-middle mb-2">
-      <label>Fecha desde:</label>
-      <v-date-picker style="display: inline-block" class="" v-model="date">
-        <template v-slot="{ inputValue, inputEvents }">
-          <input
-            class="form-control bg-white border px-2 py-1 rounded"
-            :value="inputValue"
-            v-on="inputEvents"
-          />
-        </template>
-      </v-date-picker>
+    <div class="row gutters">
+      <div class="col-6">
+        <label>Fecha desde:</label>
+        <v-date-picker class="mb-3" v-model="date">
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="form-control bg-white border px-2 py-1 rounded"
+              :value="inputValue"
+              v-on="inputEvents"
+            />
+          </template>
+        </v-date-picker>
+      </div>
     </div>
     <div class="row gutters">
       <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12">

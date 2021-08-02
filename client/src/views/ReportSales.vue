@@ -18,6 +18,11 @@
             >
           </h3>
         </li>
+        <li>
+          <h5 class="mb-3">
+            Cantidad de ventas: {{ $store.state.salesModule.total }}
+          </h5>
+        </li>
       </ul>
     </div>
     <div class="row gutters mb-3">
