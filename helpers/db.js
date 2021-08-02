@@ -160,12 +160,12 @@ module.exports = {
           : model.populates.map((el) => ({ model: el }))),
       ],
       distinct: true,
+      subQuery: false,
     };
 
     if (!req.query.limit) delete paginationOptions["limit"];
     if (!req.query.page) delete paginationOptions["offset"];
     return new Promise(async (resolve, reject) => {
-      console.log("🚀 Aqui *** -> paginationOptions", paginationOptions);
       try {
         resolve({
           ok: true,

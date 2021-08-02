@@ -1,7 +1,14 @@
 <template>
-  <!-- <div class="row gutters">
-    <button @click="generateTable">Tabla</button>
-  </div> -->
+  <div class="row gutters mb-2">
+    <div class="col-12" v-if="showReports">
+      <button type="button" class="btn btn-danger mr-1" @click="generateTable">
+        <i class="icon-cancel"></i> Exportar PDF
+      </button>
+      <button @click="exportExcel" type="button" class="btn btn-success">
+        <i class="icon-cancel"></i> Exportar XLSX
+      </button>
+    </div>
+  </div>
   <div class="row gutters">
     <div
       v-if="filterBox"
@@ -166,6 +173,7 @@
 <script>
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import XLSX from 'xlsx';
 import { format, isWithinInterval } from 'date-fns';
 
 const docTable = new jsPDF();
@@ -204,6 +212,14 @@ export default {
     itemsPerPageCustom: {
       type: Number,
       default: null,
+    },
+    showReports: {
+      type: Boolean,
+      default: false,
+    },
+    filename: {
+      type: String,
+      default: 'reporte',
     },
   },
   data() {
@@ -278,9 +294,23 @@ export default {
       }
     },
     generateTable() {
-      docTable.autoTable({ html: '#my-table' });
+      docTable.autoTable({
+        theme: 'grid',
+        headStyles: { fillColor: [25, 53, 93] },
+        styles: { fontSize: 9 },
+        columnStyles: { europe: { halign: 'center' } },
+        html: '#my-table',
+      });
 
-      docTable.save('table.pdf');
+      docTable.save(`${this.filename}.pdf`);
+    },
+    exportExcel() {
+      let elt = document.getElementById('my-table');
+      let data = XLSX.utils.table_to_sheet(elt);
+      const workbook = XLSX.utils.book_new();
+      const { filename } = this;
+      XLSX.utils.book_append_sheet(workbook, data, filename);
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
     },
   },
 };

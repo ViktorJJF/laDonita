@@ -6,6 +6,10 @@ import VCalendar from 'v-calendar';
 
 // import JQuery from 'jquery';
 import App from '@/App.vue';
+// Element plus
+import ElementPlus from 'element-plus';
+import 'element-plus/lib/theme-chalk/index.css';
+
 import router from '@/router';
 import store from '@/store';
 import initialize from '@/filters/filters';
@@ -17,7 +21,7 @@ const app = createApp(App);
 initialize(app);
 app.component('pagination', Paginate);
 app.use(VCalendar);
-// app.component('DatePicker', DatePicker);
+app.use(ElementPlus);
 
 // window.$ = window.jQuery = JQuery;
 

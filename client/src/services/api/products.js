@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export default {
   list(query) {
+    delete query['showLoading'];
     return axios.get('/api/products', { params: query });
   },
   listOne(id) {

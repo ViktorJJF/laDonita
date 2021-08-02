@@ -16,7 +16,10 @@ const module = {
   actions: {
     list({ commit }, query) {
       const finalQuery = buildQueryWithPagination(query);
-      commit('loadingModule/showLoading', true, { root: true });
+      const { showLoading } = query;
+      if (showLoading) {
+        commit('loadingModule/showLoading', true, { root: true });
+      }
       return new Promise((resolve, reject) => {
         api
           .list(finalQuery)
@@ -25,7 +28,9 @@ const module = {
             commit('totalItems', response.data.totalDocs);
             commit('totalPages', response.data.totalPages);
             resolve(response.data.payload);
-            commit('loadingModule/showLoading', false, { root: true });
+            if (showLoading) {
+              commit('loadingModule/showLoading', false, { root: true });
+            }
           })
           .catch(error => {
             handleError(error, commit, reject);

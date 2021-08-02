@@ -60,13 +60,26 @@ const listAll = async (req, res) => {
 
 const list = async (req, res) => {
   try {
+    // recibiendo id de producto a filtrar
+    const productId = req.query.productId;
     const query = await db.checkQueryString(req.query);
+    // borando id de query
+    delete query["productId"];
+    let includeProducts = {
+      model: Product,
+      required: true,
+    };
+    if (productId) {
+      includeProducts["where"] = {
+        id: productId,
+      };
+    }
     res.status(200).json(
       await db.getItems(req, model, query, [
         {
           model: PurchasesDetail,
-          required: false,
-          include: [{ model: Product, required: false }],
+          required: true,
+          include: [includeProducts],
         },
       ])
     );

@@ -20,45 +20,32 @@
       </div>
     </div>
     <div class="row gutters mb-3">
-      <div class="col-sm-4 col-12">
+      <div class="col-sm-6 col-12">
         <label class="mb-1 mr-2">Fecha desde:</label>
-        <v-date-picker v-model="startDate">
+        <v-date-picker style="display: inline-block" v-model="startDate">
           <template v-slot="{ inputValue, inputEvents }">
             <input
-              class="form-control bg-white border px-2 py-1 rounded date-picker"
+              class="form-control bg-white border px-2 py-1 rounded"
               :value="inputValue"
               v-on="inputEvents"
             />
           </template>
         </v-date-picker>
       </div>
-      <div class="col-sm-4 col-12">
+      <div class="col-sm-6 col-12">
         <label class="mb-1 mr-2">Fecha Hasta:</label>
-        <v-date-picker v-model="endDate">
+        <v-date-picker style="display: inline-block" class="" v-model="endDate">
           <template v-slot="{ inputValue, inputEvents }">
             <input
-              class="form-control bg-white border px-2 py-1 rounded date-picker"
+              class="form-control bg-white border px-2 py-1 rounded"
               :value="inputValue"
               v-on="inputEvents"
             />
           </template>
         </v-date-picker>
-      </div>
-      <div class="col-sm-4 col-12">
-        <label class="mb-1 mr-2">Producto:</label>
-        <el-autocomplete
-          style="display: block"
-          v-model="selectedProduct"
-          :fetch-suggestions="getProducts"
-          placeholder="Seleccione un producto"
-          @select="
-            selectedProductId = $event.id;
-            initialize();
-          "
-          value-key="name"
-        ></el-autocomplete>
       </div>
     </div>
+
     <div class="row gutters">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <simple-table
@@ -67,8 +54,6 @@
           date-to-filter="fechaFin"
           :filterBox="false"
           :filterDate="false"
-          :show-reports="true"
-          filename="Reporte de compras"
         >
           <template v-slot:[`item.userId`]=""> kxmn@gmail.com </template>
           <template v-slot:[`item.date`]="{ item }">
@@ -79,15 +64,7 @@
               >
                 <template v-slot="{ inputValue, inputEvents }">
                   <input
-                    class="
-                      form-control
-                      bg-white
-                      border
-                      px-2
-                      py-1
-                      rounded
-                      date-picker
-                    "
+                    class="form-control bg-white border px-2 py-1 rounded"
                     :value="inputValue"
                     v-on="inputEvents"
                   />
@@ -187,9 +164,6 @@ export default {
       editMode: false,
       startDate: null,
       endDate: null,
-      products: [],
-      selectedProduct: null,
-      selectedProductId: null,
     };
   },
   computed: {
@@ -218,6 +192,12 @@ export default {
     },
   },
   watch: {
+    async search() {
+      clearTimeout(this.delayTimer);
+      this.delayTimer = setTimeout(() => {
+        this.initialize(this.page);
+      }, 600);
+    },
     async page() {
       this.initialize(this.page);
     },
@@ -228,11 +208,6 @@ export default {
     endDate() {
       this.page = 1;
       this.initialize(this.page);
-    },
-    selectedProduct() {
-      if (this.selectedProduct.trim().length === 0) {
-        this.initialize();
-      }
     },
   },
   async mounted() {
@@ -251,43 +226,12 @@ export default {
         query['startDate'] = this.startDate;
         query['endDate'] = this.endDate;
       }
-      if (this.selectedProductId && this.selectedProduct.trim().length > 0) {
-        query['productId'] = this.selectedProductId;
-      }
-      await Promise.all([
-        this.$store.dispatch(ENTITY + 'Module/list', query),
-        this.$store.dispatch('productsModule/list', {
-          showLoading: false,
-          page: 1,
-        }),
-      ]);
-      this.products = this.$store.state.productsModule.products;
-      console.log('🚀 Aqui *** -> this.products', this.products);
+      await Promise.all([this.$store.dispatch(ENTITY + 'Module/list', query)]);
       // asignar al data del componente
       this[ENTITY] = this.$deepCopy(
         this.$store.state[ENTITY + 'Module'][ENTITY],
       );
     },
-    getProducts($event, callback) {
-      clearTimeout(this.delayTimer);
-      this.delayTimer = setTimeout(async () => {
-        // llamada asincrona de items
-        let query = {
-          search: $event,
-          showLoading: false,
-          limit: 10,
-          page: 1,
-        };
-        if (this.fieldsToSearch) {
-          query['fieldsToSearch'] = this.fieldsToSearch;
-        }
-        await Promise.all([this.$store.dispatch('productsModule/list', query)]);
-        // asignar al data del componente
-        this.products = this.$store.state.productsModule.products;
-        callback(this.products);
-      }, 1000);
-    },
-
     async deleteItem(item) {
       const index = this[ENTITY].indexOf(item);
       let itemId = this[ENTITY][index].id;
@@ -326,10 +270,6 @@ export default {
           .toFixed(2);
       }
       return '0';
-    },
-    filterItemsByDate() {
-      console.log('jaja');
-      this.initialize();
     },
     subTotalRevenue(purchasesDetail) {
       if (purchasesDetail) {

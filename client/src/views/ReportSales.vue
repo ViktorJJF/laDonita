@@ -1,29 +1,33 @@
 <template>
   <core-view-slot view-name="Listado de Ventas">
     <div class="row gutters">
-      <ul>
-        <li>
-          <h3 class="mb-3">
-            Total de Ventas:
-            <span class="ganancia"
-              >S/.{{ $filters.formatMoney(totalSales) }}</span
-            >
-          </h3>
-        </li>
-        <li>
-          <h3 class="mb-3">
-            Total de Ganancias:
-            <span class="ganancia"
-              >S/.{{ $filters.formatMoney(totalSales - totalSalesCost) }}</span
-            >
-          </h3>
-        </li>
-        <li>
-          <h5 class="mb-3">
-            Cantidad de ventas: {{ $store.state.salesModule.total }}
-          </h5>
-        </li>
-      </ul>
+      <div class="col-sm-6 col-12">
+        <ul>
+          <li>
+            <h3 class="mb-3">
+              Total de Ventas:
+              <span class="ganancia"
+                >S/.{{ $filters.formatMoney(totalSales) }}</span
+              >
+            </h3>
+          </li>
+          <li>
+            <h3 class="mb-3">
+              Total de Ganancias:
+              <span class="ganancia"
+                >S/.{{
+                  $filters.formatMoney(totalSales - totalSalesCost)
+                }}</span
+              >
+            </h3>
+          </li>
+          <li>
+            <h5 class="mb-3">
+              Cantidad de ventas: {{ $store.state.salesModule.total }}
+            </h5>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="row gutters mb-3">
       <div class="col-sm-6 col-12">
@@ -60,6 +64,8 @@
           date-to-filter="fechaFin"
           :filterBox="false"
           :filterDate="false"
+          :show-reports="true"
+          filename="Reporte de ventas"
         >
           <template v-slot:[`item.userId`]=""> kxmn@gmail.com </template>
           <template v-slot:[`item.date`]="{ item }">
