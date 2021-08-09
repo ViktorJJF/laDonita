@@ -125,6 +125,11 @@ const routes = [
         name: 'NotesList',
         component: () => import('@/views/NotesList.vue'),
       },
+      {
+        path: '/ordenes-menu',
+        name: 'FoodDishesOrders',
+        component: () => import('@/views/FoodDishesOrders.vue'),
+      },
     ],
   },
 ];
