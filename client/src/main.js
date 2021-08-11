@@ -3,11 +3,12 @@ import { createApp } from 'vue';
 // components
 import Paginate from 'v-pagination-3';
 import VCalendar from 'v-calendar';
+// Element plus
+import ElementPlus from 'element-plus';
 
 // import JQuery from 'jquery';
 import App from '@/App.vue';
-// Element plus
-import ElementPlus from 'element-plus';
+
 import 'element-plus/lib/theme-chalk/index.css';
 
 import router from '@/router';
