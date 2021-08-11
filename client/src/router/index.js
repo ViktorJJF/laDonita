@@ -126,9 +126,29 @@ const routes = [
         component: () => import('@/views/NotesList.vue'),
       },
       {
-        path: '/ordenes-menu',
+        path: '/pedidos-menu',
         name: 'FoodDishesOrders',
         component: () => import('@/views/FoodDishesOrders.vue'),
+      },
+      {
+        path: '/platos',
+        name: 'DishesList',
+        component: () => import('@/views/DishesList.vue'),
+      },
+      {
+        path: '/platos/crear',
+        name: 'DishesCreate',
+        component: () => import('@/views/DishesAdd.vue'),
+      },
+      {
+        path: '/platos/:id',
+        name: 'DishesAdd',
+        component: () => import('@/views/DishesAdd.vue'),
+      },
+      {
+        path: '/pedidos',
+        name: 'OrdersList',
+        component: () => import('@/views/OrdersList.vue'),
       },
     ],
   },
@@ -143,7 +163,6 @@ router.beforeEach((to, from, next) => {
   // checkForUpdates();
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const isTokenSet = store.getters['authModule/isTokenSet'];
-  console.log('🚀 Aqui *** -> isTokenSet', requiresAuth, isTokenSet);
   if (requiresAuth && !isTokenSet) {
     return next({ name: 'login' });
   } // checkIfTokenNeedsRefresh(); //

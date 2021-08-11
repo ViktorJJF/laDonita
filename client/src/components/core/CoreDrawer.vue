@@ -26,7 +26,7 @@
         </li>
         <li class="nav-item">
           <router-link class="nav-link" :to="{ name: 'NotesList' }">
-            <i class="icon-devices_other nav-icon"></i>
+            <i class="icon-filter_none nav-icon"></i>
             Notas
           </router-link>
         </li>
@@ -51,7 +51,7 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <i class="icon-users nav-icon"></i>
+            <i :class="multiple.icon"></i>
             {{ multiple.text }}
           </a>
           <ul class="dropdown-menu" aria-labelledby="doctoRs">
@@ -77,7 +77,41 @@ export default {
       items: [],
       multiples: [
         {
+          icon: 'icon-shopping-cart1 nav-icon',
+          text: 'Pedidos',
+          to: 'OrdersList',
+          subItems: [
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Historial de Pedidos',
+              to: 'OrdersList',
+            },
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Nuevo Pedido',
+              to: 'FoodDishesOrders',
+            },
+          ],
+        },
+        {
           icon: 'icon-users nav-icon',
+          text: 'Platos',
+          to: 'DishesList',
+          subItems: [
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Listado de Platos',
+              to: 'DishesList',
+            },
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Nuevo Plato',
+              to: 'DishesCreate',
+            },
+          ],
+        },
+        {
+          icon: 'icon-local_bar nav-icon',
           text: 'Productos',
           to: 'ProductsList',
           subItems: [
@@ -128,7 +162,7 @@ export default {
           ],
         },
         {
-          icon: 'icon-users nav-icon',
+          icon: 'icon-user nav-icon',
           text: 'Proveedores',
           to: 'ProvidersList',
           subItems: [
@@ -146,41 +180,41 @@ export default {
         },
 
         {
-          icon: 'icon-users nav-icon',
+          icon: 'icon-shopping-cart1 nav-icon',
           text: 'Ventas',
           to: 'SalesList',
           subItems: [
             {
               icon: 'icon-users nav-icon',
-              text: 'Nueva venta',
-              to: 'SalesAdd',
+              text: 'Historial de ventas',
+              to: 'SalesList',
             },
             {
               icon: 'icon-users nav-icon',
-              text: 'Historial de ventas',
-              to: 'SalesList',
+              text: 'Nueva venta',
+              to: 'SalesAdd',
             },
           ],
         },
         {
-          icon: 'icon-users nav-icon',
+          icon: 'icon-shopping-cart1 nav-icon',
           text: 'Compras',
           to: 'Brands',
           subItems: [
             {
               icon: 'icon-users nav-icon',
-              text: 'Nueva compra',
-              to: 'PurchasesAdd',
+              text: 'Historial de Compras',
+              to: 'PurchasesList',
             },
             {
               icon: 'icon-users nav-icon',
-              text: 'Historial de Compras',
-              to: 'PurchasesList',
+              text: 'Nueva compra',
+              to: 'PurchasesAdd',
             },
           ],
         },
         {
-          icon: 'icon-users nav-icon',
+          icon: 'icon-local_atm nav-icon',
           text: 'Reportes',
           to: 'ReportSales',
           subItems: [

@@ -44,7 +44,7 @@ const model = sequelize.define("products", {
     defaultValue: 0,
   },
   purchasePrice: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.FLOAT,
     defaultValue: 0,
   },
   minStock: {
@@ -52,7 +52,7 @@ const model = sequelize.define("products", {
     defaultValue: 0,
   },
   price: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.FLOAT,
     defaultValue: 0,
   },
   description: Sequelize.TEXT,

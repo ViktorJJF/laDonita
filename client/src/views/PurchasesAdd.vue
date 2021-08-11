@@ -178,7 +178,7 @@
                         { text: 'Cantidad', value: 'qty' },
                         { text: 'Acciones', value: 'actions' },
                       ]"
-                      @addToSale="addToSale"
+                      @addToPurchase="addToPurchase"
                     ></ProductsTable>
                   </div>
                 </div>
@@ -209,7 +209,7 @@ export default {
     };
   },
   methods: {
-    addToSale(item) {
+    addToPurchase(item) {
       this.purchases.push({
         productDetails: item,
         productId: item.id,
@@ -225,38 +225,13 @@ export default {
     async saveSale(products) {
       this.loadingButton = true;
       products = this.$deepCopy(products);
-      // delete unnecesary info
-      // for (const product of products) {
-      //   delete product['productDetails'];
-      // }
-      // validate if historyMode, set history mode to products
-      // if (this.historyMode) {
-      //   for (const product of products) {
-      //     product.history = true;
-      //   }
-      // } else {
-      //   for (const product of products) {
-      //     product.history = false;
-      //   }
-      // }
       try {
-        // date = new Date(date);
-        // date = new Date(date.getTime() - date.getTimezoneOffset() * -60000);
-
         await this.$store.dispatch('purchasesModule/create', {
           history: this.historyMode,
           products,
           date: this.date,
           providerId: this.providerId,
         });
-        // for (const product of products) {
-        //   // if (!product.history) {
-        //   this.$store.commit('productsModule/updateStock', {
-        //     productId: product.productId,
-        //     qty: -product.qty,
-        //   });
-        //   // }
-        // }
         this.purchases = [];
       } finally {
         this.loadingButton = false;

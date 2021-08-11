@@ -34,7 +34,14 @@
                     clearAll="Borrar todo"
                     class="mb-2"
                   />
-                  <button class="btn btn-danger" @click="editMode = false">
+                  <button
+                    v-show="editedId"
+                    class="btn btn-danger"
+                    @click="
+                      editMode = false;
+                      file = null;
+                    "
+                  >
                     Cancelar
                   </button>
                 </div>
@@ -87,7 +94,7 @@
               <div class="col-sm-3 col-12">
                 <VTextFieldWithValidation
                   label="Stock mínimo"
-                  type="text"
+                  type="number"
                   placeholder="Ingresa una cantidad"
                   v-model="editedItem.minStock"
                   :value="editedItem.minStock"
@@ -97,7 +104,7 @@
               <div class="col-sm-3 col-12">
                 <VTextFieldWithValidation
                   label="Stock"
-                  type="text"
+                  type="number"
                   placeholder="Ingresa una cantidad"
                   v-model="editedItem.stock"
                   :value="editedItem.stock"
@@ -107,7 +114,7 @@
               <div class="col-sm-4 col-12">
                 <VTextFieldWithValidation
                   label="Precio de compra"
-                  type="text"
+                  type="number"
                   placeholder="Ingresa un precio de compar"
                   v-model="editedItem.purchasePrice"
                   :value="editedItem.purchasePrice"
@@ -117,7 +124,7 @@
               <div class="col-sm-4 col-12">
                 <VTextFieldWithValidation
                   label="Precio de venta"
-                  type="text"
+                  type="number"
                   placeholder="Ingresa un precio"
                   v-model="editedItem.price"
                   :value="editedItem.price"

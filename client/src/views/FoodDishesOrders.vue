@@ -19,7 +19,24 @@
                   <div class="">{{ dish.name }}</div>
                 </div>
                 <div class="card-footer text-center">
-                  <a href="#" class="btn btn-success btn-block">Agregar</a>
+                  <div class="row gutters">
+                    <div class="col-10">
+                      <a
+                        href="#"
+                        class="btn btn-success btn-block"
+                        @click="addToOrder(dish)"
+                        >Agregar</a
+                      >
+                    </div>
+                    <div class="col-2">
+                      <a
+                        href="#"
+                        class="btn btn-danger btn-block"
+                        @click="decrease(dish.id)"
+                        >-</a
+                      >
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -36,8 +53,12 @@
                     <tbody>
                       <tr>
                         <td>
-                          Karla Xiomara<br />Recibo #12345<br />08 de Agosto de
-                          2021
+                          <input
+                            class="form-control form-control-sm"
+                            type="text"
+                            placeholder="Nombre del cliente"
+                            v-model="order.client"
+                          /><br />{{ $filters.formatDate(order.date) }}
                         </td>
                       </tr>
                       <tr>
@@ -48,17 +69,29 @@
                             cellspacing="0"
                           >
                             <tbody>
-                              <tr>
-                                <td>Picante a la Tacneña (x2)</td>
-                                <td class="alignright">S/.20.00</td>
-                              </tr>
-                              <tr>
-                                <td>Chicharrón de Chancho</td>
-                                <td class="alignright">S/.10.00</td>
+                              <tr
+                                v-for="(dish, idx) in order.dishes"
+                                :key="idx"
+                              >
+                                <td>{{ dish.name }} (x{{ dish.qty }})</td>
+                                <td class="alignright">
+                                  S/.{{
+                                    $filters.formatMoney(dish.price * dish.qty)
+                                  }}
+                                </td>
                               </tr>
                               <tr class="total">
                                 <td class="alignright" width="80%">Total</td>
-                                <td class="alignright">S/.30.00</td>
+                                <td class="alignright">
+                                  S/.{{
+                                    $filters.formatMoney(
+                                      order.dishes.reduce(
+                                        (acc, el) => acc + el.price * el.qty,
+                                        0,
+                                      ),
+                                    )
+                                  }}
+                                </td>
                               </tr>
                             </tbody>
                           </table>
@@ -71,9 +104,9 @@
             </tbody>
           </table>
         </div>
-        <div class="card-footer text-center">
-          <a href="#" class="btn btn-info btn-block">Terminar pedido</a>
-        </div>
+        <a href="#" class="btn btn-info btn-block" @click="saveOrder(order)"
+          >Terminar pedido</a
+        >
       </div>
     </div>
   </core-view-slot>
@@ -88,69 +121,68 @@ export default {
   },
   data() {
     return {
-      dishes: [
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.26-PM-1024x678.jpeg',
-          name: 'Picante a la Tacneña',
-          price: 15,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.29-PM.jpeg',
-          name: 'Pollo a la parrilla',
-          price: 25,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.27-PM-1024x605.jpeg',
-          name: 'Chicharrón de Chancho',
-          price: 15,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.34-PM.jpeg',
-          name: 'Arroz con Pollo',
-          price: 15,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.26-PM-1024x678.jpeg',
-          name: 'Picante a la Tacneña',
-          price: 15,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.29-PM.jpeg',
-          name: 'Pollo a la parrilla',
-          price: 25,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.27-PM-1024x605.jpeg',
-          name: 'Chicharrón de Chancho',
-          price: 15,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.34-PM.jpeg',
-          name: 'Arroz con Pollo',
-          price: 15,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.26-PM-1024x678.jpeg',
-          name: 'Picante a la Tacneña',
-          price: 15,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.29-PM.jpeg',
-          name: 'Pollo a la parrilla',
-          price: 25,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.27-PM-1024x605.jpeg',
-          name: 'Chicharrón de Chancho',
-          price: 15,
-        },
-        {
-          img: 'https://ladonita.com/wp-content/uploads/2021/04/WhatsApp-Image-2021-04-15-at-4.02.34-PM.jpeg',
-          name: 'Arroz con Pollo',
-          price: 15,
-        },
-      ],
+      order: {
+        date: new Date(),
+        client: null,
+        dishes: [],
+      },
+      historyMode: false,
     };
+  },
+  mounted() {
+    this.initialize();
+  },
+  methods: {
+    async initialize() {
+      await Promise.all([this.$store.dispatch('dishesModule/list')]);
+    },
+    addToOrder(dish) {
+      let index = this.order.dishes.findIndex((el) => el.dishId === dish.id);
+      if (index > -1) {
+        this.order.dishes[index].qty += 1;
+      } else {
+        this.order.dishes.push({
+          name: dish.name,
+          dishId: dish.id,
+          qty: 1,
+          price: dish.price,
+        });
+      }
+    },
+    decrease(dishId) {
+      let index = this.order.dishes.findIndex((el) => el.dishId === dishId);
+      if (index > -1) {
+        this.order.dishes[index].qty -= 1;
+        if (this.order.dishes[index].qty === 0) {
+          this.order.dishes.splice(index, 1);
+        }
+      }
+    },
+    async saveOrder(order) {
+      let dishesDetails = order.dishes.map((el) => ({
+        dishId: el.dishId,
+        qty: el.qty,
+        salePrice: el.price,
+      }));
+      // this.loadingButton = true;
+      try {
+        await this.$store.dispatch('ordersModule/create', {
+          history: this.historyMode,
+          dishesDetails,
+          date: this.order.date,
+          client: this.order.client,
+        });
+        this.order.dishes = [];
+        this.order.client = '';
+      } finally {
+        // this.loadingButton = false;
+      }
+    },
+  },
+  computed: {
+    dishes() {
+      return this.$store.state.dishesModule.dishes;
+    },
   },
 };
 </script>
@@ -167,29 +199,9 @@ img {
     GLOBAL
     A very basic CSS reset
 ------------------------------------- */
-* {
-  margin: 0;
-  padding: 0;
-  font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-  box-sizing: border-box;
-  font-size: 14px;
-}
 
 img {
   max-width: 100%;
-}
-
-body {
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-size-adjust: none;
-  width: 100% !important;
-  height: 100%;
-  line-height: 1.6;
-}
-
-/* Let's make sure all tables have defaults */
-table td {
-  vertical-align: top;
 }
 
 /* -------------------------------------
@@ -208,48 +220,6 @@ table td {
 .header {
   width: 100%;
 }
-/* -------------------------------------
-    TYPOGRAPHY
-------------------------------------- */
-h1,
-h2,
-h3 {
-  font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-  color: #000;
-  line-height: 1.2;
-  font-weight: 400;
-}
-
-h1 {
-  font-size: 32px;
-  font-weight: 500;
-}
-
-h2 {
-  font-size: 24px;
-}
-
-h3 {
-  font-size: 18px;
-}
-
-h4 {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-p,
-ul,
-ol {
-  font-weight: normal;
-}
-p li,
-ul li,
-ol li {
-  margin-left: 5px;
-  list-style-position: inside;
-}
-
 /* -------------------------------------
     OTHER STYLES THAT MIGHT BE USEFUL
 ------------------------------------- */

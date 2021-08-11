@@ -52,6 +52,22 @@
           <p class="custom-title">Proveedores</p>
         </div>
       </div>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+        <div
+          @click="$router.push({ name: 'DishesList' })"
+          class="hospital-tiles red"
+        >
+          <p class="custom-title">Platos</p>
+        </div>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+        <div
+          @click="$router.push({ name: 'FoodDishesOrders' })"
+          class="hospital-tiles secondary"
+        >
+          <p class="custom-title">Pedidos</p>
+        </div>
+      </div>
     </div>
   </core-view-slot>
 </template>
