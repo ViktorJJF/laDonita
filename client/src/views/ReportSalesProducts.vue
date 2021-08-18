@@ -272,7 +272,6 @@ export default {
       return '0';
     },
     filterItemsByDate() {
-      console.log('jaja');
       this.initialize();
     },
     subTotalRevenue(purchasesDetail) {

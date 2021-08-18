@@ -156,10 +156,11 @@ module.exports = {
       order: options.sort,
       include: [
         ...(populates
-          ? populates
+          ? populates.map((el) => ({ ...el, separate: true }))
           : model.populates.map((el) => ({ model: el }))),
       ],
-      distinct: true,
+      // distinct: true,
+      // duplicating: false,
       subQuery: false,
     };
 

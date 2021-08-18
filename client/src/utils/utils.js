@@ -137,14 +137,14 @@ const handleError = (error, commit, reject) => {
     //       : commit('errorModule/showError', false, { root: true }),
     //   0,
     // );
-    createToast(errMsg, { timeout: 3000, toastBackgroundColor: 'danger' });
+    createToast(errMsg, { timeout: 3000, type: 'danger' });
   }
   reject(error);
   return 0;
 };
 
 const buildSuccess = msg => {
-  createToast(msg, { timeout: 3000 });
+  createToast(msg, { timeout: 3000, type: 'success' });
 };
 
 // Checks if tokenExpiration in localstorage date is past, if so then trigger an update

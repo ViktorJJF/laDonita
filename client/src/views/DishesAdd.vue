@@ -8,7 +8,11 @@
               <div class="input-group mb-3">
                 <div
                   class="text-center"
-                  v-show="editedItem.img.length > 0 && editMode == false"
+                  v-show="
+                    editedItem.img.length > 0 &&
+                    editMode == false &&
+                    this.editedId
+                  "
                 >
                   <img
                     :src="editedItem.img"
@@ -22,9 +26,14 @@
 
                 <div
                   class="text-center"
-                  v-show="editedItem.img.length == 0 || editMode == true"
+                  v-show="
+                    editedItem.img.length == 0 ||
+                    editMode == true ||
+                    !this.editedId
+                  "
                 >
                   <UploadImages
+                    :key="resetImage"
                     value="/uploads/grodnobot.png"
                     ref="file"
                     @change="handleImages"
@@ -133,6 +142,7 @@ export default {
       loadingButton: false,
       brands: [],
       file: null,
+      resetImage: 0,
       imageName: '',
       imageUrl: '',
     };
@@ -227,6 +237,9 @@ export default {
     },
     clear() {
       this.editedItem = { ...this.defaultItem };
+      this.file = null;
+      this.resetImage += 1;
+      this.v$.$reset();
     },
   },
 };

@@ -166,7 +166,6 @@ router.beforeEach((to, from, next) => {
   if (requiresAuth && !isTokenSet) {
     return next({ name: 'login' });
   } // checkIfTokenNeedsRefresh(); //
-  console.log('jaja');
   store.commit('successModule/success', null); //
   // store.commit('errorModule/error', null);
   return next();

@@ -289,6 +289,7 @@ export default {
     },
     clear() {
       this.editedItem = { ...this.defaultItem };
+      this.v$.$reset();
     },
   },
 };

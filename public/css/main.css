@@ -2904,8 +2904,6 @@ label {
         color: #DBAE58; }
   .custom-navbar ul.navbar-nav ul.dropdown-menu {
     margin-top: 0;
-    -webkit-animation-name: slideInUp;
-    animation-name: slideInUp;
     -webkit-animation-duration: .3s;
     animation-duration: .3s;
     -webkit-animation-fill-mode: both;

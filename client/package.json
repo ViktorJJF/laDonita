@@ -130,6 +130,9 @@
       ],
       "new-cap": [
         "off"
+      ],
+      "no-unused-expressions": [
+        "off"
       ]
     }
   },

@@ -1,11 +1,30 @@
 <template>
   <core-view-slot view-name="Órdenes Menú">
-    <div class="row gutters">
+    <div class="row gutters d-flex">
       <div class="col-12 col-sm-9">
+        <div class="form-group">
+          <label for="inputName">Búsqueda por nombre</label>
+          <el-input
+            placeholder="Ingresa tu búsqueda"
+            v-model="search"
+            clearable
+          >
+          </el-input>
+        </div>
+      </div>
+      <div class="col-12 col-sm-3 align-self-center">
+        <el-button
+          @click="dialog = true"
+          type="primary"
+          icon="el-icon-shopping-cart-2"
+          >Ver pedidos</el-button
+        >
+      </div>
+      <div class="col-12 col-sm-6 col-md-9">
         <div class="row gutters">
           <div
-            class="col-12 col-sm-6 col-md-6 col-lg-4"
-            v-for="(dish, idx) in dishes"
+            class="col-12 col-sm-12 col-md-6 col-lg-4"
+            v-for="(dish, idx) in filteredItems"
             :key="idx"
           >
             <div class="card-deck">
@@ -16,7 +35,9 @@
                   alt="Card image cap"
                 />
                 <div class="card-header">
-                  <div class="">{{ dish.name }}</div>
+                  <span class="dish-name">{{ dish.name }}</span> - S/.{{
+                    dish.price
+                  }}
                 </div>
                 <div class="card-footer text-center">
                   <div class="row gutters">
@@ -24,7 +45,7 @@
                       <a
                         href="#"
                         class="btn btn-success btn-block"
-                        @click="addToOrder(dish)"
+                        @click.prevent="addToOrder(dish)"
                         >Agregar</a
                       >
                     </div>
@@ -43,8 +64,8 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-sm-3">
-        <div class="card-body">
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="custom-sticky">
           <table class="main" width="100%" cellpadding="0" cellspacing="0">
             <tbody>
               <tr>
@@ -103,21 +124,31 @@
               </tr>
             </tbody>
           </table>
+          <a href="#" class="btn btn-info btn-block" @click="saveOrder(order)"
+            >Terminar pedido</a
+          >
         </div>
-        <a href="#" class="btn btn-info btn-block" @click="saveOrder(order)"
-          >Terminar pedido</a
-        >
       </div>
     </div>
+    <el-dialog title="Pedidos recientes" v-model="dialog" width="93%">
+      <OrdersTable></OrdersTable>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="dialog = false">OK</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </core-view-slot>
 </template>
 
 <script>
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
+import OrdersTable from '@/components/OrdersTable.vue';
 
 export default {
   components: {
     CoreViewSlot,
+    OrdersTable,
   },
   data() {
     return {
@@ -127,14 +158,28 @@ export default {
         dishes: [],
       },
       historyMode: false,
+      search: '',
+      dialog: false,
     };
   },
   mounted() {
     this.initialize();
   },
+  computed: {
+    dishes() {
+      return this.$store.state.dishesModule.dishes;
+    },
+    filteredItems() {
+      return this.dishes.filter((el) =>
+        el.name.toLowerCase().includes(this.search.toLowerCase()),
+      );
+    },
+  },
   methods: {
     async initialize() {
-      await Promise.all([this.$store.dispatch('dishesModule/list')]);
+      await Promise.all([
+        this.$store.dispatch('dishesModule/list', { sort: 'name', order: 1 }),
+      ]);
     },
     addToOrder(dish) {
       let index = this.order.dishes.findIndex((el) => el.dishId === dish.id);
@@ -179,15 +224,15 @@ export default {
       }
     },
   },
-  computed: {
-    dishes() {
-      return this.$store.state.dishesModule.dishes;
-    },
-  },
 };
 </script>
 
 <style lang="scss" scoped>
+.custom-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
 img {
   float: left;
   width: 100%;
@@ -306,6 +351,9 @@ img {
 
   .invoice {
     width: 100% !important;
+  }
+  .dish-name {
+    font-weight: 500;
   }
 }
 </style>

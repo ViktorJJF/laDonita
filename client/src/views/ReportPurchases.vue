@@ -136,7 +136,7 @@
             <pagination
               v-model="page"
               :records="totalItems"
-              :per-page="$store.state.itemsPerPage"
+              :per-page="itemsPerPage"
               :options="{
                 chunk: $store.state.maxPaginationButtons,
                 texts: {
@@ -190,6 +190,7 @@ export default {
       products: [],
       selectedProduct: null,
       selectedProductId: null,
+      itemsPerPage: 100,
     };
   },
   computed: {
@@ -245,6 +246,9 @@ export default {
         page,
         search: this.search,
         fieldsToSearch: this.fieldsToSearch,
+        sort: 'date',
+        order: -1,
+        limit: this.itemsPerPage,
       };
       if (this.startDate || this.endDate) {
         query['fieldDate'] = 'date'; // este es el field a filtrar
@@ -328,7 +332,6 @@ export default {
       return '0';
     },
     filterItemsByDate() {
-      console.log('jaja');
       this.initialize();
     },
     subTotalRevenue(purchasesDetail) {

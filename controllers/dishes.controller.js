@@ -7,7 +7,7 @@ const db = require("../helpers/db");
  * Private functions *
  ******************** */
 
-const UNIQUEFIELDS = [];
+const UNIQUEFIELDS = ["name"];
 
 const itemExistsExcludingItself = async (id, body) =>
   new Promise((resolve, reject) => {

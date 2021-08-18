@@ -220,6 +220,8 @@ export default {
         page,
         search: this.search,
         fieldsToSearch: this.fieldsToSearch,
+        sort: 'date',
+        order: -1,
       };
       if (this.startDate || this.endDate) {
         query['fieldDate'] = 'date'; // este es el field a filtrar
