@@ -53,7 +53,7 @@
                       <a
                         href="#"
                         class="btn btn-danger btn-block"
-                        @click="decrease(dish.id)"
+                        @click.prevent="decrease(dish.id)"
                         >-</a
                       >
                     </div>
