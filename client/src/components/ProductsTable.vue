@@ -12,6 +12,19 @@
         <template v-slot:[`item.createdAt`]="{ item }">
           {{ $filters.formatDate(item.createdAt) }}
         </template>
+        <template v-slot:[`item.stock`]="{ item }">
+          {{ item.stock }}
+          <el-tooltip
+            v-if="item.stock < item.minStock"
+            content="Por debajo de stock mínimo"
+            placement="top"
+          >
+            <i
+              class="icon-warning1 text-danger fa-sm"
+              style="font-size: 1.3em"
+            ></i>
+          </el-tooltip>
+        </template>
         <template v-slot:[`item.name`]="{ item }">
           <div class="d-flex align-items-center">
             <img
@@ -52,7 +65,7 @@
           />
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <div v-if="!isSale" class="btn-group btn-group-sm">
+          <div v-if="!isSale && !isPurchase" class="btn-group btn-group-sm">
             <button
               @click="
                 $router.push({ name: 'ProductsAdd', params: { id: item.id } })
@@ -72,7 +85,15 @@
           </div>
           <div v-else>
             <button
+              v-if="isSale"
               @click="addToSale(item)"
+              type="button"
+              class="btn btn-warning"
+            >
+              Agregar</button
+            ><button
+              v-if="isPurchase"
+              @click="addToPurchase(item)"
               type="button"
               class="btn btn-warning"
             >
@@ -132,7 +153,7 @@ import SimpleTable from '@/components/template/SimpleTable.vue';
 import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidation.vue';
 
 export default {
-  emits: ['addToSale'],
+  emits: ['addToSale', 'addToPurchase'],
   props: {
     headers: {
       type: Array,
@@ -255,6 +276,10 @@ export default {
       }
       item['errors'] = [];
       this.$emit('addToSale', item);
+      item.qty = null;
+    },
+    addToPurchase(item) {
+      this.$emit('addToPurchase', item);
       item.qty = null;
     },
   },

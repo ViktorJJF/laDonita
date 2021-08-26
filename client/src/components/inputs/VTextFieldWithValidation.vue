@@ -17,6 +17,7 @@
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     // must be included in props
     customClasses: {

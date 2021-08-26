@@ -171,7 +171,7 @@
                   <div class="col-lg-12 col-md-12 col-sm-12">
                     <ProductsTable
                       :productsToShow="4"
-                      :isSale="true"
+                      :isSale="false"
                       :isPurchase="true"
                       :headers="[
                         { text: 'Producto', value: 'name' },
@@ -210,6 +210,7 @@ export default {
   },
   methods: {
     addToPurchase(item) {
+      console.log('🚀 Aqui *** -> item', item);
       this.purchases.push({
         productDetails: item,
         productId: item.id,

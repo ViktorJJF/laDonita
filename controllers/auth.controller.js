@@ -438,10 +438,6 @@ exports.login = async (req, res) => {
       // all ok, register access and return token
       user.loginAttempts = 0;
       await saveLoginAttemptsToDB(user, user.loginAttempts);
-      console.log(
-        "la respuesta: ",
-        await saveUserAccessAndReturnToken(req, user)
-      );
       res.status(200).json(await saveUserAccessAndReturnToken(req, user));
     }
   } catch (error) {

@@ -18,6 +18,13 @@
                   @keyup.enter="save"
                   :errors="v$.editedItem.name.$errors"
                 />
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  v-model="editedItem.name"
+                  @keyup.enter="save"
+                />
               </div>
               <div class="col-sm-12 col-12">
                 <div class="form-group">

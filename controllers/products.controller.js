@@ -7,11 +7,12 @@ const db = require("../helpers/db");
  * Private functions *
  ******************** */
 
-const UNIQUEFIELDS = ["name"];
+const UNIQUEFIELDS = [];
 
 const itemExistsExcludingItself = async (id, body) =>
   new Promise((resolve, reject) => {
     const query = UNIQUEFIELDS.length > 0 ? {} : { noFields: true };
+    if (UNIQUEFIELDS.length === 0) return resolve(false);
     for (const uniquefield of UNIQUEFIELDS) {
       query[uniquefield] = body[uniquefield];
     }
@@ -30,6 +31,7 @@ const itemExistsExcludingItself = async (id, body) =>
 const itemExists = async (body) =>
   new Promise((resolve, reject) => {
     const query = UNIQUEFIELDS.length > 0 ? {} : { noFields: true };
+    if (UNIQUEFIELDS.length === 0) return resolve(false);
     for (const uniquefield of UNIQUEFIELDS) {
       query[uniquefield] = body[uniquefield];
     }
@@ -76,11 +78,6 @@ const create = async (req, res) => {
     // req.body.userId = req.user._id;
     const doesItemExists = await itemExists(req.body);
     if (!doesItemExists) {
-      // manejo de imagenes
-      // if (req.file) {
-      //   req.body.img = req.file.path;
-      // }
-      console.log("el req body: ", req.body);
       res.status(200).json(await db.createItem(req.body, model));
     }
   } catch (error) {
