@@ -166,6 +166,20 @@ const checkIfTokenNeedsRefresh = () => {
   }
 };
 
+function searchItem(search, items, fieldsToSearch) {
+  return search && search.trim().length > 0
+    ? items.filter(item =>
+        fieldsToSearch.some(
+          key =>
+            (typeof item[key] === 'string' || typeof item[key] === 'number') &&
+            String(item[key])
+              .toLowerCase()
+              .includes(search.toLowerCase().trim()),
+        ),
+      )
+    : items;
+}
+
 export {
   addCustomScript,
   getRandomInt,
@@ -176,4 +190,5 @@ export {
   handleError,
   buildSuccess,
   checkIfTokenNeedsRefresh,
+  searchItem,
 };

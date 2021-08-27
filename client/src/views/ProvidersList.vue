@@ -6,7 +6,7 @@
           :headers="headers"
           :items="items"
           date-to-filter="fechaFin"
-          :filterBox="false"
+          :filterBox="true"
           :filterDate="false"
         >
           <template v-slot:[`item.createdAt`]="{ item }">
@@ -148,6 +148,8 @@ export default {
           page,
           search: this.search,
           fieldsToSearch: this.fieldsToSearch,
+          order: 1,
+          sort: 'name',
         }),
       ]);
       // asignar al data del componente

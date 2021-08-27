@@ -28,7 +28,7 @@
             </option>
             <option
               :value="provider.id"
-              v-for="provider in $store.state.providersModule.providers"
+              v-for="provider in providers"
               :key="provider.id"
             >
               {{ provider.name }}
@@ -63,6 +63,7 @@
                           <tr>
                             <th>X</th>
                             <th>Producto</th>
+                            <th>Marca</th>
                             <th>Cantidad</th>
                             <th>Precio de Compra (x unidad)</th>
                             <th>Total</th>
@@ -80,6 +81,13 @@
                               </a>
                             </td>
                             <td>{{ sale.productDetails.name }}</td>
+                            <td>
+                              {{
+                                $store.getters['brandsModule/getBrandNameById'](
+                                  sale.productDetails.brandId,
+                                )
+                              }}
+                            </td>
                             <td>{{ sale.qty }}</td>
                             <td>{{ sale.productDetails.price }}</td>
                             <td>
@@ -206,11 +214,23 @@ export default {
       purchases: [],
       date: new Date(),
       providerId: null,
+      providers: [],
     };
   },
+  mounted() {
+    this.initialize();
+  },
   methods: {
+    async initialize() {
+      await Promise.all([
+        this.$store.dispatch('providersModule/list', {
+          order: 1,
+          sort: 'name',
+        }),
+      ]);
+      this.providers = this.$store.state.providersModule.providers;
+    },
     addToPurchase(item) {
-      console.log('🚀 Aqui *** -> item', item);
       this.purchases.push({
         productDetails: item,
         productId: item.id,
@@ -218,6 +238,7 @@ export default {
         purchasePrice: item.purchasePrice,
         salePrice: item.price,
         providerId: null,
+        brandId: item.brandId,
       });
     },
     deleteSale(index) {

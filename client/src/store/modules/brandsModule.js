@@ -122,7 +122,12 @@ const module = {
       state.brands.splice(indexToDelete, 1);
     },
   },
-  getters: {},
+  getters: {
+    getBrandNameById: state => id => {
+      const brandFound = state.brands.find(brand => brand.id === id);
+      return brandFound ? brandFound.name : 'Sin marca';
+    },
+  },
 };
 
 export default module;

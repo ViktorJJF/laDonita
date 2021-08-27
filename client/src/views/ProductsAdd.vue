@@ -67,37 +67,29 @@
           <div class="card-body">
             <div class="row gutters">
               <div class="col-sm-12 col-12">
-                <VTextFieldWithValidation
-                  label="Nombre"
-                  type="text"
-                  placeholder="Ingresa un Nombre"
+                <el-autocomplete
+                  autocomplete="off"
+                  style="display: block"
                   v-model="editedItem.name"
-                  :value="editedItem.name"
-                  @keyup.enter="save"
-                  :errors="v$.editedItem.name.$errors"
-                />
+                  :fetch-suggestions="getProducts"
+                  placeholder="Ingresa un nombre"
+                  @select="editedItem.name = $event.name"
+                  value-key="name"
+                  :trigger-on-focus="false"
+                ></el-autocomplete>
               </div>
               <div class="col-sm-6 col-12">
                 <label for="marca">Marca</label>
                 <div class="form-group">
-                  <select
+                  <el-autocomplete
                     id="marca"
-                    required
-                    placeholder="Selecciona una marca"
-                    v-model="editedItem.brandId"
-                    class="form-control"
-                  >
-                    <option :value="0" disabled selected>
-                      Selecciona una opción
-                    </option>
-                    <option
-                      :value="brand.id"
-                      v-for="brand in brands"
-                      :key="brand.id"
-                    >
-                      {{ brand.name }}
-                    </option>
-                  </select>
+                    style="display: block"
+                    v-model="selectedBrand"
+                    :fetch-suggestions="getBrands"
+                    placeholder="Seleccione una marca"
+                    @select="editedItem.brandId = $event.id"
+                    value-key="name"
+                  ></el-autocomplete>
                 </div>
               </div>
               <div class="col-sm-3 col-12">
@@ -156,7 +148,7 @@
               </div>
               <div class="col-sm-12 col-12">
                 <div class="form-group">
-                  <label for="descripcion">Marca</label>
+                  <label for="descripcion">Descripción</label>
                   <textarea
                     v-model="editedItem.description"
                     class="form-control"
@@ -193,6 +185,7 @@ import vuelidate from '@/plugins/vuelidate';
 import MODEL_ITEM from '@/models/products';
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
 import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidation.vue';
+import { searchItem } from '@/utils/utils';
 
 export default {
   components: {
@@ -214,6 +207,7 @@ export default {
       imageName: '',
       imageUrl: '',
       resetImage: 0,
+      selectedBrand: '',
     };
   },
   validations() {
@@ -241,8 +235,9 @@ export default {
       if (!newValue) this.editedItem = this.$deepCopy(this.defaultItem);
     },
   },
-  mounted() {
+  async mounted() {
     if (this.editedId) this.initialize();
+    await this.$store.dispatch('brandsModule/list', { order: 1, sort: 'name' });
     this.brands = this.$store.state.brandsModule.brands;
   },
   methods: {
@@ -251,6 +246,11 @@ export default {
         ENTITY + 'Module/listOne',
         this.editedId,
       );
+      this.selectedBrand = this.editedItem.brandId
+        ? this.$store.state.brandsModule.brands.find(
+            (brand) => brand.id === this.editedItem.brandId,
+          ).name
+        : '';
     },
     handleImages() {
       // this.editedItem.img = files;
@@ -309,6 +309,29 @@ export default {
       this.file = null;
       this.resetImage += 1;
       this.v$.$reset();
+    },
+    getBrands($event, callback) {
+      this.brands = this.$store.state.brandsModule.brands;
+      callback(searchItem($event, this.brands, ['name']));
+    },
+    getProducts($event, callback) {
+      clearTimeout(this.delayTimer);
+      this.delayTimer = setTimeout(async () => {
+        // llamada asincrona de items
+        let query = {
+          search: $event,
+          showLoading: false,
+          limit: 10,
+          page: 1,
+          order: 1,
+          sort: 'name',
+        };
+        query['fieldsToSearch'] = ['name'];
+        await Promise.all([this.$store.dispatch('productsModule/list', query)]);
+        // asignar al data del componente
+        this.products = this.$store.state.productsModule.products;
+        callback(this.products);
+      }, 1000);
     },
   },
 };

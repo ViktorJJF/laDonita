@@ -39,6 +39,7 @@
                           <tr>
                             <th>X</th>
                             <th>Producto</th>
+                            <th>Marca</th>
                             <th>Cantidad</th>
                             <th>Precio de venta (x unidad)</th>
                             <th>Total</th>
@@ -56,6 +57,13 @@
                               </a>
                             </td>
                             <td>{{ sale.productDetails.name }}</td>
+                            <td>
+                              {{
+                                $store.getters['brandsModule/getBrandNameById'](
+                                  sale.productDetails.brandId,
+                                )
+                              }}
+                            </td>
                             <td>{{ sale.qty }}</td>
                             <td>{{ sale.productDetails.price }}</td>
                             <td>
@@ -181,13 +189,13 @@ export default {
   },
   methods: {
     addToSale(item) {
-      console.log(item);
       this.sales.push({
         productDetails: item,
         productId: item.id,
         qty: item.qty,
         purchasePrice: item.purchasePrice,
         salePrice: item.price,
+        brandId: item.brandId,
       });
     },
     deleteSale(index) {

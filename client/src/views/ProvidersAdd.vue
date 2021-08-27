@@ -1,5 +1,5 @@
 <template>
-  <core-view-slot view-name="Formulario Marcas">
+  <core-view-slot :view-name="formTitle">
     <div class="row gutters">
       <div class="col-sm-12">
         <div class="card">
@@ -82,6 +82,11 @@ export default {
     },
     submitText() {
       return this.editedId ? 'Actualizar' : 'Crear';
+    },
+    formTitle() {
+      return this.editedId
+        ? 'Formulario actualizar proveedor'
+        : 'Formulario crear proveedor';
     },
   },
   watch: {

@@ -20,7 +20,7 @@ const sequelize = new Sequelize(
     logging: false,
   }
 );
-// // sequelize.sync({ force: true });
+// // sequelize.sync({ force: trueeee });
 
 (async () => {
   try {

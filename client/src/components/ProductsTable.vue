@@ -35,7 +35,13 @@
               class="img-fluid rounded avatar-50 mr-3"
             />
             <div>
-              {{ item.name }}
+              {{ item.name
+              }}<span v-show="isSale || isPurchase">
+                -
+                {{
+                  $store.getters['brandsModule/getBrandNameById'](item.brandId)
+                }}</span
+              >
             </div>
           </div>
         </template>
@@ -103,10 +109,8 @@
         </template>
         <template v-slot:[`search`]>
           <div class="row d-flex justify-content-between mb-3">
-            <div class="col-sm-12">
-              <label for="inputName">Búsqueda</label>
-            </div>
             <div class="col-sm-6">
+              <label for="inputName">Búsqueda</label>
               <input
                 v-model="search"
                 type="text"
@@ -115,7 +119,22 @@
                 placeholder="Ingresa tu búsqueda"
               />
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4 col-12">
+              <label class="mb-1 mr-2">Marca:</label>
+              <el-autocomplete
+                style="display: block"
+                v-model="selectedBrand"
+                :fetch-suggestions="getBrands"
+                placeholder="Seleccione una marca"
+                @select="
+                  selectedBrandId = $event.id;
+                  initialize();
+                "
+                value-key="name"
+                @input="brandAutocompleteChange"
+              ></el-autocomplete>
+            </div>
+            <div class="col-sm-2 my-auto">
               <button
                 type="button"
                 class="btn btn-primary"
@@ -151,6 +170,7 @@ const ENTITY = 'products';
 import vuelidate from '@/plugins/vuelidate';
 import SimpleTable from '@/components/template/SimpleTable.vue';
 import VTextFieldWithValidation from '@/components/inputs/VTextFieldWithValidation.vue';
+import { searchItem } from '@/utils/utils';
 
 export default {
   emits: ['addToSale', 'addToPurchase'],
@@ -202,6 +222,8 @@ export default {
       loadingButton: false,
       search: '',
       dialog: false,
+      selectedBrand: null,
+      selectedBrandId: null,
     };
   },
   computed: {
@@ -241,8 +263,13 @@ export default {
           search: this.search,
           fieldsToSearch: this.fieldsToSearch,
           limit: this.productsToShow || this.$store.state.itemsPerPage,
+          order: 1,
+          sort: 'name',
+          brandId: this.selectedBrandId,
         }),
+        this.$store.dispatch('brandsModule/list', { order: 1, sort: 'name' }),
       ]);
+
       // asignar al data del componente
       this[ENTITY] = this.$deepCopy(
         this.$store.state[ENTITY + 'Module'][ENTITY],
@@ -281,6 +308,17 @@ export default {
     addToPurchase(item) {
       this.$emit('addToPurchase', item);
       item.qty = null;
+    },
+    getBrands($event, callback) {
+      this.brands = this.$store.state.brandsModule.brands;
+      callback(searchItem($event, this.brands, ['name']));
+    },
+    brandAutocompleteChange($event) {
+      if ($event.length === 0) {
+        // reiniciar listado sin marcas
+        this.selectedBrandId = null;
+        this.initialize();
+      }
     },
   },
 };

@@ -2,68 +2,74 @@ const Sequelize = require("sequelize");
 const sequelize = require("../database/connection");
 const Brands = require("./Brands");
 
-const model = sequelize.define("products", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: Sequelize.STRING(200),
-    unique: true,
-    allowNull: false,
-  },
-  img: {
-    type: Sequelize.STRING(200),
-  },
-  userId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: "users",
-      key: "id",
+const model = sequelize.define(
+  "products",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    onUpdate: "cascade",
-    onDelete: "cascade",
-  },
-  brandId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: "brands",
-      key: "id",
+    name: {
+      type: Sequelize.STRING(200),
+      unique: false,
+      allowNull: false,
     },
-    onUpdate: "cascade",
-    onDelete: "cascade",
+    img: {
+      type: Sequelize.STRING(200),
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onUpdate: "cascade",
+      onDelete: "cascade",
+    },
+    brandId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: "brands",
+        key: "id",
+      },
+      onUpdate: "cascade",
+      onDelete: "cascade",
+    },
+    stock: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+    },
+    minStock: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+    },
+    purchasePrice: {
+      type: Sequelize.FLOAT,
+      defaultValue: 0,
+    },
+    minStock: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+    },
+    price: {
+      type: Sequelize.FLOAT,
+      defaultValue: 0,
+    },
+    description: Sequelize.TEXT,
+    expiration: {
+      type: Sequelize.DATE,
+    },
+    status: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true,
+    },
   },
-  stock: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0,
-  },
-  minStock: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0,
-  },
-  purchasePrice: {
-    type: Sequelize.FLOAT,
-    defaultValue: 0,
-  },
-  minStock: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0,
-  },
-  price: {
-    type: Sequelize.FLOAT,
-    defaultValue: 0,
-  },
-  description: Sequelize.TEXT,
-  expiration: {
-    type: Sequelize.DATE,
-  },
-  status: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: true,
-  },
-});
+  {
+    indexes: [{ fields: ["name", "brandId"], unique: true }],
+  }
+);
 
 model.populates = [Brands];
 

@@ -72,6 +72,21 @@ module.exports = {
   async checkQueryString(query) {
     return new Promise((resolve, reject) => {
       let finalQuery = JSON.parse(JSON.stringify(query));
+      // se obtiene campos fuera del filtro y campos
+      let queries = {};
+      for (const key in query) {
+        if (query.hasOwnProperty.call(query, key)) {
+          const element = query[key];
+          if (
+            key !== "filter" &&
+            key !== "fields" &&
+            key !== "page" &&
+            key !== "filter"
+          ) {
+            queries[key] = element;
+          }
+        }
+      }
       try {
         // agregando filtro de rango fecha
         if (
@@ -108,7 +123,7 @@ module.exports = {
           });
           // Puts array result in data
           data[Op.or] = array;
-          resolve(data);
+          resolve({ ...data, ...queries });
         } else {
           resolve(finalQuery);
         }
@@ -240,7 +255,15 @@ module.exports = {
         // await item.reload();
         resolve({ ok: true, payload: JSON.parse(JSON.stringify(item)) });
       } catch (error) {
-        reject(buildErrObject(422, error.message));
+        console.log("el error", error);
+        reject(
+          buildErrObject(
+            422,
+            error.errors[0].type.includes("unique violation")
+              ? "El registro ya existe"
+              : error.message
+          )
+        );
       }
     });
   },
@@ -259,8 +282,16 @@ module.exports = {
           return itemNotFound(null, item, reject, "NOT_FOUND");
         }
         resolve({ ok: true, payload: item });
-      } catch (err) {
-        reject(buildErrObject(422, err.message));
+      } catch (error) {
+        console.log(error);
+        reject(
+          buildErrObject(
+            422,
+            error.errors[0].type.includes("unique violation")
+              ? "El registro ya existe"
+              : error.message
+          )
+        );
       }
     });
   },

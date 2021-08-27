@@ -104,6 +104,8 @@ const create = async (req, res) => {
     //validations
     if (products.length === 0)
       throw utils.buildErrObject(422, "No agregaste productos a la compra");
+    if (!req.body.providerId)
+      throw utils.buildErrObject(422, "Selecciona algún proveedor");
     //begin transaction
     let createdPurchase, purchasedProducts;
     try {

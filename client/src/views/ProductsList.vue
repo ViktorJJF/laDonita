@@ -1,5 +1,5 @@
 <template>
-  <core-view-slot view-name="Marcas">
+  <core-view-slot view-name="Productos">
     <ProductsTable
       :headers="[
         { text: 'Producto', value: 'name' },

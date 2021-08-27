@@ -1,5 +1,5 @@
 <template>
-  <core-view-slot view-name="Formulario Marcas">
+  <core-view-slot :view-name="formTitle">
     <div class="row gutters">
       <div class="col-sm-12">
         <div class="card">
@@ -17,13 +17,6 @@
                   :value="editedItem.name"
                   @keyup.enter="save"
                   :errors="v$.editedItem.name.$errors"
-                />
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  v-model="editedItem.name"
-                  @keyup.enter="save"
                 />
               </div>
               <div class="col-sm-12 col-12">
@@ -89,6 +82,11 @@ export default {
     },
     submitText() {
       return this.editedId ? 'Actualizar' : 'Crear';
+    },
+    formTitle() {
+      return this.editedId
+        ? 'Formulario actualizar marcas'
+        : 'Formulario crear marcas';
     },
   },
   watch: {
