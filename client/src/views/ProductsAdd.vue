@@ -307,6 +307,7 @@ export default {
     clear() {
       this.editedItem = { ...this.defaultItem };
       this.file = null;
+      this.selectedBrand = '';
       this.resetImage += 1;
       this.v$.$reset();
     },
