@@ -328,9 +328,11 @@ export default {
           sort: 'name',
         };
         query['fieldsToSearch'] = ['name'];
-        await Promise.all([this.$store.dispatch('productsModule/list', query)]);
         // asignar al data del componente
-        this.products = this.$store.state.productsModule.products;
+        this.products = await this.$store.dispatch(
+          'productsModule/listDistinct',
+          query,
+        );
         callback(this.products);
       }, 1000);
     },

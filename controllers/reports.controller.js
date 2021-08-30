@@ -1,62 +1,11 @@
 const Sequelize = require("../database/connection");
 const Product = require("../models/Products");
 const model = require("../models/Purchases");
-const PurchasesDetail = require("../models/PurchasesDetails.js");
+const SalesDetails = require("../models/SalesDetails.js");
+const PurchasesDetails = require("../models/PurchasesDetails.js");
 const utils = require("../helpers/utils");
 const { updateStock } = require("../helpers/utils2");
 const db = require("../helpers/db");
-
-/** *******************
- * Private functions *
- ******************** */
-
-const UNIQUEFIELDS = [];
-
-const itemExistsExcludingItself = async (id, body) =>
-  new Promise((resolve, reject) => {
-    const query = UNIQUEFIELDS.length > 0 ? {} : { noFields: true };
-    if (UNIQUEFIELDS.length === 0) return resolve(false);
-    for (const uniquefield of UNIQUEFIELDS) {
-      query[uniquefield] = body[uniquefield];
-    }
-    query.id = {
-      [Op.ne]: parseInt(id),
-    };
-    model
-      .findOne({ where: query })
-      .then((item) => {
-        utils.itemAlreadyExists(null, item, reject, "Este registro ya existe");
-        resolve(false);
-      })
-      .catch((err) => console.log(err));
-  });
-
-const itemExists = async (body) =>
-  new Promise((resolve, reject) => {
-    const query = UNIQUEFIELDS.length > 0 ? {} : { noFields: true };
-    for (const uniquefield of UNIQUEFIELDS) {
-      query[uniquefield] = body[uniquefield];
-    }
-    model
-      .findOne({ where: query })
-      .then((item) => {
-        utils.itemAlreadyExists(null, item, reject, "Este registro ya existe");
-        resolve(false);
-      })
-      .catch((err) => console.log(err));
-  });
-
-/**
- * Gets all items from database
- */
-
-const listAll = async (req, res) => {
-  try {
-    res.status(200).json(await db.getAllItems(model));
-  } catch (error) {
-    utils.handleError(res, error);
-  }
-};
 
 const getTotal = async (req, res) => {
   try {

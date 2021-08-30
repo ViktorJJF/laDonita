@@ -1,22 +1,20 @@
 const express = require("express");
 const passport = require("passport");
 const trimRequest = require("trim-request");
-const controller = require("../../controllers/purchases.controller");
-// const validate = require("../../controllers/sales.validate");
-// const AuthController = require('../../controllers/authController');
+const controller = require("../../controllers/notes.controller");
+const validate = require("../../controllers/notes.validate");
+const AuthController = require("../../controllers/auth.controller");
 
 const router = express.Router();
-// require('../../config/passport');
+require("../../config/passport");
 
-// const requireAuth = passport.authenticate('jwt', {
-//   session: false,
-// });
+const requireAuth = passport.authenticate("jwt", {
+  session: false,
+});
 
 /*
  * Get all items route
  */
-router.get("/get-total", controller.getTotal);
-
 router.get("/all", controller.listAll);
 
 // /*
@@ -24,8 +22,8 @@ router.get("/all", controller.listAll);
 //  */
 router.get(
   "/",
-  // requireAuth,
-  // AuthController.roleAuthorization(['ADMIN']),
+  requireAuth,
+  AuthController.roleAuthorization(["ADMIN"]),
   trimRequest.all,
   controller.list
 );
@@ -35,8 +33,8 @@ router.get(
  */
 router.post(
   "/",
-  // requireAuth,
-  // AuthController.roleAuthorization(['ADMIN']),
+  requireAuth,
+  AuthController.roleAuthorization(["ADMIN"]),
   trimRequest.all,
   // validate.create,
   controller.create
@@ -47,8 +45,8 @@ router.post(
 //  */
 router.get(
   "/:id",
-  // requireAuth,
-  // AuthController.roleAuthorization(['ADMIN']),
+  requireAuth,
+  AuthController.roleAuthorization(["ADMIN"]),
   trimRequest.all,
   // validate.listOne,
   controller.listOne
@@ -59,8 +57,8 @@ router.get(
 //  */
 router.put(
   "/:id",
-  // requireAuth,
-  // AuthController.roleAuthorization(['ADMIN']),
+  requireAuth,
+  AuthController.roleAuthorization(["ADMIN"]),
   trimRequest.all,
   // validate.update,
   controller.update
@@ -71,10 +69,10 @@ router.put(
 //  */
 router.delete(
   "/:id",
-  // requireAuth,
-  // AuthController.roleAuthorization(['ADMIN']),
+  requireAuth,
+  AuthController.roleAuthorization(["ADMIN"]),
   trimRequest.all,
-  // validate.deletes,
+  validate.deletes,
   controller.deletes
 );
 

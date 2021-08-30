@@ -37,6 +37,26 @@ const module = {
           });
       });
     },
+    listDistinct({ commit }, query) {
+      const finalQuery = buildQueryWithPagination(query);
+      const { showLoading } = query;
+      if (showLoading) {
+        commit('loadingModule/showLoading', true, { root: true });
+      }
+      return new Promise((resolve, reject) => {
+        api
+          .listDistinct(finalQuery)
+          .then(response => {
+            resolve(response.data.payload);
+            if (showLoading) {
+              commit('loadingModule/showLoading', false, { root: true });
+            }
+          })
+          .catch(error => {
+            handleError(error, commit, reject);
+          });
+      });
+    },
     listOne({ commit }, id) {
       commit('loadingModule/showLoading', true, { root: true });
       return new Promise((resolve, reject) => {

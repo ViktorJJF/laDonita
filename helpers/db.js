@@ -157,7 +157,13 @@ module.exports = {
    * @param {Object} req - request object
    * @param {Object} query - query object
    */
-  async getItems(req, model, query, populates) {
+  async getItems(
+    req,
+    model,
+    query,
+    populates,
+    { distinct, attributes, col, group } = {}
+  ) {
     const options = await listInitOptions(req);
     for (const key in options) {
       if (options.hasOwnProperty(key)) {
@@ -174,9 +180,12 @@ module.exports = {
           ? populates.map((el) => ({ ...el, separate: true }))
           : model.populates.map((el) => ({ model: el }))),
       ],
-      // distinct: true,
+      distinct,
+      col,
+      group,
       // duplicating: false,
       subQuery: false,
+      attributes,
     };
 
     if (!req.query.limit) delete paginationOptions["limit"];

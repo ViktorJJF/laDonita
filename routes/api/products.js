@@ -16,6 +16,7 @@ const router = express.Router();
  * Get all items route
  */
 router.get("/all", controller.listAll);
+router.get("/distinct", controller.listDistinct);
 
 // /*
 //  * Get items route

@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, fn, col } = require("sequelize");
 const model = require("../models/Products");
 const utils = require("../helpers/utils");
 const db = require("../helpers/db");
@@ -65,6 +65,20 @@ const list = async (req, res) => {
   }
 };
 
+const listDistinct = async (req, res) => {
+  try {
+    const query = await db.checkQueryString(req.query);
+    res.status(200).json(
+      await db.getItems(req, model, query, null, {
+        attributes: ["name"],
+        group: ["name"],
+      })
+    );
+  } catch (error) {
+    utils.handleError(res, error);
+  }
+};
+
 const listOne = async (req, res) => {
   try {
     res.status(200).json(await db.getItem(req.params.id, model));
@@ -113,4 +127,5 @@ module.exports = {
   create,
   update,
   deletes,
+  listDistinct,
 };
