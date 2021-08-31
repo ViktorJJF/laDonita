@@ -270,6 +270,7 @@ export default {
               id: this.editedId,
               data: this.editedItem,
             });
+            this.$router.push({ name: 'ProductsList' });
           } finally {
             this.loadingButton = false;
           }

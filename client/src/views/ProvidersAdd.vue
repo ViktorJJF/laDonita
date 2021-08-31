@@ -115,6 +115,7 @@ export default {
               id: this.editedId,
               data: this.editedItem,
             });
+            this.$router.push({ name: 'ProvidersList' });
           } finally {
             this.loadingButton = false;
           }

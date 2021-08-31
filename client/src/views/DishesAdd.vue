@@ -201,6 +201,7 @@ export default {
               id: this.editedId,
               data: this.editedItem,
             });
+            this.$router.push({ name: 'DishesList' });
           } finally {
             this.loadingButton = false;
           }
