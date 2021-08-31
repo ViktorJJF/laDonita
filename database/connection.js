@@ -17,7 +17,7 @@ const sequelize = new Sequelize(
     define: {
       timestamps: true,
     },
-    logging: true,
+    logging: false,
   }
 );
 // // sequelize.sync({ force: trueeee });

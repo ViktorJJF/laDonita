@@ -65,11 +65,19 @@
                               }}
                             </td>
                             <td>{{ sale.qty }}</td>
-                            <td>{{ sale.productDetails.price }}</td>
+                            <td>
+                              <input
+                                v-model="sale.salePrice"
+                                type="number"
+                                class="form-control"
+                                id="inputName"
+                                placeholder="Ingresa un precio x unidad"
+                              />
+                            </td>
                             <td>
                               {{
                                 parseInt(sale.qty) *
-                                parseFloat(sale.productDetails.price)
+                                  parseFloat(sale.salePrice) || 0
                               }}
                             </td>
                           </tr>
