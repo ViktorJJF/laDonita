@@ -149,6 +149,7 @@ const ENTITY = 'sales';
 
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
 import SimpleTable from '@/components/template/SimpleTable.vue';
+import reportsApi from '@/services/api/reports';
 
 export default {
   components: {
@@ -241,6 +242,7 @@ export default {
   methods: {
     async initialize(page = 1) {
       // llamada asincrona de items
+      let additionalQuery = {};
       let query = {
         page,
         search: this.search,
@@ -250,15 +252,19 @@ export default {
         limit: this.itemsPerPage,
       };
       if (this.startDate || this.endDate) {
-        query['fieldDate'] = 'date'; // este es el field a filtrar
-        query['startDate'] = this.startDate;
-        query['endDate'] = this.endDate;
+        additionalQuery['fieldDate'] = 'date'; // este es el field a filtrar
+        additionalQuery['startDate'] = this.startDate;
+        additionalQuery['endDate'] = this.endDate;
       }
+      query = { ...query, ...additionalQuery };
       await Promise.all([this.$store.dispatch(ENTITY + 'Module/list', query)]);
       // asignar al data del componente
       this[ENTITY] = this.$deepCopy(
         this.$store.state[ENTITY + 'Module'][ENTITY],
       );
+      // recuperando datos para reporte
+      additionalQuery['fieldDate'] = 'createdAt';
+      console.log('vino: ', await reportsApi.salesReport(additionalQuery));
     },
     async saveSale(sale) {
       let date = new Date(this.editedDate);

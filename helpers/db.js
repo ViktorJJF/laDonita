@@ -205,6 +205,30 @@ module.exports = {
       }
     });
   },
+  async getItemsReport(
+    model,
+    query,
+    { distinct, attributes, col, group } = {}
+  ) {
+    const paginationOptions = {
+      where: query,
+      distinct,
+      col,
+      group,
+      attributes,
+    };
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        resolve({
+          ok: true,
+          payload: await model.findOne(paginationOptions),
+        });
+      } catch (err) {
+        reject(buildErrObject(422, err.message));
+      }
+    });
+  },
   /**
    * Gets aggregated items from database
    * @param {Object} req - request object
