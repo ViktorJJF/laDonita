@@ -61,6 +61,84 @@
     </div>
     <div class="row gutters">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <el-table height="750" :data="items" style="width: 100%">
+          <el-table-column prop="date" label="Fecha">
+            <template #default="scope">
+              <div>
+                <v-date-picker
+                  v-show="editMode && scope.row.id == editedIndex"
+                  v-model="editedDate"
+                >
+                  <template v-slot="{ inputValue, inputEvents }">
+                    <input
+                      class="
+                        form-control
+                        bg-white
+                        border
+                        px-2
+                        py-1
+                        rounded
+                        date-picker
+                      "
+                      :value="inputValue"
+                      v-on="inputEvents"
+                    />
+                  </template>
+                </v-date-picker>
+                <span v-show="!editMode || scope.row.id != editedIndex">{{
+                  $filters.formatDate(scope.row.date)
+                }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="provider" label="Proveedor">
+            <template #default="scope">
+              <div>
+                {{
+                  $store.state.providersModule.providers.find(
+                    (el) => el.id === scope.row.providerId,
+                  )?.name || 'Sin proveedor'
+                }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="products" label="Productos">
+            <template #default="scope">
+              <ul>
+                <li
+                  v-for="purchaseDetail in scope.row.purchases_details"
+                  :key="purchaseDetail.id"
+                >
+                  ✅
+                  {{
+                    purchaseDetail.product
+                      ? purchaseDetail.product.name
+                      : 'Producto eliminado'
+                  }}
+                  ({{ purchaseDetail.qty }} x S/.{{
+                    purchaseDetail.purchasePrice
+                  }})
+                </li>
+              </ul>
+            </template>
+          </el-table-column>
+          <el-table-column
+            resizable
+            prop="totalPurchase"
+            label="Total de compra"
+            width="100"
+          >
+            <template #default="scope">
+              <span class="inversion"
+                >S/.{{
+                  $filters.formatMoney(
+                    subTotalRevenue(scope.row.purchases_details),
+                  )
+                }}</span
+              >
+            </template>
+          </el-table-column>
+        </el-table>
         <simple-table
           :headers="headers"
           :items="items"
@@ -70,68 +148,6 @@
           :show-reports="true"
           filename="Reporte de compras"
         >
-          <template v-slot:[`item.userId`]=""> kxmn@gmail.com </template>
-          <template v-slot:[`item.date`]="{ item }">
-            <div>
-              <v-date-picker
-                v-show="editMode && item.id == editedIndex"
-                v-model="editedDate"
-              >
-                <template v-slot="{ inputValue, inputEvents }">
-                  <input
-                    class="
-                      form-control
-                      bg-white
-                      border
-                      px-2
-                      py-1
-                      rounded
-                      date-picker
-                    "
-                    :value="inputValue"
-                    v-on="inputEvents"
-                  />
-                </template>
-              </v-date-picker>
-              <span v-show="!editMode || item.id != editedIndex">{{
-                $filters.formatDate(item.date)
-              }}</span>
-            </div>
-          </template>
-          <template v-slot:[`item.provider`]="{ item }">
-            <div>
-              {{
-                $store.state.providersModule.providers.find(
-                  (el) => el.id === item.providerId,
-                )?.name || 'Sin proveedor'
-              }}
-            </div>
-          </template>
-          <template v-slot:[`item.products`]="{ item }">
-            <ul>
-              <li
-                v-for="purchaseDetail in item.purchases_details"
-                :key="purchaseDetail.id"
-              >
-                ✅
-                {{
-                  purchaseDetail.product
-                    ? purchaseDetail.product.name
-                    : 'Producto eliminado'
-                }}
-                ({{ purchaseDetail.qty }} x S/.{{
-                  purchaseDetail.purchasePrice
-                }})
-              </li>
-            </ul>
-          </template>
-          <template v-slot:[`item.totalPurchase`]="{ item }">
-            <span class="inversion"
-              >S/.{{
-                $filters.formatMoney(subTotalRevenue(item.purchases_details))
-              }}</span
-            >
-          </template>
           <template v-slot:[`pagination`]>
             <pagination
               v-model="page"
@@ -170,6 +186,28 @@ export default {
         { text: 'Proveedor', value: 'provider' },
         { text: 'Productos', value: 'products' },
         { text: 'Total de compra', value: 'totalPurchase' },
+      ],
+      tableData: [
+        {
+          date: '2016-05-03',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles',
+        },
+        {
+          date: '2016-05-02',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles',
+        },
+        {
+          date: '2016-05-04',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles',
+        },
+        {
+          date: '2016-05-01',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles',
+        },
       ],
       fieldsToSearch: ['name'],
       delayTimer: null,

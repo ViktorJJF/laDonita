@@ -40,6 +40,34 @@ const getTotalSales = async (req, res) => {
   }
 };
 
+const getTotalPurchases = async (req, res) => {
+  try {
+    const query = await db.checkQueryString(req.query);
+    res.status(200).json(
+      await db.getItemsReport(PurchasesDetails, query, {
+        attributes: [
+          [
+            // Note the wrapping parentheses in the call below!
+            sequelize.literal(`(
+                COUNT(distinct purchaseId)
+            )`),
+            "purchasesQty",
+          ],
+          [
+            sequelize.literal(`(
+                SUM(purchasePrice*qty)
+            )`),
+            "totalPurchases",
+          ],
+        ],
+      })
+    );
+  } catch (error) {
+    utils.handleError(res, error);
+  }
+};
+
 module.exports = {
   getTotalSales,
+  getTotalPurchases,
 };

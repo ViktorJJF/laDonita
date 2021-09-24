@@ -19,4 +19,12 @@ router.get(
   controller.getTotalSales
 );
 
+router.get(
+  "/total-purchases",
+  requireAuth,
+  AuthController.roleAuthorization(["ADMIN"]),
+  trimRequest.all,
+  controller.getTotalPurchases
+);
+
 module.exports = router;
