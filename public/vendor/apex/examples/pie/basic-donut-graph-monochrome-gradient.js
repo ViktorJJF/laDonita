@@ -1,21 +1,21 @@
 var options = {
   chart: {
     width: 400,
-    type: "donut",
+    type: 'donut',
   },
   series: [25, 15, 44, 55, 41, 17],
-  labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
   fill: {
-    type: "gradient",
+    type: 'gradient',
   },
   theme: {
     monochrome: {
       enabled: true,
-      colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+      colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
     },
   },
   title: {
-    text: "Weekly Sales",
+    text: 'Weekly Sales',
   },
   responsive: [
     {
@@ -25,7 +25,7 @@ var options = {
           width: 200,
         },
         legend: {
-          position: "bottom",
+          position: 'bottom',
         },
       },
     },
@@ -35,7 +35,7 @@ var options = {
   },
 };
 var chart = new ApexCharts(
-  document.querySelector("#basic-donut-graph-monochrome-gradient"),
-  options
+  document.querySelector('#basic-donut-graph-monochrome-gradient'),
+  options,
 );
 chart.render();

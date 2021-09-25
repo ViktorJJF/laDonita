@@ -1,7 +1,7 @@
 var options = {
   chart: {
     height: 350,
-    type: "line",
+    type: 'line',
     zoom: {
       enabled: false,
     },
@@ -10,36 +10,36 @@ var options = {
     },
     shadow: {
       enabled: true,
-      color: "#000",
+      color: '#000',
       top: 18,
       left: 7,
       blur: 10,
       opacity: 1,
     },
   },
-  colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+  colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
   stroke: {
-    curve: "smooth",
+    curve: 'smooth',
     width: 3,
   },
   series: [
     {
-      name: "High - 2018",
+      name: 'High - 2018',
       data: [28, 29, 33, 36, 32, 32, 33],
     },
     {
-      name: "Low - 2017",
+      name: 'Low - 2017',
       data: [12, 11, 14, 18, 17, 13, 13],
     },
   ],
   title: {
-    text: "Average High & Low Temperature",
-    align: "center",
+    text: 'Average High & Low Temperature',
+    align: 'center',
   },
   grid: {
-    borderColor: "#e7e7e7",
+    borderColor: '#e7e7e7',
     row: {
-      colors: ["#f4f5fb", "#ffffff"], // takes an array which will be repeated on columns
+      colors: ['#f4f5fb', '#ffffff'], // takes an array which will be repeated on columns
       opacity: 0.5,
     },
   },
@@ -47,21 +47,21 @@ var options = {
     size: 6,
   },
   xaxis: {
-    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
     title: {
-      text: "Month",
+      text: 'Month',
     },
   },
   yaxis: {
     title: {
-      text: "Temperature",
+      text: 'Temperature',
     },
     min: 5,
     max: 40,
   },
   legend: {
-    position: "top",
-    horizontalAlign: "right",
+    position: 'top',
+    horizontalAlign: 'right',
     floating: true,
     offsetY: -25,
     offsetX: -5,
@@ -69,8 +69,8 @@ var options = {
 };
 
 var chart = new ApexCharts(
-  document.querySelector("#line-with-data-labels"),
-  options
+  document.querySelector('#line-with-data-labels'),
+  options,
 );
 
 chart.render();

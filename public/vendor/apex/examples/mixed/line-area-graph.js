@@ -1,42 +1,42 @@
 var options = {
   chart: {
     height: 350,
-    type: "line",
+    type: 'line',
     zoom: {
       enabled: false,
     },
   },
   stroke: {
-    curve: "straight",
+    curve: 'straight',
   },
   series: [
     {
-      name: "TEAM A",
-      type: "area",
+      name: 'TEAM A',
+      type: 'area',
       data: [40, 55, 35, 45, 30, 35, 27, 32, 33, 41, 30],
     },
     {
-      name: "TEAM B",
-      type: "line",
+      name: 'TEAM B',
+      type: 'line',
       data: [20, 40, 25, 35, 20, 35, 37, 52, 44, 61, 60],
     },
   ],
   fill: {
-    type: "solid",
+    type: 'solid',
     opacity: [0.35, 1],
   },
   labels: [
-    "Dec 01",
-    "Dec 02",
-    "Dec 03",
-    "Dec 04",
-    "Dec 05",
-    "Dec 06",
-    "Dec 07",
-    "Dec 08",
-    "Dec 09 ",
-    "Dec 10",
-    "Dec 11",
+    'Dec 01',
+    'Dec 02',
+    'Dec 03',
+    'Dec 04',
+    'Dec 05',
+    'Dec 06',
+    'Dec 07',
+    'Dec 08',
+    'Dec 09 ',
+    'Dec 10',
+    'Dec 11',
   ],
   markers: {
     size: 0,
@@ -44,13 +44,13 @@ var options = {
   yaxis: [
     {
       title: {
-        text: "Series A",
+        text: 'Series A',
       },
     },
     {
       opposite: true,
       title: {
-        text: "Series B",
+        text: 'Series B',
       },
     },
   ],
@@ -58,15 +58,15 @@ var options = {
     shared: true,
     intersect: false,
     y: {
-      formatter: function (y) {
-        if (typeof y !== "undefined") {
-          return y.toFixed(0) + " points";
+      formatter: function(y) {
+        if (typeof y !== 'undefined') {
+          return y.toFixed(0) + ' points';
         }
         return y;
       },
     },
   },
-  colors: ["#8e639c", "#00887A", "#d44843", "#bf870a"],
+  colors: ['#8e639c', '#00887A', '#d44843', '#bf870a'],
 };
-var chart = new ApexCharts(document.querySelector("#line-area-graph"), options);
+var chart = new ApexCharts(document.querySelector('#line-area-graph'), options);
 chart.render();

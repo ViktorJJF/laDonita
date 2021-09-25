@@ -1,7 +1,7 @@
 var options = {
   chart: {
     height: 350,
-    type: "line",
+    type: 'line',
     zoom: {
       enabled: false,
     },
@@ -11,13 +11,13 @@ var options = {
   },
   series: [
     {
-      name: "Website Blog",
-      type: "column",
+      name: 'Website Blog',
+      type: 'column',
       data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160],
     },
     {
-      name: "Social Media",
-      type: "line",
+      name: 'Social Media',
+      type: 'line',
       data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16],
     },
   ],
@@ -25,44 +25,44 @@ var options = {
     width: [0, 4],
   },
   title: {
-    text: "Traffic Sources",
-    align: "center",
+    text: 'Traffic Sources',
+    align: 'center',
   },
   // labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
   labels: [
-    "01 Jan 2001",
-    "02 Jan 2001",
-    "03 Jan 2001",
-    "04 Jan 2001",
-    "05 Jan 2001",
-    "06 Jan 2001",
-    "07 Jan 2001",
-    "08 Jan 2001",
-    "09 Jan 2001",
-    "10 Jan 2001",
-    "11 Jan 2001",
-    "12 Jan 2001",
+    '01 Jan 2001',
+    '02 Jan 2001',
+    '03 Jan 2001',
+    '04 Jan 2001',
+    '05 Jan 2001',
+    '06 Jan 2001',
+    '07 Jan 2001',
+    '08 Jan 2001',
+    '09 Jan 2001',
+    '10 Jan 2001',
+    '11 Jan 2001',
+    '12 Jan 2001',
   ],
   xaxis: {
-    type: "datetime",
+    type: 'datetime',
   },
-  colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+  colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
   yaxis: [
     {
       title: {
-        text: "Website Blog",
+        text: 'Website Blog',
       },
     },
     {
       opposite: true,
       title: {
-        text: "Social Media",
+        text: 'Social Media',
       },
     },
   ],
 };
 var chart = new ApexCharts(
-  document.querySelector("#line-column-graph"),
-  options
+  document.querySelector('#line-column-graph'),
+  options,
 );
 chart.render();

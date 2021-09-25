@@ -1,12 +1,12 @@
 var options = {
   chart: {
     height: 300,
-    type: "bar",
+    type: 'bar',
   },
   plotOptions: {
     bar: {
       horizontal: true,
-      barHeight: "35%",
+      barHeight: '35%',
     },
   },
   dataLabels: {
@@ -19,24 +19,24 @@ var options = {
   ],
   xaxis: {
     categories: [
-      "Canada",
-      "Netherlands",
-      "Italy",
-      "France",
-      "Japan",
-      "USA",
-      "India",
+      'Canada',
+      'Netherlands',
+      'Italy',
+      'France',
+      'Japan',
+      'USA',
+      'India',
     ],
   },
   theme: {
     monochrome: {
       enabled: true,
-      colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+      colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
       shadeIntensity: 0.1,
     },
   },
 };
 
-var chart = new ApexCharts(document.querySelector("#basic-bar-graph"), options);
+var chart = new ApexCharts(document.querySelector('#basic-bar-graph'), options);
 
 chart.render();

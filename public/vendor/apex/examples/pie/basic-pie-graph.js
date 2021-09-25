@@ -1,9 +1,9 @@
 var options = {
   chart: {
     width: 400,
-    type: "pie",
+    type: 'pie',
   },
-  labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+  labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
   series: [20, 20, 20, 20, 20],
   responsive: [
     {
@@ -13,7 +13,7 @@ var options = {
           width: 200,
         },
         legend: {
-          position: "bottom",
+          position: 'bottom',
         },
       },
     },
@@ -21,7 +21,7 @@ var options = {
   stroke: {
     width: 0,
   },
-  colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+  colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
 };
-var chart = new ApexCharts(document.querySelector("#basic-pie-graph"), options);
+var chart = new ApexCharts(document.querySelector('#basic-pie-graph'), options);
 chart.render();

@@ -1,9 +1,9 @@
 var options = {
   chart: {
     width: 400,
-    type: "donut",
+    type: 'donut',
   },
-  labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+  labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
   series: [20, 20, 20, 20, 20],
   responsive: [
     {
@@ -13,7 +13,7 @@ var options = {
           width: 200,
         },
         legend: {
-          position: "bottom",
+          position: 'bottom',
         },
       },
     },
@@ -22,7 +22,7 @@ var options = {
     width: 0,
   },
   fill: {
-    type: "gradient",
+    type: 'gradient',
     gradient: {
       shadeIntensity: 1,
       inverseColors: false,
@@ -31,10 +31,10 @@ var options = {
       stops: [70, 100],
     },
   },
-  colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+  colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
 };
 var chart = new ApexCharts(
-  document.querySelector("#basic-donut-graph-gradient"),
-  options
+  document.querySelector('#basic-donut-graph-gradient'),
+  options,
 );
 chart.render();

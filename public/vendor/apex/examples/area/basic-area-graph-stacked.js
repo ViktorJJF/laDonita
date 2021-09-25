@@ -1,13 +1,13 @@
 var options = {
   chart: {
     height: 350,
-    type: "area",
+    type: 'area',
     stacked: true,
     toolbar: {
       show: true,
     },
     events: {
-      selection: function (chart, e) {
+      selection: function(chart, e) {
         console.log(new Date(e.xaxis.min));
       },
     },
@@ -16,69 +16,69 @@ var options = {
     enabled: false,
   },
   stroke: {
-    curve: "straight",
+    curve: 'straight',
     width: 3,
   },
   series: [
     {
-      name: "Apple iPhone",
+      name: 'Apple iPhone',
       data: generateDayWiseTimeSeries(
-        new Date("11 Feb 2019 GMT").getTime(),
+        new Date('11 Feb 2019 GMT').getTime(),
         20,
         {
           min: 10,
           max: 60,
-        }
+        },
       ),
     },
     {
-      name: "Samsung Galaxy",
+      name: 'Samsung Galaxy',
       data: generateDayWiseTimeSeries(
-        new Date("11 Feb 2019 GMT").getTime(),
+        new Date('11 Feb 2019 GMT').getTime(),
         20,
         {
           min: 10,
           max: 20,
-        }
+        },
       ),
     },
     {
-      name: "Google Pixel",
+      name: 'Google Pixel',
       data: generateDayWiseTimeSeries(
-        new Date("11 Feb 2019 GMT").getTime(),
+        new Date('11 Feb 2019 GMT').getTime(),
         20,
         {
           min: 10,
           max: 15,
-        }
+        },
       ),
     },
   ],
   theme: {
     monochrome: {
       enabled: true,
-      colors: ["#8e639c", "#00887A", "#d44843", "#bf870a"],
+      colors: ['#8e639c', '#00887A', '#d44843', '#bf870a'],
       shadeIntensity: 0.1,
     },
   },
   grid: {
     row: {
-      colors: ["#f4f5fb", "#ffffff"], // takes an array which will be repeated on columns
+      colors: ['#f4f5fb', '#ffffff'], // takes an array which will be repeated on columns
       opacity: 0.5,
     },
   },
   legend: {
-    position: "bottom",
-    horizontalAlign: "center",
+    position: 'bottom',
+    horizontalAlign: 'center',
   },
   xaxis: {
-    type: "datetime",
+    type: 'datetime',
   },
 };
 
 var chart = new ApexCharts(
-  document.querySelector("#basic-area-stack-graph"),
-  options
+  document.querySelector('#basic-area-stack-graph'),
+  options,
 );
 
 chart.render();

@@ -1,55 +1,55 @@
 var options = {
   chart: {
     height: 350,
-    type: "area",
+    type: 'area',
   },
   dataLabels: {
     enabled: false,
   },
   stroke: {
-    curve: "smooth",
+    curve: 'smooth',
     width: 3,
   },
   series: [
     {
-      name: "Royal Hospitals",
+      name: 'Royal Hospitals',
       data: [3100, 4000, 2800, 5100, 4200, 1090, 1000],
     },
     {
-      name: "Admin Template",
+      name: 'Admin Template',
       data: [1100, 3200, 4500, 3200, 3400, 5200, 4100],
     },
   ],
   grid: {
     row: {
-      colors: ["#f4f5fb", "#ffffff"], // takes an array which will be repeated on columns
+      colors: ['#f4f5fb', '#ffffff'], // takes an array which will be repeated on columns
       opacity: 0.5,
     },
   },
   xaxis: {
-    type: "datetime",
+    type: 'datetime',
     categories: [
-      "2018-09-19T00:00:00",
-      "2018-09-19T01:30:00",
-      "2018-09-19T02:30:00",
-      "2018-09-19T03:30:00",
-      "2018-09-19T04:30:00",
-      "2018-09-19T05:30:00",
-      "2018-09-19T06:30:00",
+      '2018-09-19T00:00:00',
+      '2018-09-19T01:30:00',
+      '2018-09-19T02:30:00',
+      '2018-09-19T03:30:00',
+      '2018-09-19T04:30:00',
+      '2018-09-19T05:30:00',
+      '2018-09-19T06:30:00',
     ],
   },
   theme: {
     monochrome: {
       enabled: true,
-      colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+      colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
       shadeIntensity: 0.1,
     },
   },
   markers: {
     size: 0,
     opacity: 0.2,
-    colors: ["#8e639c", "#00887A", "#d44843", "#bf870a"],
-    strokeColor: "#fff",
+    colors: ['#8e639c', '#00887A', '#d44843', '#bf870a'],
+    strokeColor: '#fff',
     strokeWidth: 2,
     hover: {
       size: 7,
@@ -57,14 +57,14 @@ var options = {
   },
   tooltip: {
     x: {
-      format: "dd/MM/yy",
+      format: 'dd/MM/yy',
     },
   },
 };
 
 var chart = new ApexCharts(
-  document.querySelector("#basic-area-spline-graph"),
-  options
+  document.querySelector('#basic-area-spline-graph'),
+  options,
 );
 
 chart.render();

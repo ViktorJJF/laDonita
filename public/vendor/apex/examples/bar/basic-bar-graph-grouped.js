@@ -1,13 +1,13 @@
 var options = {
   chart: {
     height: 300,
-    type: "bar",
+    type: 'bar',
   },
   plotOptions: {
     bar: {
       horizontal: true,
       dataLabels: {
-        position: "top",
+        position: 'top',
       },
     },
   },
@@ -15,14 +15,14 @@ var options = {
     enabled: true,
     offsetX: -6,
     style: {
-      fontSize: "12px",
-      colors: ["#fff"],
+      fontSize: '12px',
+      colors: ['#fff'],
     },
   },
   stroke: {
     show: true,
     width: 1,
-    colors: ["#fff"],
+    colors: ['#fff'],
   },
   series: [
     {
@@ -35,10 +35,10 @@ var options = {
   xaxis: {
     categories: [2010, 2012, 2014, 2016, 2018],
   },
-  colors: ["#8e639c", "#00887A", "#d44843", "#bf870a"],
+  colors: ['#8e639c', '#00887A', '#d44843', '#bf870a'],
 };
 var chart = new ApexCharts(
-  document.querySelector("#basic-bar-graph-grouped"),
-  options
+  document.querySelector('#basic-bar-graph-grouped'),
+  options,
 );
 chart.render();

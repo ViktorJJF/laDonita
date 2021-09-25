@@ -1,15 +1,15 @@
 var options = {
   chart: {
     height: 350,
-    type: "line",
+    type: 'line',
     zoom: {
       enabled: false,
     },
   },
   series: [
     {
-      name: "Points",
-      type: "scatter",
+      name: 'Points',
+      type: 'scatter',
 
       //2.14, 2.15, 3.61, 4.93, 2.4, 2.7, 4.2, 5.4, 6.1, 8.3
       data: [
@@ -68,8 +68,8 @@ var options = {
       ],
     },
     {
-      name: "Line",
-      type: "line",
+      name: 'Line',
+      type: 'line',
       data: [
         {
           x: 1,
@@ -115,7 +115,7 @@ var options = {
     },
   ],
   fill: {
-    type: "solid",
+    type: 'solid',
   },
   markers: {
     size: [10, 0],
@@ -127,16 +127,16 @@ var options = {
   legend: {
     show: false,
   },
-  colors: ["#8e639c", "#00887A", "#d44843", "#bf870a"],
+  colors: ['#8e639c', '#00887A', '#d44843', '#bf870a'],
   xaxis: {
-    type: "numeric",
+    type: 'numeric',
     min: 0,
     max: 12,
     tickAmount: 12,
   },
 };
 var chart = new ApexCharts(
-  document.querySelector("#line-scatter-graph"),
-  options
+  document.querySelector('#line-scatter-graph'),
+  options,
 );
 chart.render();

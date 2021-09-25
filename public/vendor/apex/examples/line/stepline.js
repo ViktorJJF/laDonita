@@ -1,7 +1,7 @@
 var options = {
   chart: {
     height: 450,
-    type: "line",
+    type: 'line',
     zoom: {
       enabled: false,
     },
@@ -9,29 +9,29 @@ var options = {
   dataLabels: {
     enabled: false,
   },
-  colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+  colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
   stroke: {
     width: [3, 3, 3],
-    curve: "straight",
+    curve: 'straight',
     dashArray: [0, 8, 5],
   },
   series: [
     {
-      name: "Session Duration",
+      name: 'Session Duration',
       data: [45, 52, 38, 24, 33, 26, 21, 20, 6, 8, 15, 10],
     },
     {
-      name: "Page Views",
+      name: 'Page Views',
       data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35],
     },
     {
-      name: "Total Visits",
+      name: 'Total Visits',
       data: [87, 57, 74, 99, 75, 38, 62, 47, 82, 56, 45, 47],
     },
   ],
   title: {
-    text: "Page Statistics",
-    align: "center",
+    text: 'Page Statistics',
+    align: 'center',
   },
   markers: {
     size: 0,
@@ -41,39 +41,39 @@ var options = {
   },
   xaxis: {
     categories: [
-      "01 Jan",
-      "02 Jan",
-      "03 Jan",
-      "04 Jan",
-      "05 Jan",
-      "06 Jan",
-      "07 Jan",
-      "08 Jan",
-      "09 Jan",
-      "10 Jan",
-      "11 Jan",
-      "12 Jan",
+      '01 Jan',
+      '02 Jan',
+      '03 Jan',
+      '04 Jan',
+      '05 Jan',
+      '06 Jan',
+      '07 Jan',
+      '08 Jan',
+      '09 Jan',
+      '10 Jan',
+      '11 Jan',
+      '12 Jan',
     ],
   },
   tooltip: {
     y: [
       {
         title: {
-          formatter: function (val) {
-            return val + " (mins)";
+          formatter: function(val) {
+            return val + ' (mins)';
           },
         },
       },
       {
         title: {
-          formatter: function (val) {
-            return val + " per session";
+          formatter: function(val) {
+            return val + ' per session';
           },
         },
       },
       {
         title: {
-          formatter: function (val) {
+          formatter: function(val) {
             return val;
           },
         },
@@ -82,12 +82,12 @@ var options = {
   },
   grid: {
     row: {
-      colors: ["#f4f5fb", "#ffffff"], // takes an array which will be repeated on columns
+      colors: ['#f4f5fb', '#ffffff'], // takes an array which will be repeated on columns
       opacity: 0.5,
     },
   },
 };
 
-var chart = new ApexCharts(document.querySelector("#dashedLineChart"), options);
+var chart = new ApexCharts(document.querySelector('#dashedLineChart'), options);
 
 chart.render();

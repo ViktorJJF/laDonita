@@ -1,13 +1,13 @@
 var options = {
   chart: {
     height: 350,
-    type: "bar",
+    type: 'bar',
   },
   plotOptions: {
     bar: {
       horizontal: false,
-      endingShape: "rounded",
-      columnWidth: "35%",
+      endingShape: 'rounded',
+      columnWidth: '35%',
     },
   },
   dataLabels: {
@@ -16,28 +16,28 @@ var options = {
   stroke: {
     show: true,
     width: 2,
-    colors: ["transparent"],
+    colors: ['transparent'],
   },
   series: [
     {
-      name: "Net Profit",
+      name: 'Net Profit',
       data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
     },
     {
-      name: "Revenue",
+      name: 'Revenue',
       data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
     },
     {
-      name: "Free Cash Flow",
+      name: 'Free Cash Flow',
       data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
     },
   ],
   xaxis: {
-    categories: ["Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"],
+    categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
   },
   yaxis: {
     title: {
-      text: "$ (thousands)",
+      text: '$ (thousands)',
     },
   },
   fill: {
@@ -45,21 +45,21 @@ var options = {
   },
   tooltip: {
     y: {
-      formatter: function (val) {
-        return "$ " + val + " thousands";
+      formatter: function(val) {
+        return '$ ' + val + ' thousands';
       },
     },
   },
   grid: {
     row: {
-      colors: ["#f4f5fb", "#ffffff"], // takes an array which will be repeated on columns
+      colors: ['#f4f5fb', '#ffffff'], // takes an array which will be repeated on columns
       opacity: 0.5,
     },
   },
-  colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+  colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
 };
 var chart = new ApexCharts(
-  document.querySelector("#basic-column-graph"),
-  options
+  document.querySelector('#basic-column-graph'),
+  options,
 );
 chart.render();

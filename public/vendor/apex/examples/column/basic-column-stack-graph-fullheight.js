@@ -1,9 +1,9 @@
 var options = {
   chart: {
     height: 350,
-    type: "bar",
+    type: 'bar',
     stacked: true,
-    stackType: "100%",
+    stackType: '100%',
     toolbar: {
       show: false,
     },
@@ -16,7 +16,7 @@ var options = {
       breakpoint: 480,
       options: {
         legend: {
-          position: "bottom",
+          position: 'bottom',
           offsetX: -10,
           offsetY: 0,
         },
@@ -33,44 +33,44 @@ var options = {
   },
   series: [
     {
-      name: "Product A",
+      name: 'Product A',
       data: [44, 55, 41, 67, 22, 43],
     },
     {
-      name: "Product B",
+      name: 'Product B',
       data: [13, 23, 20, 8, 13, 27],
     },
     {
-      name: "Product C",
+      name: 'Product C',
       data: [11, 17, 15, 15, 21, 14],
     },
     {
-      name: "Product D",
+      name: 'Product D',
       data: [21, 7, 25, 13, 22, 8],
     },
   ],
   xaxis: {
-    type: "datetime",
+    type: 'datetime',
     categories: [
-      "01/01/2011 GMT",
-      "01/02/2011 GMT",
-      "01/03/2011 GMT",
-      "01/04/2011 GMT",
-      "01/05/2011 GMT",
-      "01/06/2011 GMT",
+      '01/01/2011 GMT',
+      '01/02/2011 GMT',
+      '01/03/2011 GMT',
+      '01/04/2011 GMT',
+      '01/05/2011 GMT',
+      '01/06/2011 GMT',
     ],
   },
   legend: {
-    position: "top",
+    position: 'top',
     offsetY: 10,
   },
   fill: {
     opacity: 1,
   },
-  colors: ["#d44843", "#bf870a", "#8e639c", "#00887A"],
+  colors: ['#d44843', '#bf870a', '#8e639c', '#00887A'],
 };
 var chart = new ApexCharts(
-  document.querySelector("#basic-column-stack-graph-fullheight"),
-  options
+  document.querySelector('#basic-column-stack-graph-fullheight'),
+  options,
 );
 chart.render();
