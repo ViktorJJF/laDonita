@@ -5,7 +5,7 @@
       <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
         <div class="login-screen">
           <div class="login-box">
-            <a href="#" class="login-logo"> La Doñita </a>
+            <a href="#" class="login-logo"> {{ $store.state.business }} </a>
             <h5>Bienvenido de nuevo,<br />Por favor, ingresa a tu cuenta.</h5>
             <VTextFieldWithValidation
               type="text"

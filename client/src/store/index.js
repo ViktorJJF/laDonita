@@ -5,6 +5,8 @@ import modules from './modules';
 export default createStore({
   modules,
   state: {
+    business: 'La Doñita',
+    subMessage: 'campestre',
     businessImage: '/images/donitalogo.png',
     maxPaginationButtons: 15,
     itemsPerPage: 15,

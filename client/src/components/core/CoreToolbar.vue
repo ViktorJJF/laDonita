@@ -5,7 +5,8 @@
       <div class="row gutters">
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
           <a href="index-2.html" class="logo"
-            >La Doñita <span>campestre</span></a
+            >{{ $store.state.business }}
+            <span>{{ $store.state.subMessage }}</span></a
           >
         </div>
         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8">
