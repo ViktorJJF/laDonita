@@ -1,5 +1,6 @@
 const Sequelize = require("../database/connection");
 const Product = require("../models/Products");
+const Brands = require("../models/Brands");
 const model = require("../models/Purchases");
 const PurchasesDetail = require("../models/PurchasesDetails.js");
 const utils = require("../helpers/utils");
@@ -128,7 +129,13 @@ const list = async (req, res) => {
         {
           model: PurchasesDetail,
           required: true,
-          include: [includeProducts],
+          include: [
+            {
+              model: Product,
+              required: true,
+              include: [{ model: Brands, required: false }],
+            },
+          ],
         },
       ])
     );

@@ -22,139 +22,183 @@
             </h3>
           </li>
           <li>
-            <h5 class="mb-3">
-              Cantidad de ventas: {{ $store.state.salesModule.total }}
-            </h5>
+            <h5 class="mb-3">Cantidad de ventas: {{ filteredItems.length }}</h5>
           </li>
         </ul>
       </div>
     </div>
     <div class="row gutters mb-3">
-      <div class="col-sm-6 col-12">
+      <div class="col-sm-4 col-12">
         <label class="mb-1 mr-2">Fecha desde:</label>
-        <v-date-picker style="display: inline-block" v-model="startDate">
+        <v-date-picker v-model="startDate">
           <template v-slot="{ inputValue, inputEvents }">
             <input
-              class="form-control bg-white border px-2 py-1 rounded"
+              class="form-control bg-white border px-2 py-1 rounded date-picker"
               :value="inputValue"
               v-on="inputEvents"
             />
           </template>
         </v-date-picker>
       </div>
-      <div class="col-sm-6 col-12">
+      <div class="col-sm-4 col-12">
         <label class="mb-1 mr-2">Fecha Hasta:</label>
-        <v-date-picker style="display: inline-block" class="" v-model="endDate">
+        <v-date-picker v-model="endDate">
           <template v-slot="{ inputValue, inputEvents }">
             <input
-              class="form-control bg-white border px-2 py-1 rounded"
+              class="form-control bg-white border px-2 py-1 rounded date-picker"
               :value="inputValue"
               v-on="inputEvents"
             />
           </template>
         </v-date-picker>
+      </div>
+      <div class="col-sm-4 col-12">
+        <label class="mb-1 mr-2">Producto:</label>
+        <el-autocomplete
+          style="display: block"
+          v-model="selectedProduct"
+          :fetch-suggestions="getProducts"
+          placeholder="Seleccione un producto"
+          @select="selectedProductId = $event.id"
+          value-key="formattedName"
+        ></el-autocomplete>
       </div>
     </div>
-
+    <div class="row gutters mb-2">
+      <div class="col-12">
+        <button
+          type="button"
+          class="btn btn-danger mr-1"
+          @click="generateTable"
+        >
+          <i class="icon-cancel"></i> Exportar PDF
+        </button>
+        <button @click="exportExcel" type="button" class="btn btn-success">
+          <i class="icon-cancel"></i> Exportar XLSX
+        </button>
+      </div>
+    </div>
     <div class="row gutters">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <simple-table
-          :headers="headers"
-          :items="items"
-          date-to-filter="fechaFin"
-          :filterBox="false"
-          :filterDate="false"
-          :show-reports="true"
-          filename="Reporte de ventas"
+        <el-table
+          stripe
+          border
+          id="my-table"
+          :data="limitedItems"
+          style="width: 100%"
         >
-          <template v-slot:[`item.userId`]=""> kxmn@gmail.com </template>
-          <template v-slot:[`item.date`]="{ item }">
-            <div>
-              <v-date-picker
-                v-show="editMode && item.id == editedIndex"
-                v-model="editedDate"
+          <el-table-column prop="date" sortable label="Fecha">
+            <template #default="scope">
+              <div>
+                <v-date-picker
+                  v-show="editMode && scope.row.id == editedIndex"
+                  v-model="editedDate"
+                >
+                  <template v-slot="{ inputValue, inputEvents }">
+                    <input
+                      class="
+                        form-control
+                        bg-white
+                        border
+                        px-2
+                        py-1
+                        rounded
+                        date-picker
+                      "
+                      :value="inputValue"
+                      v-on="inputEvents"
+                    />
+                  </template>
+                </v-date-picker>
+                <span v-show="!editMode || scope.row.id != editedIndex">{{
+                  $filters.formatDate(scope.row.date)
+                }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="products" label="Productos">
+            <template #default="scope">
+              <ul>
+                <li
+                  v-for="saleDetail in scope.row.sales_details"
+                  :key="saleDetail.id"
+                >
+                  ✅
+                  {{
+                    saleDetail.product
+                      ? saleDetail.product.name
+                      : 'Producto eliminado'
+                  }}
+                  <span v-show="saleDetail.product?.brand?.name"
+                    >({{ saleDetail.product?.brand?.name }})
+                  </span>
+                  ({{ saleDetail.qty }} x S/.{{ saleDetail.salePrice }})
+                </li>
+              </ul>
+            </template>
+          </el-table-column>
+          <el-table-column prop="cost" label="Costo">
+            <template #default="scope">
+              <span class
+                >S/.{{
+                  $filters.formatMoney(subTotalCost(scope.row.sales_details))
+                }}</span
               >
-                <template v-slot="{ inputValue, inputEvents }">
-                  <input
-                    class="form-control bg-white border px-2 py-1 rounded"
-                    :value="inputValue"
-                    v-on="inputEvents"
-                  />
-                </template>
-              </v-date-picker>
-              <span v-show="!editMode || item.id != editedIndex">{{
-                $filters.formatDate(item.date)
-              }}</span>
-            </div>
-          </template>
-          <template v-slot:[`item.products`]="{ item }">
-            <ul>
-              <li v-for="saleDetail in item.sales_details" :key="saleDetail.id">
-                ✅
-                {{
-                  saleDetail.product
-                    ? saleDetail.product.name
-                    : 'Producto eliminado'
-                }}
-                ({{ saleDetail.qty }} x S/.{{ saleDetail.salePrice }})
-              </li>
-            </ul>
-          </template>
-          <template v-slot:[`item.cost`]="{ item }">
-            <span class
-              >S/.{{
-                $filters.formatMoney(subTotalCost(item.sales_details))
-              }}</span
-            >
-          </template>
-          <template v-slot:[`item.totalSale`]="{ item }">
-            <span class
-              >S/.{{
-                $filters.formatMoney(subTotalRevenue(item.sales_details))
-              }}</span
-            >
-          </template>
-          <template v-slot:[`item.amount`]="{ item }">
-            <span class="ganancia"
-              >S/.{{
-                $filters.formatMoney(
-                  subTotalRevenue(item.sales_details) -
-                    subTotalCost(item.sales_details),
-                )
-              }}</span
-            >
-          </template>
-          <template v-slot:[`pagination`]>
-            <pagination
-              v-model="page"
-              :records="totalItems"
-              :per-page="itemsPerPage"
-              :options="{
-                chunk: $store.state.maxPaginationButtons,
-                texts: {
-                  count:
-                    'Mostrando {from} a {to} de {count} elementos|{count} elementos|Un elemento',
-                },
-              }"
-            />
-          </template>
-        </simple-table>
+            </template>
+          </el-table-column>
+          <el-table-column prop="totalSale" label="Total de Venta">
+            <template #default="scope">
+              <span class
+                >S/.{{
+                  $filters.formatMoney(subTotalRevenue(scope.row.sales_details))
+                }}</span
+              >
+            </template>
+          </el-table-column>
+          <el-table-column resizable prop="amount" label="Ganancias">
+            <template #default="scope">
+              <span class="ganancia"
+                >S/.{{
+                  $filters.formatMoney(
+                    subTotalRevenue(scope.row.sales_details) -
+                      subTotalCost(scope.row.sales_details),
+                  )
+                }}</span
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="mt-2 pagination justify-content-center primary text-center">
+          <pagination
+            v-model="page"
+            :records="filteredItems.length"
+            :per-page="itemsPerPage"
+            :options="{
+              chunk: 10,
+              texts: {
+                count:
+                  'Mostrando {from} a {to} de {count} elementos|{count} elementos|Un elemento',
+              },
+            }"
+          />
+        </div>
       </div>
     </div>
   </core-view-slot>
 </template>
 
 <script>
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import XLSX from 'xlsx';
+
 const ENTITY = 'sales';
 
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
-import SimpleTable from '@/components/template/SimpleTable.vue';
-import reportsApi from '@/services/api/reports';
 
 export default {
   components: {
     CoreViewSlot,
-    SimpleTable,
   },
   data() {
     return {
@@ -181,7 +225,10 @@ export default {
       editMode: false,
       startDate: null,
       endDate: null,
-      itemsPerPage: 100,
+      itemsPerPage: 30,
+      products: [],
+      selectedProduct: null,
+      selectedProductId: null,
     };
   },
   computed: {
@@ -194,11 +241,26 @@ export default {
     items() {
       return this[ENTITY];
     },
+    filteredItems() {
+      return this.selectedProductId
+        ? this.items.filter((el) =>
+            el.sales_details.find(
+              (el2) => el2.productId === this.selectedProductId,
+            ),
+          )
+        : this.items;
+    },
+    limitedItems() {
+      return this.filteredItems.slice(
+        (this.page - 1) * this.itemsPerPage,
+        this.page * this.itemsPerPage,
+      );
+    },
     entity() {
       return ENTITY;
     },
     totalSales() {
-      return this.sales
+      return this.filteredItems
         .reduce(
           (a, b) =>
             a + b.sales_details.reduce((c, d) => c + d.salePrice * d.qty, 0),
@@ -207,7 +269,7 @@ export default {
         .toFixed(2);
     },
     totalSalesCost() {
-      return this.sales
+      return this.filteredItems
         .reduce(
           (a, b) =>
             a +
@@ -218,12 +280,6 @@ export default {
     },
   },
   watch: {
-    async search() {
-      clearTimeout(this.delayTimer);
-      this.delayTimer = setTimeout(() => {
-        this.initialize(this.page);
-      }, 600);
-    },
     async page() {
       this.initialize(this.page);
     },
@@ -234,6 +290,16 @@ export default {
     endDate() {
       this.page = 1;
       this.initialize(this.page);
+    },
+    selectedProduct() {
+      if (this.selectedProduct.trim().length === 0) {
+        console.log(
+          '🚀 Aqui *** -> this.selectedProduct',
+          this.selectedProduct,
+        );
+        this.selectedProductId = null;
+        // this.initialize();
+      }
     },
   },
   async mounted() {
@@ -249,7 +315,7 @@ export default {
         fieldsToSearch: this.fieldsToSearch,
         sort: 'date',
         order: -1,
-        limit: this.itemsPerPage,
+        limit: 999999999,
       };
       if (this.startDate || this.endDate) {
         additionalQuery['fieldDate'] = 'date'; // este es el field a filtrar
@@ -257,14 +323,46 @@ export default {
         additionalQuery['endDate'] = this.endDate;
       }
       query = { ...query, ...additionalQuery };
-      await Promise.all([this.$store.dispatch(ENTITY + 'Module/list', query)]);
+      await Promise.all([
+        this.$store.dispatch(ENTITY + 'Module/list', query),
+        this.$store.dispatch('productsModule/list', {
+          showLoading: false,
+          page: 1,
+        }),
+      ]);
+      this.products = this.$store.state.productsModule.products;
       // asignar al data del componente
       this[ENTITY] = this.$deepCopy(
         this.$store.state[ENTITY + 'Module'][ENTITY],
       );
       // recuperando datos para reporte
       additionalQuery['fieldDate'] = 'createdAt';
-      console.log('vino: ', await reportsApi.salesReport(additionalQuery));
+    },
+    getProducts($event, callback) {
+      clearTimeout(this.delayTimer);
+      this.delayTimer = setTimeout(async () => {
+        // llamada asincrona de items
+        let query = {
+          search: $event,
+          showLoading: false,
+          limit: 10,
+          page: 1,
+        };
+        if (this.fieldsToSearch) {
+          query['fieldsToSearch'] = this.fieldsToSearch;
+        }
+        await Promise.all([this.$store.dispatch('productsModule/list', query)]);
+        // asignar al data del componente
+        this.products = this.$store.state.productsModule.products;
+        callback(
+          this.products.map((product) => ({
+            ...product,
+            formattedName:
+              product.name +
+              (product.brandId ? ` (${product.brand.name})` : ''),
+          })),
+        );
+      }, 1000);
     },
     async saveSale(sale) {
       let date = new Date(this.editedDate);
@@ -330,6 +428,99 @@ export default {
         return salesDetail.reduce((a, b) => a + b.purchasePrice * b.qty, 0);
       }
       return 'S/.0';
+    },
+    generateTable() {
+      const docTable = new jsPDF('l', 'pt');
+      docTable.setFontSize(9);
+      docTable.text(
+        `Actualizado al ${this.$filters.formatDate(new Date())}`,
+        40,
+        20,
+        { fontSize: 100 },
+      );
+      docTable.setFontSize(14);
+      docTable.text(
+        `Total de ventas: S/.${this.$filters.formatMoney(this.totalSales)}`,
+        40,
+        36,
+      );
+      docTable.text(
+        `Total de ganancias: S/.${this.$filters.formatMoney(
+          this.totalSales - this.totalSalesCost,
+        )}`,
+        40,
+        54,
+      );
+      docTable.autoTable({
+        theme: 'grid',
+        margin: [60, 40, 40, 40],
+        headStyles: { fillColor: [25, 53, 93] },
+        styles: { fontSize: 9, overflow: 'ellipsize', cellWidth: 'wrap' },
+        columnStyles: { europe: { halign: 'center' } },
+        head: [
+          ['#', 'Fecha', 'Productos', 'Costo', 'Total de venta', 'Ganancias'],
+        ],
+        body: this.filteredItems.map((item, index) => [
+          String(index + 1),
+          this.$filters.formatDate(item.date),
+          item.sales_details
+            .map(
+              (detail) =>
+                '✅' +
+                (detail.product
+                  ? detail.product.brand
+                    ? detail.product.name +
+                      ` (${detail.product.brand.name})(${detail.qty} x S/.${detail.salePrice})`
+                    : detail.product.name +
+                      ` (${detail.qty} x S/.${detail.salePrice})`
+                  : 'Producto eliminado') +
+                '\n',
+            )
+            .join(''),
+          'S/.' +
+            this.$filters.formatMoney(this.subTotalCost(item.sales_details)),
+          'S/.' +
+            this.$filters.formatMoney(this.subTotalRevenue(item.sales_details)),
+          'S/.' +
+            this.$filters.formatMoney(
+              this.subTotalRevenue(item.sales_details) -
+                this.subTotalCost(item.sales_details),
+            ),
+        ]),
+      });
+
+      docTable.save('reporte_compras.pdf');
+    },
+    exportExcel() {
+      let data = XLSX.utils.aoa_to_sheet([
+        ['#', 'Fecha', 'Productos', 'Costo', 'Total de venta', 'Ganancias'],
+        ...this.filteredItems.map((item, index) => [
+          String(index + 1),
+          this.$filters.formatDate(item.date),
+          item.sales_details
+            .map(
+              (detail) =>
+                '✅' +
+                (detail.product
+                  ? detail.product.brand
+                    ? detail.product.name +
+                      ` (${detail.product.brand.name})(${detail.qty} x S/.${detail.salePrice})`
+                    : detail.product.name +
+                      ` (${detail.qty} x S/.${detail.salePrice})`
+                  : 'Producto eliminado') +
+                '\n',
+            )
+            .join(''),
+          this.subTotalCost(item.sales_details),
+          this.subTotalRevenue(item.sales_details),
+          this.subTotalRevenue(item.sales_details) -
+            this.subTotalCost(item.sales_details),
+        ]),
+      ]);
+      const workbook = XLSX.utils.book_new();
+      const { filename } = this;
+      XLSX.utils.book_append_sheet(workbook, data, filename);
+      XLSX.writeFile(workbook, 'reporte_ventas.xlsx');
     },
   },
 };

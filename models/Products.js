@@ -71,7 +71,7 @@ const model = sequelize.define(
   }
 );
 
-model.populates = [Brands];
+model.populates = [];
 
 model.addScope("populate", {
   include: [...model.populates.map((el) => ({ model: el }))],

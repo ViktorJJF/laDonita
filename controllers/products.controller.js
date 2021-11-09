@@ -1,5 +1,6 @@
 const { Op, fn, col } = require("sequelize");
 const model = require("../models/Products");
+const Brands = require("../models/Brands");
 const utils = require("../helpers/utils");
 const db = require("../helpers/db");
 
@@ -59,7 +60,14 @@ const listAll = async (req, res) => {
 const list = async (req, res) => {
   try {
     const query = await db.checkQueryString(req.query);
-    res.status(200).json(await db.getItems(req, model, query));
+    res.status(200).json(
+      await db.getItems(req, model, query, [
+        {
+          model: Brands,
+          required: false,
+        },
+      ])
+    );
   } catch (error) {
     utils.handleError(res, error);
   }
