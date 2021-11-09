@@ -228,6 +228,11 @@ export default {
               text: 'Reporte de compras',
               to: 'ReportPurchases',
             },
+            {
+              icon: 'icon-users nav-icon',
+              text: 'Reporte de productos',
+              to: 'ReportProducts',
+            },
           ],
         },
       ],

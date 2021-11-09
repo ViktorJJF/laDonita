@@ -6,6 +6,7 @@ const Product = require("../models/Products.js");
 const utils = require("../helpers/utils");
 const { updateStock } = require("../helpers/utils2");
 const db = require("../helpers/db");
+const Brands = require("../models/Brands");
 
 //Public functions
 const stockAvailable = async (productId, qty) => {
@@ -76,8 +77,14 @@ const list = async (req, res) => {
       await db.getItems(req, model, query, [
         {
           model: SalesDetail,
-          required: false,
-          include: [{ model: Product, required: false }],
+          required: true,
+          include: [
+            {
+              model: Product,
+              required: false,
+              include: [{ model: Brands, required: false }],
+            },
+          ],
         },
       ])
     );

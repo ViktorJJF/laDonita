@@ -71,6 +71,9 @@
       "no-console": [
         "off"
       ],
+      "no-nested-ternary": [
+        "off"
+      ],
       "import/first": [
         "off"
       ],

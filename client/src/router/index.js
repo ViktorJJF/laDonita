@@ -121,6 +121,11 @@ const routes = [
         component: () => import('@/views/ReportPurchases.vue'),
       },
       {
+        path: '/reportes/productos',
+        name: 'ReportProducts',
+        component: () => import('@/views/ReportProducts.vue'),
+      },
+      {
         path: '/notas',
         name: 'NotesList',
         component: () => import('@/views/NotesList.vue'),

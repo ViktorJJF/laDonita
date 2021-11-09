@@ -13,7 +13,7 @@
           </li>
           <li>
             <h5 class="mb-3">
-              Cantidad de compras: {{ $store.state.purchasesModule.total }}
+              Cantidad de compras: {{ filteredItems.length }}
             </h5>
           </li>
         </ul>
@@ -51,18 +51,35 @@
           v-model="selectedProduct"
           :fetch-suggestions="getProducts"
           placeholder="Seleccione un producto"
-          @select="
-            selectedProductId = $event.id;
-            initialize();
-          "
-          value-key="name"
+          @select="selectedProductId = $event.id"
+          value-key="formattedName"
         ></el-autocomplete>
+      </div>
+    </div>
+    <div class="row gutters mb-2">
+      <div class="col-12">
+        <button
+          type="button"
+          class="btn btn-danger mr-1"
+          @click="generateTable"
+        >
+          <i class="icon-cancel"></i> Exportar PDF
+        </button>
+        <button @click="exportExcel" type="button" class="btn btn-success">
+          <i class="icon-cancel"></i> Exportar XLSX
+        </button>
       </div>
     </div>
     <div class="row gutters">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <el-table height="750" :data="items" style="width: 100%">
-          <el-table-column prop="date" label="Fecha">
+        <el-table
+          stripe
+          border
+          id="my-table"
+          :data="limitedItems"
+          style="width: 100%"
+        >
+          <el-table-column prop="date" sortable label="Fecha">
             <template #default="scope">
               <div>
                 <v-date-picker
@@ -91,7 +108,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="provider" label="Proveedor">
+          <el-table-column prop="provider" sortable label="Proveedor">
             <template #default="scope">
               <div>
                 {{
@@ -115,6 +132,9 @@
                       ? purchaseDetail.product.name
                       : 'Producto eliminado'
                   }}
+                  <span v-show="purchaseDetail.product?.brand?.name"
+                    >({{ purchaseDetail.product?.brand?.name }})
+                  </span>
                   ({{ purchaseDetail.qty }} x S/.{{
                     purchaseDetail.purchasePrice
                   }})
@@ -126,7 +146,6 @@
             resizable
             prop="totalPurchase"
             label="Total de compra"
-            width="100"
           >
             <template #default="scope">
               <span class="inversion"
@@ -139,45 +158,37 @@
             </template>
           </el-table-column>
         </el-table>
-        <simple-table
-          :headers="headers"
-          :items="items"
-          date-to-filter="fechaFin"
-          :filterBox="false"
-          :filterDate="false"
-          :show-reports="true"
-          filename="Reporte de compras"
-        >
-          <template v-slot:[`pagination`]>
-            <pagination
-              v-model="page"
-              :records="totalItems"
-              :per-page="itemsPerPage"
-              :options="{
-                chunk: $store.state.maxPaginationButtons,
-                texts: {
-                  count:
-                    'Mostrando {from} a {to} de {count} elementos|{count} elementos|Un elemento',
-                },
-              }"
-            />
-          </template>
-        </simple-table>
+        <div class="mt-2 pagination justify-content-center primary text-center">
+          <pagination
+            v-model="page"
+            :records="filteredItems.length"
+            :per-page="itemsPerPage"
+            :options="{
+              chunk: 10,
+              texts: {
+                count:
+                  'Mostrando {from} a {to} de {count} elementos|{count} elementos|Un elemento',
+              },
+            }"
+          />
+        </div>
       </div>
     </div>
   </core-view-slot>
 </template>
 
 <script>
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import XLSX from 'xlsx';
+
 const ENTITY = 'purchases';
 
 import CoreViewSlot from '@/components/core/CoreViewSlot.vue';
-import SimpleTable from '@/components/template/SimpleTable.vue';
 
 export default {
   components: {
     CoreViewSlot,
-    SimpleTable,
   },
   data() {
     return {
@@ -186,28 +197,6 @@ export default {
         { text: 'Proveedor', value: 'provider' },
         { text: 'Productos', value: 'products' },
         { text: 'Total de compra', value: 'totalPurchase' },
-      ],
-      tableData: [
-        {
-          date: '2016-05-03',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-02',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-04',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-01',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
-        },
       ],
       fieldsToSearch: ['name'],
       delayTimer: null,
@@ -228,28 +217,37 @@ export default {
       products: [],
       selectedProduct: null,
       selectedProductId: null,
-      itemsPerPage: 100,
+      itemsPerPage: 30,
     };
   },
   computed: {
-    totalItems() {
-      return this.$store.state[ENTITY + 'Module'].total;
-    },
-    totalPages() {
-      return this.$store.state[ENTITY + 'Module'].totalPages;
-    },
     items() {
       return this[ENTITY];
+    },
+    filteredItems() {
+      return this.selectedProductId
+        ? this.items.filter((el) =>
+            el.purchases_details.find(
+              (el2) => el2.productId === this.selectedProductId,
+            ),
+          )
+        : this.items;
+    },
+    limitedItems() {
+      return this.filteredItems.slice(
+        (this.page - 1) * this.itemsPerPage,
+        this.page * this.itemsPerPage,
+      );
     },
     entity() {
       return ENTITY;
     },
     totalPurchases() {
-      return this.purchases.reduce(
+      return this.filteredItems.reduce(
         (acc, el) =>
           acc +
           el.purchases_details.reduce(
-            (acc2, el2) => acc2 + el2.product.purchasePrice * el2.qty,
+            (acc2, el2) => acc2 + el2.purchasePrice * el2.qty,
             0,
           ),
         0,
@@ -257,9 +255,9 @@ export default {
     },
   },
   watch: {
-    async page() {
-      this.initialize(this.page);
-    },
+    // async page() {
+    //   this.initialize(this.page);
+    // },
     startDate() {
       this.page = 1;
       this.initialize(this.page);
@@ -270,7 +268,12 @@ export default {
     },
     selectedProduct() {
       if (this.selectedProduct.trim().length === 0) {
-        this.initialize();
+        console.log(
+          '🚀 Aqui *** -> this.selectedProduct',
+          this.selectedProduct,
+        );
+        this.selectedProductId = null;
+        // this.initialize();
       }
     },
   },
@@ -286,7 +289,7 @@ export default {
         fieldsToSearch: this.fieldsToSearch,
         sort: 'date',
         order: -1,
-        limit: this.itemsPerPage,
+        limit: 999999999,
       };
       if (this.startDate || this.endDate) {
         query['fieldDate'] = 'date'; // este es el field a filtrar
@@ -304,7 +307,6 @@ export default {
         }),
       ]);
       this.products = this.$store.state.productsModule.products;
-      console.log('🚀 Aqui *** -> this.products', this.products);
       // asignar al data del componente
       this[ENTITY] = this.$deepCopy(
         this.$store.state[ENTITY + 'Module'][ENTITY],
@@ -326,7 +328,14 @@ export default {
         await Promise.all([this.$store.dispatch('productsModule/list', query)]);
         // asignar al data del componente
         this.products = this.$store.state.productsModule.products;
-        callback(this.products);
+        callback(
+          this.products.map((product) => ({
+            ...product,
+            formattedName:
+              product.name +
+              (product.brandId ? ` (${product.brand.name})` : ''),
+          })),
+        );
       }, 1000);
     },
 
@@ -377,6 +386,90 @@ export default {
         return purchasesDetail.reduce((a, b) => a + b.purchasePrice * b.qty, 0);
       }
       return 'S/.0';
+    },
+    generateTable() {
+      const docTable = new jsPDF('l', 'pt');
+      docTable.setFontSize(9);
+      docTable.text(
+        `Actualizado al ${this.$filters.formatDate(new Date())}`,
+        38,
+        20,
+        { fontSize: 100 },
+      );
+      docTable.setFontSize(14);
+      docTable.text(
+        `Total de compras: S/.${this.$filters.formatMoney(
+          this.totalPurchases,
+        )}`,
+        38,
+        36,
+      );
+      docTable.autoTable({
+        theme: 'grid',
+        headStyles: { fillColor: [25, 53, 93] },
+        styles: { fontSize: 9, overflow: 'ellipsize', cellWidth: 'wrap' },
+        columnStyles: { europe: { halign: 'center' } },
+        head: [['#', 'Fecha', 'Proveedor', 'Productos', 'Total de compra']],
+        body: this.filteredItems.map((item, index) => [
+          String(index + 1),
+          this.$filters.formatDate(item.date),
+          this.$store.state.providersModule.providers.find(
+            (el) => el.id === item.providerId,
+          )?.name || 'Sin proveedor',
+          item.purchases_details
+            .map(
+              (detail) =>
+                '✅' +
+                (detail.product
+                  ? detail.product.brand
+                    ? detail.product.name +
+                      ` (${detail.product.brand.name})(${detail.qty} x S/.${detail.purchasePrice})`
+                    : detail.product.name +
+                      ` (${detail.qty} x S/.${detail.purchasePrice})`
+                  : 'Producto eliminado') +
+                '\n',
+            )
+            .join(''),
+          'S/.' +
+            this.$filters.formatMoney(
+              this.subTotalRevenue(item.purchases_details),
+            ),
+        ]),
+      });
+
+      docTable.save('reporte_ventas.pdf');
+    },
+    exportExcel() {
+      let data = XLSX.utils.aoa_to_sheet([
+        ['#', 'Fecha', 'Proveedor', 'Productos', 'Total de compra'],
+        ...this.filteredItems.map((item, index) => [
+          String(index + 1),
+          this.$filters.formatDate(item.date),
+          this.$store.state.providersModule.providers.find(
+            (el) => el.id === item.providerId,
+          )?.name || 'Sin proveedor',
+          item.purchases_details
+            .map(
+              (detail) =>
+                '-' +
+                (detail.product
+                  ? detail.product.brand
+                    ? detail.product.name +
+                      ` (${detail.product.brand.name})(${detail.product.brand.name})`
+                    : detail.product.name +
+                      ` (${detail.qty} x S/.${detail.purchasePrice})`
+                  : 'Producto eliminado') +
+                '\n',
+            )
+            .join(''),
+
+          this.subTotalRevenue(item.purchases_details),
+        ]),
+      ]);
+      const workbook = XLSX.utils.book_new();
+      const { filename } = this;
+      XLSX.utils.book_append_sheet(workbook, data, filename);
+      XLSX.writeFile(workbook, 'reporte_compras.xlsx');
     },
   },
 };

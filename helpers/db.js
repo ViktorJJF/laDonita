@@ -177,7 +177,7 @@ module.exports = {
       order: options.sort,
       include: [
         ...(populates
-          ? populates.map((el) => ({ ...el, separate: true }))
+          ? populates.map((el) => ({ ...el }))
           : model.populates.map((el) => ({ model: el }))),
       ],
       distinct,
