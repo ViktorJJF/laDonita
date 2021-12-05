@@ -79,15 +79,7 @@ export default {
     this.initialize();
   },
   methods: {
-    async initialize(page = 1) {
-      // llamada asincrona de items
-      await Promise.all([
-        this.$store.dispatch(ENTITY + 'Module/list', {
-          page,
-          search: this.search,
-          fieldsToSearch: this.fieldsToSearch,
-        }),
-      ]);
+    async initialize() {
       // asignar al data del componente
       this[ENTITY] = this.$deepCopy(
         this.$store.state[ENTITY + 'Module'][ENTITY],

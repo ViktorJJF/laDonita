@@ -24,15 +24,22 @@ const module = {
         api
           .list(finalQuery)
           .then(response => {
-            commit('list', response.data.payload);
+            // agregando campo para busqueda name-brand
+            let docs = response.data.payload.map(el => ({
+              ...el,
+              productWithBrand:
+                el.name + (el.brandId ? ' ' + el.brand.name : ''),
+            }));
+            commit('list', docs);
             commit('totalItems', response.data.totalDocs);
             commit('totalPages', response.data.totalPages);
-            resolve(response.data.payload);
+            resolve(docs);
             if (showLoading) {
               commit('loadingModule/showLoading', false, { root: true });
             }
           })
           .catch(error => {
+            console.log('🚀 Aqui *** -> error', error);
             handleError(error, commit, reject);
           });
       });
@@ -151,7 +158,23 @@ const module = {
       state.products.splice(indexToDelete, 1);
     },
   },
-  getters: {},
+  getters: {
+    searchProduct: state => search => {
+      console.log('🚀 Aqui *** -> search', search);
+      return search.trim().length > 0
+        ? state.products.filter(item =>
+            [...Object.keys(item)].some(
+              key =>
+                (typeof item[key] === 'string' ||
+                  typeof item[key] === 'number') &&
+                String(item[key])
+                  .toLowerCase()
+                  .includes(search.toLowerCase().trim()),
+            ),
+          )
+        : state.products;
+    },
+  },
 };
 
 export default module;

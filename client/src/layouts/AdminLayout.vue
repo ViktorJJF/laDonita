@@ -45,6 +45,11 @@ export default {
   methods: {
     async initialData() {
       await Promise.all([
+        this.$store.dispatch('productsModule/list', {
+          limit: 9999999,
+          order: 1,
+          sort: 'name',
+        }),
         this.$store.dispatch('brandsModule/list'),
         this.$store.dispatch('providersModule/list'),
       ]);

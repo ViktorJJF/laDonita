@@ -323,13 +323,7 @@ export default {
         additionalQuery['endDate'] = this.endDate;
       }
       query = { ...query, ...additionalQuery };
-      await Promise.all([
-        this.$store.dispatch(ENTITY + 'Module/list', query),
-        this.$store.dispatch('productsModule/list', {
-          showLoading: false,
-          page: 1,
-        }),
-      ]);
+      await Promise.all([this.$store.dispatch(ENTITY + 'Module/list', query)]);
       this.products = this.$store.state.productsModule.products;
       // asignar al data del componente
       this[ENTITY] = this.$deepCopy(
@@ -339,30 +333,17 @@ export default {
       additionalQuery['fieldDate'] = 'createdAt';
     },
     getProducts($event, callback) {
-      clearTimeout(this.delayTimer);
-      this.delayTimer = setTimeout(async () => {
-        // llamada asincrona de items
-        let query = {
-          search: $event,
-          showLoading: false,
-          limit: 10,
-          page: 1,
-        };
-        if (this.fieldsToSearch) {
-          query['fieldsToSearch'] = this.fieldsToSearch;
-        }
-        await Promise.all([this.$store.dispatch('productsModule/list', query)]);
-        // asignar al data del componente
-        this.products = this.$store.state.productsModule.products;
-        callback(
-          this.products.map((product) => ({
-            ...product,
-            formattedName:
-              product.name +
-              (product.brandId ? ` (${product.brand.name})` : ''),
-          })),
-        );
-      }, 1000);
+      // asignar al data del componente
+      this.products = this.$store.getters['productsModule/searchProduct'](
+        $event || '',
+      );
+      callback(
+        this.products.map((product) => ({
+          ...product,
+          formattedName:
+            product.name + (product.brandId ? ` (${product.brand.name})` : ''),
+        })),
+      );
     },
     async saveSale(sale) {
       let date = new Date(this.editedDate);

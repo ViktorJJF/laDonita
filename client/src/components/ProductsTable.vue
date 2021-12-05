@@ -107,58 +107,6 @@
             </button>
           </div>
         </template>
-        <template v-slot:[`search`]>
-          <div class="row d-flex justify-content-between mb-3">
-            <div class="col-sm-6">
-              <label for="inputName">Búsqueda</label>
-              <input
-                v-model="search"
-                type="text"
-                class="form-control"
-                id="inputName"
-                placeholder="Ingresa tu búsqueda"
-              />
-            </div>
-            <div class="col-sm-4 col-12">
-              <label class="mb-1 mr-2">Marca:</label>
-              <el-autocomplete
-                style="display: block"
-                v-model="selectedBrand"
-                :fetch-suggestions="getBrands"
-                placeholder="Seleccione una marca"
-                @select="
-                  selectedBrandId = $event.id;
-                  initialize();
-                "
-                value-key="name"
-                @input="brandAutocompleteChange"
-              ></el-autocomplete>
-            </div>
-            <div class="col-sm-2 my-auto">
-              <button
-                type="button"
-                class="btn btn-primary"
-                @click="$router.push({ name: 'ProductsCreate' })"
-              >
-                Agregar Nuevo
-              </button>
-            </div>
-          </div>
-        </template>
-        <template v-slot:[`pagination`]>
-          <pagination
-            v-model="page"
-            :records="totalItems"
-            :per-page="productsToShow || $store.state.itemsPerPage"
-            :options="{
-              chunk: $store.state.maxPaginationButtons,
-              texts: {
-                count:
-                  'Mostrando {from} a {to} de {count} elementos|{count} elementos|Un elemento',
-              },
-            }"
-          />
-        </template>
       </simple-table>
     </div>
   </div>
@@ -255,22 +203,8 @@ export default {
     this.initialize();
   },
   methods: {
-    async initialize(page = 1) {
-      // llamada asincrona de items
-      await Promise.all([
-        this.$store.dispatch(ENTITY + 'Module/list', {
-          page,
-          search: this.search,
-          fieldsToSearch: this.fieldsToSearch,
-          limit: this.productsToShow || this.$store.state.itemsPerPage,
-          order: 1,
-          sort: 'name',
-          brandId: this.selectedBrandId,
-        }),
-        this.$store.dispatch('brandsModule/list', { order: 1, sort: 'name' }),
-      ]);
-
-      // asignar al data del componente
+    async initialize() {
+      // asignar al data del componente con campo extra agregado (nombre producto + marca) para busqueda
       this[ENTITY] = this.$deepCopy(
         this.$store.state[ENTITY + 'Module'][ENTITY],
       );
