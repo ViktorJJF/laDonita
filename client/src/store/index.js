@@ -5,9 +5,9 @@ import modules from './modules';
 export default createStore({
   modules,
   state: {
-    business: 'FIXTECBAR',
+    business: 'La Donita',
     subMessage: '',
-    businessImage: '/images/fixtec.jpg',
+    businessImage: '/images/donitalogo.png',
     maxPaginationButtons: 15,
     itemsPerPage: 15,
     snackbar: {
